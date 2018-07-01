@@ -1,4 +1,4 @@
-package invalue.core.entities;
+package com.example.easynotes.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

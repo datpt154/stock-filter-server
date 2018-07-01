@@ -1,4 +1,4 @@
-package invalue.core.vo;
+package com.example.easynotes.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -7,99 +7,257 @@ import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
-public class  ReportVO implements Serializable{
-		/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7656055076958852454L;
-	private Integer id;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+@Entity
+@Table(name = "finance_ratio_q", uniqueConstraints = {@UniqueConstraint(columnNames = "CODE") })
+public class FinanceRatioQ implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "ID", unique = true, nullable = false)
+	private Long id;
+	
+	@Basic
+	@Column(name = "CODE", nullable = false, unique = true, length = 100)
 	private String code;
+
+	@Basic
+	@Column(name = "TYPE", nullable = false)
 	private Integer type;
 	
+	@Basic
+	@Column(name = "STATUS", nullable = false)
 	private Integer status;
 
+	@Basic
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATED_TIME", nullable = false, length = 19)
 	private Date createdTime;
 
+	@Basic
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "UPDATED_TIME", length = 19, insertable = false, updatable = true)
 	private Date updatedTime;
 	
+	@Basic
+	@Column(name = "TIME_STRING", length = 255)
 	private String timeString;	
 	
+	@Basic
+	@Column(name = "NET_REVENUE", precision = 20, scale = 5)
 	private Double netRevenue;
+	@Basic
+	@Column(name = "GROSS_PROFIT", precision = 20, scale = 5)
 	private Double grossProfit;
+	@Basic
+	@Column(name = "NET_INCOME", precision = 20, scale = 5)
 	private Double netIncome;
+	@Basic
+	@Column(name = "SHARE_S_OUSTANDING", precision = 20, scale = 5)
 	private Double shareSOustanding;
+	@Basic
+	@Column(name = "EPS", precision = 20, scale = 5)
 	private Double eps;
+	@Basic
+	@Column(name = "BOOK_VALUE", precision = 20, scale = 5)
 	private Double bookValue;
+	@Basic
+	@Column(name = "MARKET_PRICE", precision = 20, scale = 5)
 	private Double marketPrice;
+	@Basic
+	@Column(name = "DAYYS", precision = 20, scale = 5)
 	private Double dayys;
+	@Basic
+	@Column(name = "CAPEX", precision = 20, scale = 5)
 	private Double capex;
+	@Basic
+	@Column(name = "FCF", precision = 20, scale = 5)
 	private Double fcf;
+	@Basic
+	@Column(name = "EBIT", precision = 20, scale = 5)
 	private Double ebit;
+	@Basic
+	@Column(name = "EBITDA", precision = 20, scale = 5)
 	private Double ebitda;
+	@Basic
+	@Column(name = "NNWC", precision = 20, scale = 5)
 	private Double nnwc;
+	@Basic
+	@Column(name = "NET_WORKING_CAPITAL", precision = 20, scale = 5)
 	private Double netWorkingCapital;
+	@Basic
+	@Column(name = "EV", precision = 20, scale = 5)
 	private Double ev;
+	@Basic
+	@Column(name = "MARKET_CAPITAL", precision = 20, scale = 5)
 	private Double marketCapital;
+	@Basic
+	@Column(name = "NET_REVENUE_YOY", precision = 20, scale = 5)
 	private Double netRevenueYoy;
+	@Basic
+	@Column(name = "GROSS_PROFIT_YOY", precision = 20, scale = 5)
 	private Double grossProfitYoy;
+	@Basic
+	@Column(name = "EPS_YOY", precision = 20, scale = 5)
 	private Double epsYoy;
+	@Basic
+	@Column(name = "EBITDA_YOY", precision = 20, scale = 5)
 	private Double ebitdaYoy;
+	@Basic
+	@Column(name = "DEBT_YOY", precision = 20, scale = 5)
 	private Double debtYoy;
+	@Basic
+	@Column(name = "EQUITY_YOY", precision = 20, scale = 5)
 	private Double equityYoy;
+	@Basic
+	@Column(name = "MARKET_CAPITAL_YOY", precision = 20, scale = 5)
 	private Double marketCapitalYoy;
+	@Basic
+	@Column(name = "TOTAL_ASSETS_YOY", precision = 20, scale = 5)
 	private Double totalAssetsYoy;
+	@Basic
+	@Column(name = "P_E", precision = 20, scale = 5)
 	private Double pE;
+	@Basic
+	@Column(name = "PEG", precision = 20, scale = 5)
 	private Double peg;
+	@Basic
+	@Column(name = "P_B", precision = 20, scale = 5)
 	private Double pB;
+	@Basic
+	@Column(name = "P_S", precision = 20, scale = 5)
 	private Double pS;
+	@Basic
+	@Column(name = "EV_EBITDA", precision = 20, scale = 5)
 	private Double evEbitda;
+	@Basic
+	@Column(name = "EV_EBIT", precision = 20, scale = 5)
 	private Double evEbit;
+	@Basic
+	@Column(name = "EV_FCF", precision = 20, scale = 5)
 	private Double evFcf;
+	@Basic
+	@Column(name = "REV_FCF", precision = 20, scale = 5)
 	private Double revFcf;
+	@Basic
+	@Column(name = "MC_CFO", precision = 20, scale = 5)
 	private Double mcCfo;
+	@Basic
+	@Column(name = "MC_NWC", precision = 20, scale = 5)
 	private Double mcNwc;
+	@Basic
+	@Column(name = "FCFF", precision = 20, scale = 5)
 	private Double fcff;
+	@Basic
+	@Column(name = "FCFE", precision = 20, scale = 5)
 	private Double fcfe;
+	@Basic
+	@Column(name = "CAPEX_REV", precision = 20, scale = 5)
 	private Double capexRev;
+	@Basic
+	@Column(name = "ROIC", precision = 20, scale = 5)
 	private Double roic;
+	@Basic
+	@Column(name = "ROCE", precision = 20, scale = 5)
 	private Double roce;
+	@Basic
+	@Column(name = "ROE", precision = 20, scale = 5)
 	private Double roe;
+	@Basic
+	@Column(name = "ROA", precision = 20, scale = 5)
 	private Double roa;
+	@Basic
+	@Column(name = "GROSS_PROFIT_MARGIN", precision = 20, scale = 5)
 	private Double grossProfitMargin;
+	@Basic
+	@Column(name = "OPERATING_PROFIT_MARGIN", precision = 20, scale = 5)
 	private Double operatingProfitMargin;
+	@Basic
+	@Column(name = "PRETAX_PROFIT_MARGIN", precision = 20, scale = 5)
 	private Double pretaxProfitMargin;
+	@Basic
+	@Column(name = "NET_PROFIT_MARGIN", precision = 20, scale = 5)
 	private Double netProfitMargin;
+	@Basic
+	@Column(name = "DIV_YIELD", precision = 20, scale = 5)
 	private Double divYield;
+	@Basic
+	@Column(name = "EBIT_REV", precision = 20, scale = 5)
 	private Double ebitRev;
+	@Basic
+	@Column(name = "EBITDA_REV", precision = 20, scale = 5)
 	private Double ebitdaRev;
+	@Basic
+	@Column(name = "SALES_TO_TOTAL_ASSETS", precision = 20, scale = 5)
 	private Double salesToTotalAssets;
+	@Basic
+	@Column(name = "RECEIVABLE_TURNOVER", precision = 20, scale = 5)
 	private Double receivableTurnover;
+	@Basic
+	@Column(name = "PAYABLE_TURNOVER", precision = 20, scale = 5)
 	private Double payableTurnover;
+	@Basic
+	@Column(name = "INVENTORY_TURNOVER", precision = 20, scale = 5)
 	private Double inventoryTurnover;
+	@Basic
+	@Column(name = "DEBT_TO_ASSETS_RATIO", precision = 20, scale = 5)
 	private Double debtToAssetsRatio;
+	@Basic
+	@Column(name = "DEBT_TO_EQUITY_RATIO", precision = 20, scale = 5)
 	private Double debtToEquityRatio;
+	@Basic
+	@Column(name = "LONG_TIME_DEBT_TOTAL_CAPITALAZION", precision = 20, scale = 5)
 	private Double longTimeDebtTotalCapitalazion;
+	@Basic
+	@Column(name = "INTEREST_COVERAGE", precision = 20, scale = 5)
 	private Double interestCoverage;
+	@Basic
+	@Column(name = "CURRENT_RATIO", precision = 20, scale = 5)
 	private Double currentRatio;
+	@Basic
+	@Column(name = "QUICK_RATIO", precision = 20, scale = 5)
 	private Double quickRatio;
+	@Basic
+	@Column(name = "CASH_RATIO", precision = 20, scale = 5)
 	private Double cashRatio;
+	@Basic
+	@Column(name = "ACCOUNT_RECEIVABLE_TO_REVENUE", precision = 20, scale = 5)
 	private Double accountReceivableToRevenue;
+	@Basic
+	@Column(name = "ACCOUNT_RECEIVABLE_TO_NET_INCOME", precision = 20, scale = 5)
 	private Double accountReceivableToNetIncome;
+	@Basic
+	@Column(name = "ALLOWANCES_AND_PROVISIONS_TO_NET_INCOME", precision = 20, scale = 5)
 	private Double allowancesAndProvisionsToNetIncome;
+	@Basic
+	@Column(name = "F_SCORE", precision = 20, scale = 5)
 	private Double fScore;
+	@Basic
+	@Column(name = "C_SCORE", precision = 20, scale = 5)
 	private Double cScore;
+	@Basic
+	@Column(name = "M_SCORE", precision = 20, scale = 5)
 	private Double mScore;
+	@Basic
+	@Column(name = "Z_SCORE", precision = 20, scale = 5)
 	private Double zScore;
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getCode() {
@@ -465,8 +623,7 @@ public class  ReportVO implements Serializable{
 	public Double getLongTimeDebtTotalCapitalazion() {
 		return longTimeDebtTotalCapitalazion;
 	}
-	public void setLongTimeDebtTotalCapitalazion(
-			Double longTimeDebtTotalCapitalazion) {
+	public void setLongTimeDebtTotalCapitalazion(Double longTimeDebtTotalCapitalazion) {
 		this.longTimeDebtTotalCapitalazion = longTimeDebtTotalCapitalazion;
 	}
 	public Double getInterestCoverage() {
@@ -508,8 +665,7 @@ public class  ReportVO implements Serializable{
 	public Double getAllowancesAndProvisionsToNetIncome() {
 		return allowancesAndProvisionsToNetIncome;
 	}
-	public void setAllowancesAndProvisionsToNetIncome(
-			Double allowancesAndProvisionsToNetIncome) {
+	public void setAllowancesAndProvisionsToNetIncome(Double allowancesAndProvisionsToNetIncome) {
 		this.allowancesAndProvisionsToNetIncome = allowancesAndProvisionsToNetIncome;
 	}
 	public Double getfScore() {
@@ -536,4 +692,5 @@ public class  ReportVO implements Serializable{
 	public void setzScore(Double zScore) {
 		this.zScore = zScore;
 	}
+	
 }

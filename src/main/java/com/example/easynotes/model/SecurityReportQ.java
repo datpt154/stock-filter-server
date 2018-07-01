@@ -1,4 +1,4 @@
-package invalue.core.entities;
+package com.example.easynotes.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -21,8 +21,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
-@Table(name = "normal_report_y", uniqueConstraints = {@UniqueConstraint(columnNames = "CODE") })
-public class NormalReportY implements java.io.Serializable {
+@Table(name = "security_report_q", uniqueConstraints = {@UniqueConstraint(columnNames = "CODE") })
+public class SecurityReportQ implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -57,26 +57,35 @@ public class NormalReportY implements java.io.Serializable {
 	private String timeString;	
 	
 	@Basic
-	@Column(name = "CURRENT_ASSET", precision = 20, scale = 5)
-	private Double currentAsset;
+	@Column(name = "CURRENT_ASSETS", precision = 20, scale = 5)
+	private Double currentAssets;
+	@Basic
+	@Column(name = "FINANCE_ASSETS", precision = 20, scale = 5)
+	private Double financeAssets;
 	@Basic
 	@Column(name = "CASH_AND_CASH_EQUIVALENTS", precision = 20, scale = 5)
 	private Double cashAndCashEquivalents;
 	@Basic
-	@Column(name = "SHORT_TERM_INVESTMENTS", precision = 20, scale = 5)
-	private Double shortTermInvestments;
+	@Column(name = "FINANCE_ASSETS_AT_FAIR_VALUE_THOUGH_PROFIT_OR_LOSS", precision = 20, scale = 5)
+	private Double financeAssetsAtFairValueThoughProfitOrLoss;
 	@Basic
-	@Column(name = "ACCOUNTS_RECEIVABLE_SHORT_TERM", precision = 20, scale = 5)
-	private Double accountsReceivableShortTerm;
+	@Column(name = "HELD_TO_MATURITY_INVESTMENT", precision = 20, scale = 5)
+	private Double heldToMaturityInvestment;
 	@Basic
-	@Column(name = "INVENTORIES", precision = 20, scale = 5)
-	private Double inventories;
+	@Column(name = "LOANS", precision = 20, scale = 5)
+	private Double loans;
+	@Basic
+	@Column(name = "AVAILABLE_FOR_SALE_FINANCE_ASSET", precision = 20, scale = 5)
+	private Double availableForSaleFinanceAsset;
+	@Basic
+	@Column(name = "SHORT_TERM_ACCOUNT_RECEIVABLE", precision = 20, scale = 5)
+	private Double shortTermAccountReceivable;
 	@Basic
 	@Column(name = "OTHER_CURRENT_ASSETS", precision = 20, scale = 5)
 	private Double otherCurrentAssets;
 	@Basic
-	@Column(name = "LONG_TERM_ASSETS", precision = 20, scale = 5)
-	private Double longTermAssets;
+	@Column(name = "NON_CURRENT_ASSETS", precision = 20, scale = 5)
+	private Double nonCurrentAssets;
 	@Basic
 	@Column(name = "ACCOUNT_RECEIVABLE_LONG_TERM", precision = 20, scale = 5)
 	private Double accountReceivableLongTerm;
@@ -111,62 +120,20 @@ public class NormalReportY implements java.io.Serializable {
 	@Column(name = "TOTAL_ASSETS", precision = 20, scale = 5)
 	private Double totalAssets;
 	@Basic
+	@Column(name = "LIABILITIES", precision = 20, scale = 5)
+	private Double liabilities;
+	@Basic
 	@Column(name = "CURRENT_LIABILITIES", precision = 20, scale = 5)
 	private Double currentLiabilities;
-	@Basic
-	@Column(name = "ACCOUNT_PAYABLE_TO_SUPPLIERS", precision = 20, scale = 5)
-	private Double accountPayableToSuppliers;
-	@Basic
-	@Column(name = "SHORT_TERM_ADVANCES_FROM_CUSTOMERS", precision = 20, scale = 5)
-	private Double shortTermAdvancesFromCustomers;
-	@Basic
-	@Column(name = "SHORT_TERM_UNEARNED_REVENUE", precision = 20, scale = 5)
-	private Double shortTermUnearnedRevenue;
 	@Basic
 	@Column(name = "SHORT_TERM_BORROWINGS_AND_LIABILITIES", precision = 20, scale = 5)
 	private Double shortTermBorrowingsAndLiabilities;
 	@Basic
-	@Column(name = "OTHER_SHORT_TERM_LIABILITIES", precision = 20, scale = 5)
-	private Double otherShortTermLiabilities;
+	@Column(name = "SHORT_TERM_TRADE_PAYABLE", precision = 20, scale = 5)
+	private Double shortTermTradePayable;
 	@Basic
 	@Column(name = "LONG_TERM_LIABILITIES", precision = 20, scale = 5)
 	private Double longTermLiabilities;
-	@Basic
-	@Column(name = "LONG_TERM_ACCOUNTS_PAYABLE", precision = 20, scale = 5)
-	private Double longTermAccountsPayable;
-	@Basic
-	@Column(name = "LONG_TERMADVANCES_FROM_CUSTOMERS", precision = 20, scale = 5)
-	private Double longTermadvancesFromCustomers;
-	@Basic
-	@Column(name = "LONG_TERM_UNEARNED_REVENUE", precision = 20, scale = 5)
-	private Double longTermUnearnedRevenue;
-	@Basic
-	@Column(name = "LONG_TERM_BORROWINGS_AND_LIABILITIES", precision = 20, scale = 5)
-	private Double longTermBorrowingsAndLiabilities;
-	@Basic
-	@Column(name = "OTHER_LONG_TERM_LIABILITIES", precision = 20, scale = 5)
-	private Double otherLongTermLiabilities;
-	@Basic
-	@Column(name = "EQUITY", precision = 20, scale = 5)
-	private Double equity;
-	@Basic
-	@Column(name = "SHARE_CAPITAL", precision = 20, scale = 5)
-	private Double shareCapital;
-	@Basic
-	@Column(name = "SHARE_PREMIUM", precision = 20, scale = 5)
-	private Double sharePremium;
-	@Basic
-	@Column(name = "RETAINED_PROFITS", precision = 20, scale = 5)
-	private Double retainedProfits;
-	@Basic
-	@Column(name = "OTHER_CAPITALS", precision = 20, scale = 5)
-	private Double otherCapitals;
-	@Basic
-	@Column(name = "NON_CONTROLLING_INTEREST", precision = 20, scale = 5)
-	private Double nonControllingInterest;
-	@Basic
-	@Column(name = "TOTAL_RESOURCES", precision = 20, scale = 5)
-	private Double totalResources;
 	@Basic
 	@Column(name = "NET_REVENUE", precision = 20, scale = 5)
 	private Double netRevenue;
@@ -275,11 +242,17 @@ public class NormalReportY implements java.io.Serializable {
 	public void setTimeString(String timeString) {
 		this.timeString = timeString;
 	}
-	public Double getCurrentAsset() {
-		return currentAsset;
+	public Double getCurrentAssets() {
+		return currentAssets;
 	}
-	public void setCurrentAsset(Double currentAsset) {
-		this.currentAsset = currentAsset;
+	public void setCurrentAssets(Double currentAssets) {
+		this.currentAssets = currentAssets;
+	}
+	public Double getFinanceAssets() {
+		return financeAssets;
+	}
+	public void setFinanceAssets(Double financeAssets) {
+		this.financeAssets = financeAssets;
 	}
 	public Double getCashAndCashEquivalents() {
 		return cashAndCashEquivalents;
@@ -287,23 +260,35 @@ public class NormalReportY implements java.io.Serializable {
 	public void setCashAndCashEquivalents(Double cashAndCashEquivalents) {
 		this.cashAndCashEquivalents = cashAndCashEquivalents;
 	}
-	public Double getShortTermInvestments() {
-		return shortTermInvestments;
+	public Double getFinanceAssetsAtFairValueThoughProfitOrLoss() {
+		return financeAssetsAtFairValueThoughProfitOrLoss;
 	}
-	public void setShortTermInvestments(Double shortTermInvestments) {
-		this.shortTermInvestments = shortTermInvestments;
+	public void setFinanceAssetsAtFairValueThoughProfitOrLoss(Double financeAssetsAtFairValueThoughProfitOrLoss) {
+		this.financeAssetsAtFairValueThoughProfitOrLoss = financeAssetsAtFairValueThoughProfitOrLoss;
 	}
-	public Double getAccountsReceivableShortTerm() {
-		return accountsReceivableShortTerm;
+	public Double getHeldToMaturityInvestment() {
+		return heldToMaturityInvestment;
 	}
-	public void setAccountsReceivableShortTerm(Double accountsReceivableShortTerm) {
-		this.accountsReceivableShortTerm = accountsReceivableShortTerm;
+	public void setHeldToMaturityInvestment(Double heldToMaturityInvestment) {
+		this.heldToMaturityInvestment = heldToMaturityInvestment;
 	}
-	public Double getInventories() {
-		return inventories;
+	public Double getLoans() {
+		return loans;
 	}
-	public void setInventories(Double inventories) {
-		this.inventories = inventories;
+	public void setLoans(Double loans) {
+		this.loans = loans;
+	}
+	public Double getAvailableForSaleFinanceAsset() {
+		return availableForSaleFinanceAsset;
+	}
+	public void setAvailableForSaleFinanceAsset(Double availableForSaleFinanceAsset) {
+		this.availableForSaleFinanceAsset = availableForSaleFinanceAsset;
+	}
+	public Double getShortTermAccountReceivable() {
+		return shortTermAccountReceivable;
+	}
+	public void setShortTermAccountReceivable(Double shortTermAccountReceivable) {
+		this.shortTermAccountReceivable = shortTermAccountReceivable;
 	}
 	public Double getOtherCurrentAssets() {
 		return otherCurrentAssets;
@@ -311,11 +296,11 @@ public class NormalReportY implements java.io.Serializable {
 	public void setOtherCurrentAssets(Double otherCurrentAssets) {
 		this.otherCurrentAssets = otherCurrentAssets;
 	}
-	public Double getLongTermAssets() {
-		return longTermAssets;
+	public Double getNonCurrentAssets() {
+		return nonCurrentAssets;
 	}
-	public void setLongTermAssets(Double longTermAssets) {
-		this.longTermAssets = longTermAssets;
+	public void setNonCurrentAssets(Double nonCurrentAssets) {
+		this.nonCurrentAssets = nonCurrentAssets;
 	}
 	public Double getAccountReceivableLongTerm() {
 		return accountReceivableLongTerm;
@@ -383,29 +368,17 @@ public class NormalReportY implements java.io.Serializable {
 	public void setTotalAssets(Double totalAssets) {
 		this.totalAssets = totalAssets;
 	}
+	public Double getLiabilities() {
+		return liabilities;
+	}
+	public void setLiabilities(Double liabilities) {
+		this.liabilities = liabilities;
+	}
 	public Double getCurrentLiabilities() {
 		return currentLiabilities;
 	}
 	public void setCurrentLiabilities(Double currentLiabilities) {
 		this.currentLiabilities = currentLiabilities;
-	}
-	public Double getAccountPayableToSuppliers() {
-		return accountPayableToSuppliers;
-	}
-	public void setAccountPayableToSuppliers(Double accountPayableToSuppliers) {
-		this.accountPayableToSuppliers = accountPayableToSuppliers;
-	}
-	public Double getShortTermAdvancesFromCustomers() {
-		return shortTermAdvancesFromCustomers;
-	}
-	public void setShortTermAdvancesFromCustomers(Double shortTermAdvancesFromCustomers) {
-		this.shortTermAdvancesFromCustomers = shortTermAdvancesFromCustomers;
-	}
-	public Double getShortTermUnearnedRevenue() {
-		return shortTermUnearnedRevenue;
-	}
-	public void setShortTermUnearnedRevenue(Double shortTermUnearnedRevenue) {
-		this.shortTermUnearnedRevenue = shortTermUnearnedRevenue;
 	}
 	public Double getShortTermBorrowingsAndLiabilities() {
 		return shortTermBorrowingsAndLiabilities;
@@ -413,89 +386,17 @@ public class NormalReportY implements java.io.Serializable {
 	public void setShortTermBorrowingsAndLiabilities(Double shortTermBorrowingsAndLiabilities) {
 		this.shortTermBorrowingsAndLiabilities = shortTermBorrowingsAndLiabilities;
 	}
-	public Double getOtherShortTermLiabilities() {
-		return otherShortTermLiabilities;
+	public Double getShortTermTradePayable() {
+		return shortTermTradePayable;
 	}
-	public void setOtherShortTermLiabilities(Double otherShortTermLiabilities) {
-		this.otherShortTermLiabilities = otherShortTermLiabilities;
+	public void setShortTermTradePayable(Double shortTermTradePayable) {
+		this.shortTermTradePayable = shortTermTradePayable;
 	}
 	public Double getLongTermLiabilities() {
 		return longTermLiabilities;
 	}
 	public void setLongTermLiabilities(Double longTermLiabilities) {
 		this.longTermLiabilities = longTermLiabilities;
-	}
-	public Double getLongTermAccountsPayable() {
-		return longTermAccountsPayable;
-	}
-	public void setLongTermAccountsPayable(Double longTermAccountsPayable) {
-		this.longTermAccountsPayable = longTermAccountsPayable;
-	}
-	public Double getLongTermadvancesFromCustomers() {
-		return longTermadvancesFromCustomers;
-	}
-	public void setLongTermadvancesFromCustomers(Double longTermadvancesFromCustomers) {
-		this.longTermadvancesFromCustomers = longTermadvancesFromCustomers;
-	}
-	public Double getLongTermUnearnedRevenue() {
-		return longTermUnearnedRevenue;
-	}
-	public void setLongTermUnearnedRevenue(Double longTermUnearnedRevenue) {
-		this.longTermUnearnedRevenue = longTermUnearnedRevenue;
-	}
-	public Double getLongTermBorrowingsAndLiabilities() {
-		return longTermBorrowingsAndLiabilities;
-	}
-	public void setLongTermBorrowingsAndLiabilities(Double longTermBorrowingsAndLiabilities) {
-		this.longTermBorrowingsAndLiabilities = longTermBorrowingsAndLiabilities;
-	}
-	public Double getOtherLongTermLiabilities() {
-		return otherLongTermLiabilities;
-	}
-	public void setOtherLongTermLiabilities(Double otherLongTermLiabilities) {
-		this.otherLongTermLiabilities = otherLongTermLiabilities;
-	}
-	public Double getEquity() {
-		return equity;
-	}
-	public void setEquity(Double equity) {
-		this.equity = equity;
-	}
-	public Double getShareCapital() {
-		return shareCapital;
-	}
-	public void setShareCapital(Double shareCapital) {
-		this.shareCapital = shareCapital;
-	}
-	public Double getSharePremium() {
-		return sharePremium;
-	}
-	public void setSharePremium(Double sharePremium) {
-		this.sharePremium = sharePremium;
-	}
-	public Double getRetainedProfits() {
-		return retainedProfits;
-	}
-	public void setRetainedProfits(Double retainedProfits) {
-		this.retainedProfits = retainedProfits;
-	}
-	public Double getOtherCapitals() {
-		return otherCapitals;
-	}
-	public void setOtherCapitals(Double otherCapitals) {
-		this.otherCapitals = otherCapitals;
-	}
-	public Double getNonControllingInterest() {
-		return nonControllingInterest;
-	}
-	public void setNonControllingInterest(Double nonControllingInterest) {
-		this.nonControllingInterest = nonControllingInterest;
-	}
-	public Double getTotalResources() {
-		return totalResources;
-	}
-	public void setTotalResources(Double totalResources) {
-		this.totalResources = totalResources;
 	}
 	public Double getNetRevenue() {
 		return netRevenue;

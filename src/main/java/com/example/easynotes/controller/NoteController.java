@@ -2,7 +2,11 @@ package com.example.easynotes.controller;
 
 import com.example.easynotes.exception.ResourceNotFoundException;
 import com.example.easynotes.model.Note;
+import com.example.easynotes.model.vo.ReportFilterInfo;
 import com.example.easynotes.repository.NoteRepository;
+
+import com.example.easynotes.model.FinanceRatioQ;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +20,17 @@ public class NoteController {
 
     @Autowired
     NoteRepository noteRepository;
-
+    
     @GetMapping("/notes")
     public List<Note> getAllNotes() {
         return noteRepository.findAll();
     }
-
+    
+    @RequestMapping(value = "/filter", method = RequestMethod.POST)
+    public List<FinanceRatioQ> getFiltered(@Valid @RequestBody List<ReportFilterInfo> listIn) {
+        return noteRepository.getFinanceRatioFillter(listIn);
+    }
+    
     @PostMapping("/notes")
     public Note createNote(@Valid @RequestBody Note note) {
         return noteRepository.save(note);
@@ -56,4 +65,5 @@ public class NoteController {
 
         return ResponseEntity.ok().build();
     }
+
 }

@@ -1,4 +1,4 @@
-package invalue.core.entities;
+package com.example.easynotes.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -21,14 +21,14 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
-@Table(name = "finance_ratio_q", uniqueConstraints = {@UniqueConstraint(columnNames = "CODE") })
-public class FinanceRatioQ implements java.io.Serializable {
+@Table(name = "finance_ratio_y", uniqueConstraints = {@UniqueConstraint(columnNames = "CODE") })
+public class FinanceRatioY implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
-	private Integer id;
+	private Long id;
 	
 	@Basic
 	@Column(name = "CODE", nullable = false, unique = true, length = 100)
@@ -254,10 +254,10 @@ public class FinanceRatioQ implements java.io.Serializable {
 	@Basic
 	@Column(name = "Z_SCORE", precision = 20, scale = 5)
 	private Double zScore;
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getCode() {

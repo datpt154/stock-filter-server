@@ -1,20 +1,15 @@
-package invalue.core.vo;
+package com.example.easynotes.model.vo;
 
-import java.io.Serializable;
+public class ReportFilterInfo {
 
-public class ReportFilterInfo implements Serializable{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1343859963517305230L;
-	
 	private String code;
-	
+
 	private Double max;
-	
+
 	private Double min;
 
+	  
 	public String getCode() {
 		return code;
 	}
@@ -38,6 +33,6 @@ public class ReportFilterInfo implements Serializable{
 	public void setMin(Double min) {
 		this.min = min;
 	}
-	
+
 	
 }

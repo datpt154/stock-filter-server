@@ -9,6 +9,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class EasyNotesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EasyNotesApplication.class, args);
+		try {
+			SpringApplication.run(EasyNotesApplication.class, args);
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 }
