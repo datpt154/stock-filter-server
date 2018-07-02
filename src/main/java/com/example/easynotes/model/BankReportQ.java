@@ -57,6 +57,14 @@ public class BankReportQ implements java.io.Serializable {
 	private String timeString;
 
 	@Basic
+	@Column(name = "STOCK_CODE", nullable = false, length = 255)
+	private String stockCode;
+
+	@Basic
+	@Column(name = "STOCK_ID", nullable = false)
+	private Integer stockId;
+	
+	@Basic
 	@Column(name = "ASSETS", precision = 20, scale = 5)
 	private Double assets;
 	@Basic
@@ -754,6 +762,22 @@ public class BankReportQ implements java.io.Serializable {
 
 	public void setPaymentsOfDividends(Double paymentsOfDividends) {
 		this.paymentsOfDividends = paymentsOfDividends;
+	}
+
+	public String getStockCode() {
+		return stockCode;
+	}
+
+	public void setStockCode(String stockCode) {
+		this.stockCode = stockCode;
+	}
+
+	public Integer getStockId() {
+		return stockId;
+	}
+
+	public void setStockId(Integer stockId) {
+		this.stockId = stockId;
 	}
 	
 }

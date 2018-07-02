@@ -57,6 +57,14 @@ public class BankReportY implements java.io.Serializable {
 	private String timeString;
 
 	@Basic
+	@Column(name = "STOCK_CODE", nullable = false, length = 255)
+	private String stockCode;
+
+	@Basic
+	@Column(name = "STOCK_ID", nullable = false)
+	private Integer stockId;
+	
+	@Basic
 	@Column(name = "ASSETS", precision = 20, scale = 5)
 	private Double assets;
 	@Basic
@@ -285,5 +293,20 @@ public class BankReportY implements java.io.Serializable {
 
 	public void setTimeString(String timeString) {
 		this.timeString = timeString;
+	}
+	public String getStockCode() {
+		return stockCode;
+	}
+
+	public void setStockCode(String stockCode) {
+		this.stockCode = stockCode;
+	}
+
+	public Integer getStockId() {
+		return stockId;
+	}
+
+	public void setStockId(Integer stockId) {
+		this.stockId = stockId;
 	}
 }

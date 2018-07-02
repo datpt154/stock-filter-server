@@ -26,8 +26,9 @@ public class FinanceRatioQ implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "finance_ratio_q_generator")
+	@SequenceGenerator(name="finance_ratio_q_generator", sequenceName = "finance_ratio_q_seq", allocationSize=1)
+	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
 	@Basic
@@ -55,6 +56,14 @@ public class FinanceRatioQ implements java.io.Serializable {
 	@Basic
 	@Column(name = "TIME_STRING", length = 255)
 	private String timeString;	
+	
+	@Basic
+	@Column(name = "STOCK_CODE", nullable = false, length = 255)
+	private String stockCode;
+
+	@Basic
+	@Column(name = "STOCK_ID", nullable = false)
+	private Integer stockId;
 	
 	@Basic
 	@Column(name = "NET_REVENUE", precision = 20, scale = 5)
@@ -440,10 +449,10 @@ public class FinanceRatioQ implements java.io.Serializable {
 	public void setTotalAssetsYoy(Double totalAssetsYoy) {
 		this.totalAssetsYoy = totalAssetsYoy;
 	}
-	public Double getpE() {
+	public Double getPE() {
 		return pE;
 	}
-	public void setpE(Double pE) {
+	public void setPE(Double pE) {
 		this.pE = pE;
 	}
 	public Double getPeg() {
@@ -452,16 +461,16 @@ public class FinanceRatioQ implements java.io.Serializable {
 	public void setPeg(Double peg) {
 		this.peg = peg;
 	}
-	public Double getpB() {
+	public Double getPB() {
 		return pB;
 	}
-	public void setpB(Double pB) {
+	public void setPB(Double pB) {
 		this.pB = pB;
 	}
-	public Double getpS() {
+	public Double getPS() {
 		return pS;
 	}
-	public void setpS(Double pS) {
+	public void setPS(Double pS) {
 		this.pS = pS;
 	}
 	public Double getEvEbitda() {
@@ -668,29 +677,43 @@ public class FinanceRatioQ implements java.io.Serializable {
 	public void setAllowancesAndProvisionsToNetIncome(Double allowancesAndProvisionsToNetIncome) {
 		this.allowancesAndProvisionsToNetIncome = allowancesAndProvisionsToNetIncome;
 	}
-	public Double getfScore() {
+	public Double getFScore() {
 		return fScore;
 	}
-	public void setfScore(Double fScore) {
+	public void setFScore(Double fScore) {
 		this.fScore = fScore;
 	}
-	public Double getcScore() {
+	public Double getCScore() {
 		return cScore;
 	}
-	public void setcScore(Double cScore) {
+	public void setCScore(Double cScore) {
 		this.cScore = cScore;
 	}
-	public Double getmScore() {
+	public Double getMScore() {
 		return mScore;
 	}
-	public void setmScore(Double mScore) {
+	public void setMScore(Double mScore) {
 		this.mScore = mScore;
 	}
-	public Double getzScore() {
+	public Double getZScore() {
 		return zScore;
 	}
-	public void setzScore(Double zScore) {
+	public void setZScore(Double zScore) {
 		this.zScore = zScore;
 	}
-	
+	public String getStockCode() {
+		return stockCode;
+	}
+
+	public void setStockCode(String stockCode) {
+		this.stockCode = stockCode;
+	}
+
+	public Integer getStockId() {
+		return stockId;
+	}
+
+	public void setStockId(Integer stockId) {
+		this.stockId = stockId;
+	}
 }

@@ -57,6 +57,14 @@ public class FinanceRatioY implements java.io.Serializable {
 	private String timeString;	
 	
 	@Basic
+	@Column(name = "STOCK_CODE", nullable = false, length = 255)
+	private String stockCode;
+
+	@Basic
+	@Column(name = "STOCK_ID", nullable = false)
+	private Integer stockId;
+	
+	@Basic
 	@Column(name = "NET_REVENUE", precision = 20, scale = 5)
 	private Double netRevenue;
 	@Basic
@@ -693,4 +701,19 @@ public class FinanceRatioY implements java.io.Serializable {
 		this.zScore = zScore;
 	}
 	
+	public String getStockCode() {
+		return stockCode;
+	}
+
+	public void setStockCode(String stockCode) {
+		this.stockCode = stockCode;
+	}
+
+	public Integer getStockId() {
+		return stockId;
+	}
+
+	public void setStockId(Integer stockId) {
+		this.stockId = stockId;
+	}
 }
