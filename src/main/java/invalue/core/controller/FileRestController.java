@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import invalue.core.constant.ConstantManager;
+import invalue.core.dto.ApiDTOBuilder;
+import invalue.core.dto.BasicFilterDTO;
 import invalue.core.entity.FinanceRatioQ;
 import invalue.core.repository.FinanceRatioQRepository;
 import invalue.core.vo.ObjectOutput;
@@ -22,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,35 +50,29 @@ public class FileRestController {
     }
     
     @PostMapping("/filter")
-    public ObjectOutput getFiltered(@Valid @RequestBody List<ReportFilterInfo> listIn) {
-    	ObjectOutput out= new ObjectOutput();
-    	if(null==listIn || listIn.isEmpty()) {
-    		out.setCode(200);
-    		out.setMessage("Khong nhan duoc gia tri dau vao");
-    		out.setStatus(-1);
-    		return out;
-    	}
-    	for(int i=0; i<listIn.size(); i++) {
-    		if(!ConstantManager.mapingColumFinanceRatio.containsKey(listIn.get(i).getCode())) {
-    			out.setCode(200);
-        		out.setMessage("Gia tri dau vao khong hop le: "+listIn.get(i).getCode());
-        		out.setStatus(-1);
-        		return out;
-    		}
-    	}
+    public Collection<BasicFilterDTO> getFiltered(@Valid @RequestBody List<ReportFilterInfo> listIn) {
+//    	ObjectOutput out= new ObjectOutput();
+//    	if(null==listIn || listIn.isEmpty()) {
+//    		out.setCode(200);
+//    		out.setMessage("Khong nhan duoc gia tri dau vao");
+//    		out.setStatus(-1);
+//    		return out;
+//    	}
+//    	for(int i=0; i<listIn.size(); i++) {
+//    		if(!ConstantManager.mapingColumFinanceRatio.containsKey(listIn.get(i).getCode())) {
+//    			out.setCode(200);
+//        		out.setMessage("Gia tri dau vao khong hop le: "+listIn.get(i).getCode());
+//        		out.setStatus(-1);
+//        		return out;
+//    		}
+//    	}
     	List<Object> result = financeRatioQRepository.getFinanceRatioFillter(listIn);
-    	List<Object> listData= new ArrayList<Object>();
-    	for(int i=0; i<result.size(); i++) {
-    		Object[] o1=(Object[])result.get(i);
-    		Map<String, Object> object= new HashMap<>();
-    		object.put("Mã", o1[0]);
-    		for(int j=0; j<listIn.size(); j++) {
-    			object.put(listIn.get(j).getTitle(), o1[j+1]);
-    		}
-    		listData.add(object);
-    	}
-    	out.setData(listData);
-        return out;
+    	Collection<BasicFilterDTO> basicFilterDTOs = new ArrayList<>();
+    	for (Object object : result) {
+    		BasicFilterDTO basicFilterDTO = ApiDTOBuilder.convertToDto(object,listIn);
+    		basicFilterDTOs.add(basicFilterDTO);
+		}
+        return basicFilterDTOs;
     }
     
     @PostMapping("/importfile")
