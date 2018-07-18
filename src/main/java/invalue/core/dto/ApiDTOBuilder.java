@@ -23,7 +23,6 @@ public class ApiDTOBuilder {
 		for (int i = 0; i < listIn.size(); i++) {
 			SearchItemDTO searchItem = new SearchItemDTO();
 			searchItem.setCode(listIn.get(i).getCode());
-			searchItem.setTitle(listIn.get(i).getTitle());
 			searchItem.setValue((Double) arrayObject[i+1]);
 
 			basicFilterDTO.getSearchItems().add(searchItem);
