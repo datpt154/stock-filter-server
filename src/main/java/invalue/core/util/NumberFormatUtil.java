@@ -7,7 +7,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 /**
- * @author Nguye Huy
+ * @author Nguyen Phat Huy
  *
  */
 public class NumberFormatUtil {

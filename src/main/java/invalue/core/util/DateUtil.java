@@ -11,7 +11,7 @@ import java.util.Locale;
 
 
 /**
- * @author DuongMinhTu
+ * @author Nguyen Phat Huy
  * 
  */
 public class DateUtil {

@@ -30,7 +30,7 @@ import invalue.core.util.NumberFormatUtil;
 import invalue.core.vo.ReportFilterInfo;
 
 @Component
-public class NoteProcessor {
+public class InvalueCoreProcessor {
 	
     @Autowired
     FinanceRatioQRepository financeRatioQRepository;

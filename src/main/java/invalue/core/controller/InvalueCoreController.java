@@ -13,9 +13,8 @@ import invalue.core.constant.ConstantManager;
 import invalue.core.dto.ApiDTOBuilder;
 import invalue.core.dto.BasicFilterDTO;
 import invalue.core.entity.FinanceRatioQ;
-import invalue.core.processor.NoteProcessor;
+import invalue.core.processor.InvalueCoreProcessor;
 import invalue.core.repository.FinanceRatioQRepository;
-import invalue.core.vo.ObjectOutput;
 import invalue.core.vo.ReportFilterInfo;
 
 import javax.validation.Valid;
@@ -34,14 +33,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
-public class FileRestController {
+public class InvalueCoreController {
 
 //    @Autowired
 //    NoteRepository noteRepository;
     @Autowired
     FinanceRatioQRepository financeRatioQRepository;
     @Autowired
-    NoteProcessor noteProcessor;
+    InvalueCoreProcessor noteProcessor;
     
     @GetMapping("/notes")
     public List<Object> getAllNotes() {
