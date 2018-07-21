@@ -31,10 +31,20 @@ public class FinanceRatioQRepositoryImpl implements FinanceRatioQRepositoryCusto
     	StringBuilder where = new StringBuilder();
     	StringBuilder from = new StringBuilder();
     	List<Object> params = new ArrayList<Object>();
-    	Query query = entityManager.createNativeQuery("", FinanceRatioQ.class);
-    	select.append(" SELECT stock_code, 'Waiting' stock_name, 'Waiting' stock_exchage , MARKET_PRICE");
-    	from.append(" from finance_ratio_q ");
-    	where.append(" where 1=1 ");
+    	Query query = entityManager.createNativeQuery("");
+    	select.append(" SELECT f.stock_code, s.name, s.STOCK_EXCHANGE_CODE , f.MARKET_PRICE");
+    	from.append(" from finance_ratio_q f, stock s ");
+    	where.append(" where 1 = 1 and f.STOCK_CODE = s.code and f.status = 0 ");
+    	where.append("and stock_exchange_code in (");
+    	for(int i=0;i<inputBasicFilterDTO.getStockExchange().length;i++){
+    		if(i == 0) {
+    			where.append(" ?");
+			}else {
+				where.append(", ?");
+			}
+			params.add(inputBasicFilterDTO.getStockExchange()[i]);
+		}
+    	where.append(")");
 		for(int i=0;i<inputBasicFilterDTO.getSearchDataitems().size();i++){
 			//select clause
 			select.append(",").append(inputBasicFilterDTO.getSearchDataitems().get(i).getCode());
@@ -52,5 +62,28 @@ public class FinanceRatioQRepositoryImpl implements FinanceRatioQRepositoryCusto
 
         return query.getResultList();
     }
+
+	@Override
+	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString) {
+		StringBuilder sql = new StringBuilder();
+		Query query = entityManager.createNativeQuery("");
+		List<Object> params = new ArrayList<Object>();
+		sql.append("update finance_ratio_q set status = 1 where TIME_STRING< ? and stock_code in (");
+		params.add(timeString);
+		for(int i=0;i<listCode.size();i++){
+			if(i == 0) {
+				sql.append(" ?");
+			}else {
+				sql.append(", ?");
+			}
+			params.add(listCode.get(i));
+        }
+		sql.append(")");
+		query = entityManager.createNativeQuery(sql.toString());
+		for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+		query.executeUpdate();
+	}
    
 }

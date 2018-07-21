@@ -8,7 +8,7 @@ import invalue.core.vo.ReportFilterInfo;
 public class InputBasicFilterDTO {
 	private List<ReportFilterInfo> searchDataitems;
 	private String time;
-	private String stockExchange;
+	private String[] stockExchange;
 	public List<ReportFilterInfo> getSearchDataitems() {
 		return searchDataitems;
 	}
@@ -21,13 +21,12 @@ public class InputBasicFilterDTO {
 	public void setTime(String time) {
 		this.time = time;
 	}
-	public String getStockExchange() {
+	public String[] getStockExchange() {
 		return stockExchange;
 	}
-	public void setStockExchange(String stockExchange) {
+	public void setStockExchange(String[] stockExchange) {
 		this.stockExchange = stockExchange;
 	}
- 	
 	
 }
 

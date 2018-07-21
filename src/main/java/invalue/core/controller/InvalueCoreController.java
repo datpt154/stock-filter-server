@@ -60,10 +60,14 @@ public class InvalueCoreController {
     	return invalueCoreProcessor.getFiltered(inputBasicFilterDTO);
     }
     
-    @PostMapping("/importfile")
-    public String importFile(@Valid @RequestBody MultipartFile multipartFile, String timeString) {
-    	return invalueCoreProcessor.importFile(multipartFile,timeString);
+    @PostMapping("/importfinanceratio")
+    public String importFinanceratio(@Valid @RequestBody MultipartFile multipartFile) {
+    	return invalueCoreProcessor.importFinanceratio(multipartFile);
     }
     
+    @PostMapping("/importcty")
+    public String importCty(@Valid @RequestBody MultipartFile multipartFile) {
+    	return invalueCoreProcessor.importCty(multipartFile);
+    }
 
 }

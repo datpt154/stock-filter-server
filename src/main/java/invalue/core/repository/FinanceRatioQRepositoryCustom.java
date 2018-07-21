@@ -7,4 +7,5 @@ import invalue.core.vo.ReportFilterInfo;
 
 public interface FinanceRatioQRepositoryCustom {
 	public List<Object> getFinanceRatioFillter(InputBasicFilterDTO inputBasicFilterDTO);
+	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString );
 }
