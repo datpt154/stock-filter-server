@@ -1,34 +1,25 @@
 package invalue.core.controller;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import invalue.core.constant.ConstantManager;
-import invalue.core.dto.ApiDTOBuilder;
-import invalue.core.dto.BasicFilterDTO;
-import invalue.core.entity.FinanceRatioQ;
-import invalue.core.processor.InvalueCoreProcessor;
-import invalue.core.repository.FinanceRatioQRepository;
-import invalue.core.vo.ReportFilterInfo;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.validation.Valid;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import invalue.core.dto.BasicFilterDTO;
+import invalue.core.dto.InputBasicFilterDTO;
+import invalue.core.processor.InvalueCoreProcessor;
+import invalue.core.repository.FinanceRatioQRepository;
+import invalue.core.vo.ReportFilterInfo;
 
 @RestController
 @RequestMapping("/api")
@@ -40,7 +31,7 @@ public class InvalueCoreController {
     @Autowired
     FinanceRatioQRepository financeRatioQRepository;
     @Autowired
-    InvalueCoreProcessor noteProcessor;
+    InvalueCoreProcessor invalueCoreProcessor;
     
     @GetMapping("/notes")
     public List<Object> getAllNotes() {
@@ -50,7 +41,7 @@ public class InvalueCoreController {
     }
     
     @PostMapping("/filter")
-    public Collection<BasicFilterDTO> getFiltered(@Valid @RequestBody List<ReportFilterInfo> listIn) {
+    public Collection<BasicFilterDTO> getFiltered(@Valid @RequestBody InputBasicFilterDTO inputBasicFilterDTO) {
 //    	ObjectOutput out= new ObjectOutput();
 //    	if(null==listIn || listIn.isEmpty()) {
 //    		out.setCode(200);
@@ -66,12 +57,12 @@ public class InvalueCoreController {
 //        		return out;
 //    		}
 //    	}
-    	return noteProcessor.getFiltered(listIn);
+    	return invalueCoreProcessor.getFiltered(inputBasicFilterDTO);
     }
     
     @PostMapping("/importfile")
     public String importFile(@Valid @RequestBody MultipartFile multipartFile, String timeString) {
-    	return noteProcessor.importFile(multipartFile,timeString);
+    	return invalueCoreProcessor.importFile(multipartFile,timeString);
     }
     
 

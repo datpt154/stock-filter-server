@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.entity.FinanceRatioQ;
 import invalue.core.vo.ReportFilterInfo;
 /**
@@ -24,24 +25,24 @@ public class FinanceRatioQRepositoryImpl implements FinanceRatioQRepositoryCusto
     EntityManager entityManager;
    
     @Override
-    public List<Object> getFinanceRatioFillter(List<ReportFilterInfo> listIn) {
+    public List<Object> getFinanceRatioFillter(InputBasicFilterDTO inputBasicFilterDTO) {
     	StringBuilder sql = new StringBuilder();
     	StringBuilder select = new StringBuilder();
     	StringBuilder where = new StringBuilder();
     	StringBuilder from = new StringBuilder();
     	List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("", FinanceRatioQ.class);
-    	select.append(" SELECT stock_code");
+    	select.append(" SELECT stock_code, 'Waiting' stock_name, 'Waiting' stock_exchage , MARKET_PRICE");
     	from.append(" from finance_ratio_q ");
     	where.append(" where 1=1 ");
-		for(int i=0;i<listIn.size();i++){
+		for(int i=0;i<inputBasicFilterDTO.getSearchDataitems().size();i++){
 			//select clause
-			select.append(",").append(listIn.get(i).getCode());
+			select.append(",").append(inputBasicFilterDTO.getSearchDataitems().get(i).getCode());
 			//where clause
-			where.append(" and "+listIn.get(i).getCode()+">= ?" );
-			params.add(listIn.get(i).getSelectedValues()[0]);
-			where.append(" and "+listIn.get(i).getCode()+"<= ?" );
-			params.add(listIn.get(i).getSelectedValues()[1]);
+			where.append(" and "+inputBasicFilterDTO.getSearchDataitems().get(i).getCode()+">= ?" );
+			params.add(inputBasicFilterDTO.getSearchDataitems().get(i).getSelectedValues()[0]);
+			where.append(" and "+inputBasicFilterDTO.getSearchDataitems().get(i).getCode()+"<= ?" );
+			params.add(inputBasicFilterDTO.getSearchDataitems().get(i).getSelectedValues()[1]);
 		}
 		sql.append(select).append(from).append(where);
         query = entityManager.createNativeQuery(sql.toString());

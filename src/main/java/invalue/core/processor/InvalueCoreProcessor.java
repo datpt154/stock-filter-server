@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import invalue.core.dto.ApiDTOBuilder;
 import invalue.core.dto.BasicFilterDTO;
+import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.entity.FinanceRatioQ;
 import invalue.core.repository.FinanceRatioQRepository;
 import invalue.core.util.NumberFormatUtil;
@@ -35,11 +36,11 @@ public class InvalueCoreProcessor {
     @Autowired
     FinanceRatioQRepository financeRatioQRepository;
 	
-    public Collection<BasicFilterDTO> getFiltered(List<ReportFilterInfo> listIn) {    
-    	List<Object> result = financeRatioQRepository.getFinanceRatioFillter(listIn);
+    public Collection<BasicFilterDTO> getFiltered(InputBasicFilterDTO inputBasicFilterDTO) {    
+    	List<Object> result = financeRatioQRepository.getFinanceRatioFillter(inputBasicFilterDTO);
     	Collection<BasicFilterDTO> basicFilterDTOs = new ArrayList<>();
     	for (Object object : result) {
-    		BasicFilterDTO basicFilterDTO = ApiDTOBuilder.convertToDto(object,listIn);
+    		BasicFilterDTO basicFilterDTO = ApiDTOBuilder.convertToDto(object,inputBasicFilterDTO.getSearchDataitems());
     		basicFilterDTOs.add(basicFilterDTO);
 		}
         return basicFilterDTOs;

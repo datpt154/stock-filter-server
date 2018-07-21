@@ -16,14 +16,16 @@ public class ApiDTOBuilder {
 		BasicFilterDTO basicFilterDTO = new BasicFilterDTO();
 
 		Object[] arrayObject = (Object[]) object;
-		basicFilterDTO.setCompanyName("FPT company");
 		basicFilterDTO.setCompanyCode((String) arrayObject[0]);
+		basicFilterDTO.setCompanyName((String) arrayObject[1]);
+		basicFilterDTO.setStockExchange((String) arrayObject[2]);
+		basicFilterDTO.setPrice((Double) arrayObject[3]);
 		basicFilterDTO.setSearchItems(new ArrayList<>());
 
 		for (int i = 0; i < listIn.size(); i++) {
 			SearchItemDTO searchItem = new SearchItemDTO();
 			searchItem.setCode(listIn.get(i).getCode());
-			searchItem.setValue((Double) arrayObject[i+1]);
+			searchItem.setValue((Double) arrayObject[i+3]);
 
 			basicFilterDTO.getSearchItems().add(searchItem);
 		}
