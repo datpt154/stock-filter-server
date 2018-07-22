@@ -36,13 +36,13 @@ public class FinanceRatioYRepositoryImpl implements FinanceRatioYRepositoryCusto
     	from.append(" from finance_ratio_y f, stock s ");
     	where.append(" where 1 = 1 and f.STOCK_CODE = s.code and f.status = 0 ");
     	where.append("and stock_exchange_code in (");
-    	for(int i=0;i<inputBasicFilterDTO.getStockExchange().length;i++){
+    	for(int i=0;i<inputBasicFilterDTO.getStockExchanges().length;i++){
     		if(i == 0) {
     			where.append(" ?");
 			}else {
 				where.append(", ?");
 			}
-			params.add(inputBasicFilterDTO.getStockExchange()[i]);
+			params.add(inputBasicFilterDTO.getStockExchanges()[i]);
 		}
     	where.append(")");
 		for(int i=0;i<inputBasicFilterDTO.getSearchDataitems().size();i++){
