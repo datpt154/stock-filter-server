@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,11 +19,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import invalue.core.dto.ApiDTOBuilder;
 import invalue.core.dto.BasicFilterDTO;
+import invalue.core.dto.CompareFilterDTO;
 import invalue.core.dto.InputBasicFilterDTO;
+import invalue.core.dto.InputCompareFilterDTO;
+import invalue.core.dto.ObjectOutPutDTO;
+import invalue.core.dto.SearchItemDTO;
 import invalue.core.entity.FinanceRatioQ;
 import invalue.core.entity.FinanceRatioY;
 import invalue.core.entity.Stock;
@@ -50,11 +58,56 @@ public class InvalueCoreProcessor {
     	Collection<BasicFilterDTO> basicFilterDTOs = new ArrayList<>();
     	if(!result.isEmpty()) {
 	    	for (Object object : result) {
-	    		BasicFilterDTO basicFilterDTO = ApiDTOBuilder.convertToDto(object,inputBasicFilterDTO.getSearchDataitems());
+	    		BasicFilterDTO basicFilterDTO = ApiDTOBuilder.convertToBasicFilterDTOToDto(object,inputBasicFilterDTO.getSearchDataitems());
 	    		basicFilterDTOs.add(basicFilterDTO);
 			}
     	}
         return basicFilterDTOs;
+    }
+    
+    public List<CompareFilterDTO> getCompareFiltered(InputCompareFilterDTO inputCompareFilterDTO){
+    	List<Object> result;
+    	if("quarter".toUpperCase().equals(inputCompareFilterDTO.getTime().toUpperCase())) {
+    		result = financeRatioQRepository.getCompareFillter(inputCompareFilterDTO);
+    	}
+    	else {
+    		result = financeRatioYRepository.getCompareFillter(inputCompareFilterDTO);
+    	}
+    	CompareFilterDTO sumCompareFilterDTO= new CompareFilterDTO();
+    	ArrayList<SearchItemDTO> sumList = new ArrayList<>();
+    	List<CompareFilterDTO> compareFilterDTOs = new ArrayList<>();
+    	if(!result.isEmpty()) {
+	    	for (Object object : result) {
+	    		CompareFilterDTO compareFilterDTO = ApiDTOBuilder.convertToCompareFilterDTO(object,inputCompareFilterDTO.getSearchDataitems());
+	    		compareFilterDTOs.add(compareFilterDTO);
+			}
+	    	for (int i=0;i<compareFilterDTOs.size();i++) {
+	    		if(i==0) {
+	    			sumCompareFilterDTO.setSearchItems(new ArrayList<>());
+	    			sumCompareFilterDTO.setPrice(compareFilterDTOs.get(i).getPrice());
+	    			for(int j=0;j<compareFilterDTOs.get(i).getSearchItems().size();j++) {
+	    				SearchItemDTO searchItem = new SearchItemDTO();
+	    				searchItem.setCode(compareFilterDTOs.get(i).getSearchItems().get(j).getCode());
+	    				searchItem.setValue(compareFilterDTOs.get(i).getSearchItems().get(j).getValue());
+//	    				sumCompareFilterDTO.getSearchItems().add(compareFilterDTOs.get(i).getSearchItems().get(j));
+	    				sumCompareFilterDTO.getSearchItems().add(searchItem);
+    	    		}
+    			}else {
+    				for(int j=0;j<compareFilterDTOs.get(i).getSearchItems().size();j++) {
+    					sumCompareFilterDTO.getSearchItems().get(j).setValue(sumCompareFilterDTO.getSearchItems().get(j).getValue()+compareFilterDTOs.get(i).getSearchItems().get(j).getValue());
+    	    		}
+    			}
+	    		sumCompareFilterDTO.setPrice(sumCompareFilterDTO.getPrice()+compareFilterDTOs.get(i).getPrice());
+	    	}
+	    	sumCompareFilterDTO.setCompanyCode("Trung binh");
+	    	int totalItem=compareFilterDTOs.size();
+	    	sumCompareFilterDTO.setPrice(NumberFormatUtil.formatDouble(sumCompareFilterDTO.getPrice()/totalItem,2));
+	    	for(int i=0;i<sumCompareFilterDTO.getSearchItems().size();i++) {
+	    		sumCompareFilterDTO.getSearchItems().get(i).setValue(NumberFormatUtil.formatDouble(sumCompareFilterDTO.getSearchItems().get(i).getValue()/totalItem,2));
+	    	}
+	    	compareFilterDTOs.add(sumCompareFilterDTO);
+    	}
+        return compareFilterDTOs;
     }
     
     @Transactional
@@ -274,7 +327,7 @@ public class InvalueCoreProcessor {
     	}catch(Exception ex) {
 			System.out.println(ex);
 		}
-		return "abc";
+		return "import file thanh cong";
 	}
 	
 	public String importCty(MultipartFile multipartFile) {
@@ -331,7 +384,21 @@ public class InvalueCoreProcessor {
     	}catch(Exception ex) {
 			System.out.println(ex);
 		}
-		return "abc";
+		return "import file thanh cong";
+	}
+	
+	public List<ObjectOutPutDTO> autoCompleteStock(String searchPattern) {
+		List<Object> result = stockRepository.autoCompleteStock(searchPattern);
+    	
+		List<ObjectOutPutDTO> objectOutPutDTOs = new ArrayList<>();
+    	if(!result.isEmpty()) {
+	    	for (Object object : result) {
+	    		ObjectOutPutDTO basicFilterDTO = ApiDTOBuilder.convertToObjectOutPutDTO(object);
+	    		objectOutPutDTOs.add(basicFilterDTO);
+			}
+    	}
+        return objectOutPutDTOs;
+		
 	}
 	
 	public File convert(MultipartFile file)

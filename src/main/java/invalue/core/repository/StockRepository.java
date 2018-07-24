@@ -12,7 +12,7 @@ import invalue.core.entity.Stock;
  */
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Long> {
+public interface StockRepository extends JpaRepository<Stock, Long>, StockRepositoryCustom {
 
 //    @Query("SELECT p FROM Note p WHERE 1=2")
 //    public List<Note> find1();
