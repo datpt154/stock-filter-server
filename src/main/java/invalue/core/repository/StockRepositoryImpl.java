@@ -21,7 +21,7 @@ public class StockRepositoryImpl implements StockRepositoryCustom {
 	public List<Object> autoCompleteStock(String searchPattern) {
 		StringBuilder sql = new StringBuilder();
     	Query query = entityManager.createNativeQuery("");
-    	sql.append(" select id,code,name from stock where code like ? or Name like ? ");
+    	sql.append(" select id,code,name from stock where code like ? or Name_Text like ? ");
     	
 		
         query = entityManager.createNativeQuery(sql.toString());

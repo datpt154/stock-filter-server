@@ -52,6 +52,10 @@ public class Stock implements java.io.Serializable {
 	private String name;
 	
 	@Basic
+	@Column(name = "NAME_TEXT", nullable = false)
+	private String nameText;
+	
+	@Basic
 	@Column(name = "STOCK_EXCHANGE_CODE", nullable = false)
 	private String stockExchangeCode;
 
@@ -117,6 +121,14 @@ public class Stock implements java.io.Serializable {
 
 	public void setStockExchangeCode(String stockExchangeCode) {
 		this.stockExchangeCode = stockExchangeCode;
+	}
+
+	public String getNameText() {
+		return nameText;
+	}
+
+	public void setNameText(String nameText) {
+		this.nameText = nameText;
 	}
 
 	

@@ -31,6 +31,7 @@ import invalue.core.repository.FinanceRatioQRepository;
 import invalue.core.repository.FinanceRatioYRepository;
 import invalue.core.repository.StockRepository;
 import invalue.core.util.NumberFormatUtil;
+import invalue.core.util.Unicode2English;
 
 @Component
 public class InvalueCoreProcessor {
@@ -349,7 +350,9 @@ public class InvalueCoreProcessor {
 			    	stock.setStatus(0);
 			    	stock.setCreatedTime(new Date());
 			    	stock.setName(row.getCell(1).getStringCellValue());
+			    	stock.setNameText(Unicode2English.removeDau(stock.getName()));
 			    	stock.setStockExchangeCode(row.getCell(2).getStringCellValue());
+			    	
 //			    	if("HOSE".equals(row.getCell(2).getStringCellValue())) {
 //			    		stock.setStockExchangeId(1);
 //			    	}
@@ -383,7 +386,7 @@ public class InvalueCoreProcessor {
 	}
 	
 	public List<ObjectOutPutDTO> autoCompleteStock(String searchPattern) {
-		List<Object> result = stockRepository.autoCompleteStock(searchPattern);
+		List<Object> result = stockRepository.autoCompleteStock(searchPattern.toUpperCase());
     	
 		List<ObjectOutPutDTO> objectOutPutDTOs = new ArrayList<>();
     	if(!result.isEmpty()) {
