@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +26,6 @@ import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.processor.InvalueCoreProcessor;
 import invalue.core.repository.FinanceRatioQRepository;
-import invalue.core.vo.ReportFilterInfo;
 
 @RestController
 @RequestMapping("/api")

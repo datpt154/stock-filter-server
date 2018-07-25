@@ -2,10 +2,6 @@ package invalue.core.dto;
 
 import java.util.ArrayList;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 //@Getter @Setter
 public class CompareFilterDTO {
 	private String companyCode;

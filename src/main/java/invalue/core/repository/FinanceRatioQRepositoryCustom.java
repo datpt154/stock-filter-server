@@ -4,7 +4,6 @@ import java.util.List;
 
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
-import invalue.core.vo.ReportFilterInfo;
 
 public interface FinanceRatioQRepositoryCustom {
 	public List<Object> getFinanceRatioFillter(InputBasicFilterDTO inputBasicFilterDTO);

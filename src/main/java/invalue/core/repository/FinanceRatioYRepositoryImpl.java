@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
-import invalue.core.entity.FinanceRatioQ;
-import invalue.core.vo.ReportFilterInfo;
 /**
  * Created by gkatzioura on 6/3/16.
  */

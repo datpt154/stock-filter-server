@@ -1,8 +1,5 @@
 package invalue.core.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -16,9 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name = "finance_ratio_y", uniqueConstraints = {@UniqueConstraint(columnNames = "CODE") })

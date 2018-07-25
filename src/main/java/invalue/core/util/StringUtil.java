@@ -1,32 +1,7 @@
 
 package invalue.core.util;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.codec.digest.DigestUtils;
 
 
 /**
