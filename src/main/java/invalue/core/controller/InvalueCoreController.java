@@ -11,12 +11,14 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.model.Note;
 import com.google.gson.Gson;
 
 import invalue.core.dto.BasicFilterDTO;
@@ -76,16 +78,17 @@ public class InvalueCoreController {
     	return invalueCoreProcessor.importCty(multipartFile);
     }
     
-    @PostMapping("/autocompletestock")
-    public List<ObjectOutPutDTO> autoCompleteStock(@Valid @RequestBody String searchPattern) {
-    	
+//    @GetMapping("/autocompletestock")
+//    public List<ObjectOutPutDTO> autoCompleteStock(@Valid @RequestBody String searchPattern) {
+    @GetMapping("/autocompletestock/{searchPattern}")
+    public List<ObjectOutPutDTO> autoCompleteStock(@PathVariable(value = "searchPattern") String searchPattern) {
 		
-		Gson gson = new Gson();
-		Map<String,Object> map = new HashMap<String,Object>();
-		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
-		String searchCode=(String) map.get("searchPattern");
+//		Gson gson = new Gson();
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
+//		String searchCode=(String) map.get("searchPattern");
     	
-    	return invalueCoreProcessor.autoCompleteStock(searchCode);
+    	return invalueCoreProcessor.autoCompleteStock(searchPattern);
     }
     
     @PostMapping("/Compare")
