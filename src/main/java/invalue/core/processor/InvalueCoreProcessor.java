@@ -92,8 +92,9 @@ public class InvalueCoreProcessor {
     				for(int j=0;j<compareFilterDTOs.get(i).getSearchItems().size();j++) {
     					sumCompareFilterDTO.getSearchItems().get(j).setValue(sumCompareFilterDTO.getSearchItems().get(j).getValue()+compareFilterDTOs.get(i).getSearchItems().get(j).getValue());
     	    		}
+    				sumCompareFilterDTO.setPrice(sumCompareFilterDTO.getPrice()+compareFilterDTOs.get(i).getPrice());
     			}
-	    		sumCompareFilterDTO.setPrice(sumCompareFilterDTO.getPrice()+compareFilterDTOs.get(i).getPrice());
+	    		
 	    	}
 	    	sumCompareFilterDTO.setCompanyCode("Trung binh");
 	    	int totalItem=compareFilterDTOs.size();

@@ -101,10 +101,10 @@ public class FinanceRatioQRepositoryImpl implements FinanceRatioQRepositoryCusto
 			//select clause
 			select.append(",").append(inputCompareFilterDTO.getSearchDataitems().get(i).getCode());
 			//where clause
-			where.append(" and "+inputCompareFilterDTO.getSearchDataitems().get(i).getCode()+">= ?" );
-			params.add(inputCompareFilterDTO.getSearchDataitems().get(i).getSelectedValues()[0]);
-			where.append(" and "+inputCompareFilterDTO.getSearchDataitems().get(i).getCode()+"<= ?" );
-			params.add(inputCompareFilterDTO.getSearchDataitems().get(i).getSelectedValues()[1]);
+//			where.append(" and "+inputCompareFilterDTO.getSearchDataitems().get(i).getCode()+">= ?" );
+//			params.add(inputCompareFilterDTO.getSearchDataitems().get(i).getSelectedValues()[0]);
+//			where.append(" and "+inputCompareFilterDTO.getSearchDataitems().get(i).getCode()+"<= ?" );
+//			params.add(inputCompareFilterDTO.getSearchDataitems().get(i).getSelectedValues()[1]);
 		}
 		
 		where.append(" and STOCK_CODE in( " );
