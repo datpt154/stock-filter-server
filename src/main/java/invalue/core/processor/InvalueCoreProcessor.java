@@ -26,9 +26,11 @@ import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.SearchItemDTO;
 import invalue.core.entity.FinanceRatioQ;
 import invalue.core.entity.FinanceRatioY;
+import invalue.core.entity.NormalReportY;
 import invalue.core.entity.Stock;
 import invalue.core.repository.FinanceRatioQRepository;
 import invalue.core.repository.FinanceRatioYRepository;
+import invalue.core.repository.NormalReportYRepository;
 import invalue.core.repository.StockRepository;
 import invalue.core.util.NumberFormatUtil;
 import invalue.core.util.Unicode2English;
@@ -42,6 +44,9 @@ public class InvalueCoreProcessor {
     FinanceRatioYRepository financeRatioYRepository;
     @Autowired
     StockRepository stockRepository;
+    @Autowired
+    NormalReportYRepository normalReportYRepository;
+    
 	
     public Collection<BasicFilterDTO> getFiltered(InputBasicFilterDTO inputBasicFilterDTO) {
     	List<Object> result;
@@ -385,6 +390,127 @@ public class InvalueCoreProcessor {
 		}
 		return "import file thanh cong";
 	}
+	
+	@Transactional
+	public String importReportCty(MultipartFile multipartFile) {
+		try {
+	    	if(multipartFile!=null) {
+			    File file= convert(multipartFile);
+			    
+			    if(null==file) {
+			    	return "false";
+			    }
+			    FileInputStream input = new FileInputStream(file.getPath());
+			    Workbook workbook = new XSSFWorkbook(input);
+			    Sheet sheet = workbook.getSheetAt(0);
+			    List<String> listUpdateOld= new ArrayList<>();
+			    int rowIndex=-1;
+			    String timeString=file.getName();
+			    timeString=timeString.split("\\.")[0];
+			    if(timeString.contains("Q")) {
+			    	
+			    }else if(timeString.contains("Y")) {
+			    	
+			    	for (Row row : sheet) {
+				    	rowIndex++;
+				    	if(rowIndex<3) {
+				    		continue;
+				    	}
+				    	if(null==row.getCell(0)) {
+				    		break;
+				    	}
+				    	NormalReportY normalReportY = new NormalReportY();
+				    	normalReportY.setStockCode(row.getCell(0).getStringCellValue());
+				    	System.out.println("row:"+normalReportY.getStockCode()); 
+				    	normalReportY.setCode(normalReportY.getStockCode()+timeString);
+				    	normalReportY.setType(1);
+				    	
+//				    	if(null != row.getCell(1) && "NEW".equals(row.getCell(1).getStringCellValue())) {
+//				    		listUpdateOld.add(financeRatioY.getStockCode());
+//				    		financeRatioY.setStatus(0);
+//				    	}else {
+				    		normalReportY.setStatus(1);
+//				    	}
+				    	normalReportY.setCreatedTime(new Date());
+				    	normalReportY.setTimeString(timeString);
+				    	normalReportY.setStockId(1);
+				    	
+				    	normalReportY.setCurrentAsset(NumberFormatUtil.formatDouble(row.getCell(2).getNumericCellValue(),1));
+				    	normalReportY.setCashAndCashEquivalents(NumberFormatUtil.formatDouble(row.getCell(3).getNumericCellValue(),1));
+				    	normalReportY.setShortTermInvestments(NumberFormatUtil.formatDouble(row.getCell(4).getNumericCellValue(),1));
+				    	normalReportY.setAccountsReceivableShortTerm(NumberFormatUtil.formatDouble(row.getCell(5).getNumericCellValue(),1));
+				    	normalReportY.setInventories(NumberFormatUtil.formatDouble(row.getCell(6).getNumericCellValue(),1));
+				    	normalReportY.setOtherCurrentAssets(NumberFormatUtil.formatDouble(row.getCell(7).getNumericCellValue(),1));
+				    	normalReportY.setLongTermAssets(NumberFormatUtil.formatDouble(row.getCell(12).getNumericCellValue(),1));
+				    	normalReportY.setAccountReceivableLongTerm(NumberFormatUtil.formatDouble(row.getCell(13).getNumericCellValue(),1));
+				    	normalReportY.setFixedAssets(NumberFormatUtil.formatDouble(row.getCell(14).getNumericCellValue(),1));
+				    	normalReportY.setTangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
+				    	normalReportY.setFinanceTangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
+				    	normalReportY.setIntangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
+				    	normalReportY.setInvestmentProperty(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue(),1));
+				    	normalReportY.setContructionInProgress(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue(),1));
+				    	normalReportY.setLongTermInvestment(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue(),1));
+				    	normalReportY.setGoodWill(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue(),1));
+				    	normalReportY.setOtherLongTermAssets(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue(),1));
+				    	normalReportY.setTotalAssets(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue(),1));
+				    	normalReportY.setCurrentLiabilities(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue(),1));
+				    	normalReportY.setAccountPayableToSuppliers(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
+				    	normalReportY.setShortTermAdvancesFromCustomers(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
+				    	normalReportY.setShortTermUnearnedRevenue(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
+				    	normalReportY.setShortTermBorrowingsAndLiabilities(NumberFormatUtil.formatDouble(row.getCell(29).getNumericCellValue(),1));
+				    	normalReportY.setOtherShortTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(30).getNumericCellValue(),1));
+				    	normalReportY.setLongTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(31).getNumericCellValue(),1));
+				    	normalReportY.setLongTermAccountsPayable(NumberFormatUtil.formatDouble(row.getCell(32).getNumericCellValue(),1));
+				    	normalReportY.setLongTermadvancesFromCustomers(NumberFormatUtil.formatDouble(row.getCell(33).getNumericCellValue(),1));
+				    	normalReportY.setLongTermUnearnedRevenue(NumberFormatUtil.formatDouble(row.getCell(34).getNumericCellValue(),1));
+				    	normalReportY.setLongTermBorrowingsAndLiabilities(NumberFormatUtil.formatDouble(row.getCell(35).getNumericCellValue(),1));
+				    	normalReportY.setOtherLongTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(36).getNumericCellValue(),1));
+				    	normalReportY.setEquity(NumberFormatUtil.formatDouble(row.getCell(37).getNumericCellValue(),1));
+				    	normalReportY.setShareCapital(NumberFormatUtil.formatDouble(row.getCell(38).getNumericCellValue(),1));
+				    	normalReportY.setSharePremium(NumberFormatUtil.formatDouble(row.getCell(39).getNumericCellValue(),1));
+				    	normalReportY.setRetainedProfits(NumberFormatUtil.formatDouble(row.getCell(40).getNumericCellValue(),1));
+				    	normalReportY.setOtherCapitals(NumberFormatUtil.formatDouble(row.getCell(41).getNumericCellValue(),1));
+				    	normalReportY.setNonControllingInterest(NumberFormatUtil.formatDouble(row.getCell(42).getNumericCellValue(),1));
+				    	normalReportY.setTotalResources(NumberFormatUtil.formatDouble(row.getCell(43).getNumericCellValue(),1));
+				    	normalReportY.setNetRevenue(NumberFormatUtil.formatDouble(row.getCell(46).getNumericCellValue(),1));
+				    	normalReportY.setCostOfSales(NumberFormatUtil.formatDouble(row.getCell(47).getNumericCellValue(),1));
+				    	normalReportY.setGrossProfit(NumberFormatUtil.formatDouble(row.getCell(48).getNumericCellValue(),1));
+				    	normalReportY.setFinancialIncome(NumberFormatUtil.formatDouble(row.getCell(49).getNumericCellValue(),1));
+				    	normalReportY.setFinancialExpenses(NumberFormatUtil.formatDouble(row.getCell(50).getNumericCellValue(),1));
+				    	normalReportY.setInWhichInterestExpense(NumberFormatUtil.formatDouble(row.getCell(51).getNumericCellValue(),1));
+				    	normalReportY.setShareOfProfitInAssociates(NumberFormatUtil.formatDouble(row.getCell(52).getNumericCellValue(),1));
+				    	normalReportY.setSellingExpenses(NumberFormatUtil.formatDouble(row.getCell(53).getNumericCellValue(),1));
+				    	normalReportY.setGeneralAndAdministrationExpenses(NumberFormatUtil.formatDouble(row.getCell(54).getNumericCellValue(),1));
+				    	normalReportY.setNetOperatingProfit(NumberFormatUtil.formatDouble(row.getCell(55).getNumericCellValue(),1));
+				    	normalReportY.setOtherIncome(NumberFormatUtil.formatDouble(row.getCell(56).getNumericCellValue(),1));
+				    	normalReportY.setProfitBeforeTax(NumberFormatUtil.formatDouble(row.getCell(57).getNumericCellValue(),1));
+				    	normalReportY.setIncomeTaxExpense(NumberFormatUtil.formatDouble(row.getCell(58).getNumericCellValue(),1));
+				    	normalReportY.setNetProfitAfterTax(NumberFormatUtil.formatDouble(row.getCell(59).getNumericCellValue(),1));
+				    	normalReportY.setMinorityInterest(NumberFormatUtil.formatDouble(row.getCell(60).getNumericCellValue(),1));
+				    	normalReportY.setNetIncome(NumberFormatUtil.formatDouble(row.getCell(61).getNumericCellValue(),1));
+				    	normalReportY.setDepreciation(NumberFormatUtil.formatDouble(row.getCell(65).getNumericCellValue(),1));
+				    	normalReportY.setAllowancesAndProvisions(NumberFormatUtil.formatDouble(row.getCell(66).getNumericCellValue(),1));
+				    	normalReportY.setNetCashFlowsFromOperatingActivities(NumberFormatUtil.formatDouble(row.getCell(67).getNumericCellValue(),1));
+				    	normalReportY.setNetCashFlowsFromInvestingActivities(NumberFormatUtil.formatDouble(row.getCell(68).getNumericCellValue(),1));
+				    	normalReportY.setNetCashFlowsFromFinancingActivities(NumberFormatUtil.formatDouble(row.getCell(69).getNumericCellValue(),1));
+				    	normalReportY.setNetCashFlows(NumberFormatUtil.formatDouble(row.getCell(70).getNumericCellValue(),1));
+				    	normalReportY.setPaymentsOfDividends(NumberFormatUtil.formatDouble(row.getCell(71).getNumericCellValue(),1));
+
+
+				    	normalReportYRepository.save(normalReportY);
+				    }
+				    
+			    }
+			    
+			    workbook.close();
+			    
+	    	}
+    	}catch(Exception ex) {
+			System.out.println(ex);
+		}
+		return "import file thanh cong";
+	}
+	
 	
 	public List<ObjectOutPutDTO> autoCompleteStock(String searchPattern) {
 		List<Object> result = stockRepository.autoCompleteStock(searchPattern.toUpperCase());

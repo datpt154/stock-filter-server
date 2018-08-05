@@ -73,6 +73,11 @@ public class InvalueCoreController {
     	return invalueCoreProcessor.importCty(multipartFile);
     }
     
+    @PostMapping("/importreportcty")
+    public String importReportCty(@Valid @RequestBody MultipartFile multipartFile) {
+    	return invalueCoreProcessor.importReportCty(multipartFile);
+    }
+    
 //    @GetMapping("/autocompletestock")
 //    public List<ObjectOutPutDTO> autoCompleteStock(@Valid @RequestBody String searchPattern) {
     @GetMapping("/autocompletestock/{searchPattern}")

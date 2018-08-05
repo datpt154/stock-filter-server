@@ -8,7 +8,9 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,8 +22,9 @@ public class NormalReportQ implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "normal_report_q_generator")
+	@SequenceGenerator(name="normal_report_q_generator", sequenceName = "normal_report_q_seq", allocationSize=1)
+	@Column(name = "id", updatable = false, nullable = false)
 	private Integer id;
 	
 	@Basic
@@ -232,6 +235,9 @@ public class NormalReportQ implements java.io.Serializable {
 	@Basic
 	@Column(name = "NET_CASH_FLOWS_FROM_FINANCING_ACTIVITIES", precision = 20, scale = 5)
 	private Double netCashFlowsFromFinancingActivities;
+	@Basic
+	@Column(name = "NET_CASH_FLOWS", precision = 20, scale = 5)
+	private Double netCashFlows;
 	@Basic
 	@Column(name = "PAYMENTS_OF_DIVIDENDS", precision = 20, scale = 5)
 	private Double paymentsOfDividends;
@@ -647,4 +653,13 @@ public class NormalReportQ implements java.io.Serializable {
 	public void setStockId(Integer stockId) {
 		this.stockId = stockId;
 	}
+	
+	public Double getNetCashFlows() {
+		return netCashFlows;
+	}
+	
+	public void setNetCashFlows(Double netCashFlows) {
+		this.netCashFlows = netCashFlows;
+	}
+	
 }
