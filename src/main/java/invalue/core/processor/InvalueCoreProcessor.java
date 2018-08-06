@@ -23,6 +23,7 @@ import invalue.core.dto.CompareFilterDTO;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.ObjectOutPutDTO;
+import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.dto.SearchItemDTO;
 import invalue.core.entity.FinanceRatioQ;
 import invalue.core.entity.FinanceRatioY;
@@ -523,6 +524,32 @@ public class InvalueCoreProcessor {
 			}
     	}
         return objectOutPutDTOs;
+		
+	}
+	
+	public ObjectOutPutDetailStockDTO detailStock(String code) {
+		// List<Object> result = stockRepository.autoCompleteStock(searchPattern.toUpperCase());
+		ObjectOutPutDetailStockDTO out = new ObjectOutPutDetailStockDTO();
+		List<String> header= new ArrayList<>();
+		header.add("Year End 30th Sep");
+		header.add("2012");
+		header.add("2013");
+		header.add("2014");
+		header.add("2015");
+		out.setHeaders(header);
+		
+		List<Object> result =normalReportYRepository.searchReportData("ABC");
+		List<Object> data = new ArrayList<>();
+    	if(!result.isEmpty()) {
+	    	for (Object object : result) {
+	    		data.add(object);
+//	    		ObjectOutPutDTO basicFilterDTO = ApiDTOBuilder.convertToObjectOutPutDTO(object);
+//	    		objectOutPutDTOs.add(basicFilterDTO);
+			}
+    	}
+    	out.setRows(data);
+		
+        return out;
 		
 	}
 	

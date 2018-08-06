@@ -12,7 +12,7 @@ import invalue.core.entity.NormalReportY;
  */
 
 @Repository
-public interface NormalReportYRepository extends JpaRepository<NormalReportY, Long> {
+public interface NormalReportYRepository extends JpaRepository<NormalReportY, Long>,NormalReportYCustom {
 
 //    @Query("SELECT p FROM Note p WHERE 1=2")
 //    public List<Note> find1();

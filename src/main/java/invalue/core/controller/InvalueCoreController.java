@@ -21,6 +21,7 @@ import invalue.core.dto.CompareFilterDTO;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.ObjectOutPutDTO;
+import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.processor.InvalueCoreProcessor;
 import invalue.core.repository.FinanceRatioQRepository;
 
@@ -89,6 +90,17 @@ public class InvalueCoreController {
 //		String searchCode=(String) map.get("searchPattern");
     	
     	return invalueCoreProcessor.autoCompleteStock(searchPattern);
+    }
+    
+    @GetMapping("/detailstock/{code}")
+    public ObjectOutPutDetailStockDTO detailStock(@PathVariable(value = "code") String code) {
+		
+//		Gson gson = new Gson();
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
+//		String searchCode=(String) map.get("searchPattern");
+    	
+    	return invalueCoreProcessor.detailStock(code);
     }
     
     @PostMapping("/Compare")
