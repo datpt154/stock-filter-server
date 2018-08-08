@@ -531,18 +531,168 @@ public class InvalueCoreProcessor {
 		// List<Object> result = stockRepository.autoCompleteStock(searchPattern.toUpperCase());
 		ObjectOutPutDetailStockDTO out = new ObjectOutPutDetailStockDTO();
 		List<String> header= new ArrayList<>();
+		List<Object> resultHeader =normalReportYRepository.searchHeaderReportData(code);
+		
 		header.add("Year End 30th Sep");
-		header.add("2012");
-		header.add("2013");
-		header.add("2014");
-		header.add("2015");
+		if(!resultHeader.isEmpty()) {
+			for (Object object : resultHeader) {
+				header.add(object.toString());
+			}
+		}
+//		header.add("2012");
+//		header.add("2013");
+//		header.add("2014");
+//		header.add("2015");
 		out.setHeaders(header);
 		
-		List<Object> result =normalReportYRepository.searchReportData("ABC");
-		List<Object> data = new ArrayList<>();
+		List<Object> result =normalReportYRepository.searchReportData(code);
+		List<List<Object>> data = new ArrayList<>();
     	if(!result.isEmpty()) {
+    		List<Object> ls0= new ArrayList<>();
+    		ls0.add("Revenue");
+    		ls0.add("$b");
+    		data.add(ls0);
+    		List<Object> ls1= new ArrayList<>();
+    		ls1.add("Operating Profit");
+    		ls1.add("$b");
+    		data.add(ls1);
+    		List<Object> ls2= new ArrayList<>();
+    		ls2.add("Net Profit");
+    		ls2.add("$b");
+    		data.add(ls2);
+    		List<Object> ls3= new ArrayList<>();
+    		ls3.add("Balance Sheet");
+    		data.add(ls3);
+    		List<Object> ls4= new ArrayList<>();
+    		ls4.add("Total asset");
+    		ls4.add("$b");
+    		data.add(ls4);
+    		List<Object> ls5= new ArrayList<>();
+    		ls5.add("Current asset");
+    		ls5.add("$b");
+    		data.add(ls5);
+    		List<Object> ls6= new ArrayList<>();
+    		ls6.add("Long-term asset");
+    		ls6.add("$b");
+    		data.add(ls6);
+    		List<Object> ls7= new ArrayList<>();
+    		ls7.add("Current liabilities");
+    		ls7.add("$b");
+    		data.add(ls7);
+    		List<Object> ls8= new ArrayList<>();
+    		ls8.add("Long-term liabilities ");
+    		ls8.add("$b");
+    		data.add(ls8);
+    		List<Object> ls9= new ArrayList<>();
+    		ls9.add("Equity");
+    		ls9.add("$b");
+    		data.add(ls9);
+    		List<Object> ls10= new ArrayList<>();
+    		ls10.add("Cash Flow");
+    		data.add(ls10);
+    		List<Object> ls11= new ArrayList<>();
+    		ls11.add("CFO");
+    		ls11.add("$b");
+    		data.add(ls11);
+    		List<Object> ls12= new ArrayList<>();
+    		ls12.add("CFI");
+    		ls12.add("$b");
+    		data.add(ls12);
+    		List<Object> ls13= new ArrayList<>();
+    		ls13.add("CFF");
+    		ls13.add("$b");
+    		data.add(ls13);
+    		List<Object> ls15= new ArrayList<>();
+    		ls15.add("Profit");
+    		data.add(ls15);
+    		List<Object> ls16= new ArrayList<>();
+    		ls16.add("EPS ");
+    		ls16.add("$k");
+    		data.add(ls16);
+    		List<Object> ls17= new ArrayList<>();
+    		ls17.add("BV");
+    		ls17.add("$k");
+    		data.add(ls17);
+    		List<Object> ls18= new ArrayList<>();
+    		ls18.add("EBITDA");
+    		ls18.add("$b");
+    		data.add(ls18);
+    		List<Object> ls19= new ArrayList<>();
+    		ls19.add("Capitalization");
+    		ls19.add("$b");
+    		data.add(ls19);
+    		List<Object> ls20= new ArrayList<>();
+    		ls20.add("Growth");
+    		data.add(ls20);
+    		List<Object> ls21= new ArrayList<>();
+    		ls21.add("Revenue Growth");
+    		ls21.add("%");
+    		data.add(ls21);
+    		List<Object> ls22= new ArrayList<>();
+    		ls22.add("Net Income");
+    		ls22.add("%");
+    		data.add(ls22);
+    		List<Object> ls23= new ArrayList<>();
+    		ls23.add("EBITDA");
+    		ls23.add("%");
+    		data.add(ls23);
+    		List<Object> ls24= new ArrayList<>();
+    		ls24.add("ASSET");
+    		ls24.add("%");
+    		data.add(ls24);
+    		List<Object> ls25= new ArrayList<>();
+    		ls25.add("Capitalization");
+    		ls25.add("%");
+    		data.add(ls25);
+    		List<Object> ls26= new ArrayList<>();
+    		ls26.add("Margin");
+    		data.add(ls26);
+    		List<Object> ls27= new ArrayList<>();
+    		ls27.add("Gross Margin");
+    		ls27.add("%");
+    		data.add(ls27);
+    		List<Object> ls28= new ArrayList<>();
+    		ls28.add("Operating Margin");
+    		ls28.add("%");
+    		data.add(ls28);
+    		List<Object> ls29= new ArrayList<>();
+    		ls29.add("Profit margin");
+    		ls29.add("%");
+    		data.add(ls29);
+    		List<Object> ls30= new ArrayList<>();
+    		ls30.add("EBITDA/Rev");
+    		ls30.add("%");
+    		data.add(ls30);
+    		List<Object> ls31= new ArrayList<>();
+    		ls31.add("Profitabilities ratio");
+    		data.add(ls31);
+    		List<Object> ls32= new ArrayList<>();
+    		ls32.add("ROE");
+    		ls32.add("%");
+    		data.add(ls32);
+    		List<Object> ls33= new ArrayList<>();
+    		ls33.add("ROA");
+    		ls33.add("%");
+    		data.add(ls33);
+    		List<Object> ls34= new ArrayList<>();
+    		ls34.add("ROIC");
+    		ls34.add("%");
+    		data.add(ls34);
+    		List<Object> ls35= new ArrayList<>();
+    		ls35.add("ROCE");
+    		ls35.add("%");
+    		data.add(ls35);
+
+
+
 	    	for (Object object : result) {
-	    		data.add(object);
+//	    		data.add(object);
+	    		Object[] arrayObject = (Object[]) object;
+	    		for(int i=0; i<arrayObject.length;i++) {
+	    			if(!"null".equals(arrayObject[i])) {
+	    				data.get(i).add(arrayObject[i]);
+	    			}
+	    		}
 //	    		ObjectOutPutDTO basicFilterDTO = ApiDTOBuilder.convertToObjectOutPutDTO(object);
 //	    		objectOutPutDTOs.add(basicFilterDTO);
 			}
