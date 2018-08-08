@@ -602,6 +602,10 @@ public class InvalueCoreProcessor {
     		ls13.add("CFF");
     		ls13.add("$b");
     		data.add(ls13);
+			List<Object> ls14= new ArrayList<>();
+    		ls14.add("NET CASH");
+    		ls14.add("$b");
+    		data.add(ls14);
     		List<Object> ls15= new ArrayList<>();
     		ls15.add("Profit");
     		data.add(ls15);
