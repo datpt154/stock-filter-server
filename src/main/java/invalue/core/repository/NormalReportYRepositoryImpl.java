@@ -70,7 +70,50 @@ public class NormalReportYRepositoryImpl implements NormalReportYCustom {
         return query.getResultList();
 		
 	}
+	@Override
+	public List<Object> searchInfoCtyAnCurrenData(String code, String timeString) {
+		StringBuilder sql = new StringBuilder();
+		List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select s.code, s.name ");
+    	sql.append(" ,999 plan_revenue, 999 LNTT, 999 LNST, 999 CoTuc ");
+    	sql.append(" ,f.P_E ");
+    	sql.append(" ,f.PEG ");
+    	sql.append(" ,f.P_B ");
+    	sql.append(" ,f.P_S ");
+    	sql.append(" ,f.DIV_YIELD ");
+    	sql.append(" ,f.EV_EBITDA ");
+    	sql.append(" ,f.F_SCORE ");
+    	sql.append(" ,f.C_SCORE ");
+    	sql.append(" ,f.M_SCORE ");
+    	sql.append(" ,f.Z_SCORE ");
+    	sql.append(" ,f.CURRENT_RATIO ");
+    	sql.append(" ,f.QUICK_RATIO ");
+    	sql.append(" ,f.CASH_RATIO ");
+    	sql.append(" ,f.RECEIVABLE_TURNOVER ");
+    	sql.append(" ,f.PAYABLE_TURNOVER ");
+    	sql.append(" ,f.INVENTORY_TURNOVER ");
+    	sql.append(" ,f.DEBT_TO_ASSETS_RATIO ");
+    	sql.append(" ,f.DEBT_TO_EQUITY_RATIO ");
+    	sql.append(" ,f.LONG_TIME_DEBT_TOTAL_CAPITALAZION ");
+    	sql.append(" ,f.INTEREST_COVERAGE ");
+    	sql.append(" ,f.ACCOUNT_RECEIVABLE_TO_REVENUE ");
+    	sql.append(" ,f.ACCOUNT_RECEIVABLE_TO_NET_INCOME ");
+    	sql.append(" ,f.ALLOWANCES_AND_PROVISIONS_TO_NET_INCOME ");
 
+
+    	sql.append(" from stock s  ");
+    	sql.append(" left join finance_ratio_y f  on s.code = f.stock_code ");
+    	sql.append(" where s.code=? and f.time_string=? ");
+    	params.add(code);
+    	params.add(timeString);
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+		
+	}
 	@Override
 	public List<Object> searchHeaderReportData(String code) {
 		StringBuilder sql = new StringBuilder();

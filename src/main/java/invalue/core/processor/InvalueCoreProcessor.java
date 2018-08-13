@@ -528,10 +528,9 @@ public class InvalueCoreProcessor {
 	}
 	
 	public ObjectOutPutDetailStockDTO detailStock(String code) {
-		// List<Object> result = stockRepository.autoCompleteStock(searchPattern.toUpperCase());
 		ObjectOutPutDetailStockDTO out = new ObjectOutPutDetailStockDTO();
 		List<String> header= new ArrayList<>();
-		List<Object> resultHeader =normalReportYRepository.searchHeaderReportData(code);
+		List<Object> resultHeader =normalReportYRepository.searchHeaderReportData(code.toUpperCase());
 		
 		header.add("Year End 30th Sep");
 		if(!resultHeader.isEmpty()) {
@@ -539,13 +538,9 @@ public class InvalueCoreProcessor {
 				header.add(object.toString());
 			}
 		}
-//		header.add("2012");
-//		header.add("2013");
-//		header.add("2014");
-//		header.add("2015");
 		out.setHeaders(header);
 		
-		List<Object> result =normalReportYRepository.searchReportData(code);
+		List<Object> result =normalReportYRepository.searchReportData(code.toUpperCase());
 		List<List<Object>> data = new ArrayList<>();
     	if(!result.isEmpty()) {
     		List<Object> ls0= new ArrayList<>();
@@ -687,22 +682,154 @@ public class InvalueCoreProcessor {
     		ls35.add("%");
     		data.add(ls35);
 
-
-
 	    	for (Object object : result) {
-//	    		data.add(object);
 	    		Object[] arrayObject = (Object[]) object;
 	    		for(int i=0; i<arrayObject.length;i++) {
 	    			if(!"null".equals(arrayObject[i])) {
 	    				data.get(i).add(arrayObject[i]);
 	    			}
 	    		}
-//	    		ObjectOutPutDTO basicFilterDTO = ApiDTOBuilder.convertToObjectOutPutDTO(object);
-//	    		objectOutPutDTOs.add(basicFilterDTO);
 			}
     	}
     	out.setRows(data);
-		
+    	List<Object> result1 =normalReportYRepository.searchInfoCtyAnCurrenData(code.toUpperCase(),resultHeader.get(resultHeader.size()-1).toString());
+    	
+    	if(!result1.isEmpty()) {
+    		List<List<Object>> plans = new ArrayList<>();
+    		Object[] arrayObject = (Object[])result1.get(0);
+    		out.setCode(arrayObject[0].toString());
+    		out.setName(arrayObject[1].toString());
+    		out.setPrice(9999D);
+    		List<Object> ls1= new ArrayList<>();
+    		ls1.add("Doanh thu(bil)");
+    		ls1.add(arrayObject[2]);
+    		plans.add(ls1);
+    		List<Object> ls2= new ArrayList<>();
+    		ls2.add("LNTT(bil)");
+    		ls2.add(arrayObject[3]);
+    		plans.add(ls2);
+    		List<Object> ls3= new ArrayList<>();
+    		ls3.add("LNST(bil)");
+    		ls3.add(arrayObject[4]);
+    		plans.add(ls3);
+    		List<Object> ls4= new ArrayList<>();
+    		ls4.add("Cổ tức(%)");
+    		ls4.add(arrayObject[5]);
+    		plans.add(ls4);
+    		out.setPlans(plans);
+    		
+    		List<List<Object>> valuation = new ArrayList<>();
+    		List<Object> ls5= new ArrayList<>();
+    		ls5.add("P/E");
+    		ls5.add(arrayObject[6]);
+    		valuation.add(ls5);
+    		List<Object> ls6= new ArrayList<>();
+    		ls6.add("Peg");
+    		ls6.add(arrayObject[7]);
+    		valuation.add(ls6);
+    		List<Object> ls7= new ArrayList<>();
+    		ls7.add("PB");
+    		ls7.add(arrayObject[8]);
+    		valuation.add(ls7);
+    		List<Object> ls8= new ArrayList<>();
+    		ls8.add("P/S");
+    		ls8.add(arrayObject[9]);
+    		valuation.add(ls8);
+    		List<Object> ls9= new ArrayList<>();
+    		ls9.add("Div Yield");
+    		ls9.add(arrayObject[10]);
+    		valuation.add(ls9);
+    		List<Object> ls10= new ArrayList<>();
+    		ls10.add("EV/EBITDA");
+    		ls10.add(arrayObject[11]);
+    		valuation.add(ls10);
+    		out.setValuation(valuation);
+    		
+    		List<List<Object>> score = new ArrayList<>();
+    		List<Object> ls11= new ArrayList<>();
+    		ls11.add("F-Score");
+    		ls11.add(arrayObject[12]);
+    		score.add(ls11);
+    		List<Object> ls12= new ArrayList<>();
+    		ls12.add("C-score");
+    		ls12.add(arrayObject[13]);
+    		score.add(ls12);
+    		List<Object> ls13= new ArrayList<>();
+    		ls13.add("M-score");
+    		ls13.add(arrayObject[14]);
+    		score.add(ls13);
+    		List<Object> ls14= new ArrayList<>();
+    		ls14.add("Z-score");
+    		ls14.add(arrayObject[15]);
+    		score.add(ls14);
+    		out.setScore(score);
+    		
+    		List<List<Object>> liquidityRatio = new ArrayList<>();
+    		List<Object> ls15= new ArrayList<>();
+    		ls15.add("Current ratio");
+    		ls15.add(arrayObject[16]);
+    		liquidityRatio.add(ls15);
+    		List<Object> ls16= new ArrayList<>();
+    		ls16.add("Quick ratio");
+    		ls16.add(arrayObject[17]);
+    		liquidityRatio.add(ls16);
+    		List<Object> ls17= new ArrayList<>();
+    		ls17.add("Cash ratio");
+    		ls17.add(arrayObject[18]);
+    		liquidityRatio.add(ls17);
+    		out.setLiquidityRatio(liquidityRatio);
+    		
+    		List<List<Object>> activityTurnover = new ArrayList<>();
+    		List<Object> ls18= new ArrayList<>();
+    		ls18.add("Receivable turnover");
+    		ls18.add(arrayObject[19]);
+    		activityTurnover.add(ls18);
+    		List<Object> ls19= new ArrayList<>();
+    		ls19.add("Payable turnover");
+    		ls19.add(arrayObject[20]);
+    		activityTurnover.add(ls19);
+    		List<Object> ls20= new ArrayList<>();
+    		ls20.add("inventory turnover");
+    		ls20.add(arrayObject[21]);
+    		activityTurnover.add(ls20);
+    		out.setActivityTurnover(activityTurnover);
+    		
+    		List<List<Object>> interpretationOfSolvencyRatios = new ArrayList<>();
+    		List<Object> ls21= new ArrayList<>();
+    		ls21.add("Debt to Assets ");
+    		ls21.add(arrayObject[22]);
+    		interpretationOfSolvencyRatios.add(ls21);
+    		List<Object> ls22= new ArrayList<>();
+    		ls22.add("Debt to Equity ");
+    		ls22.add(arrayObject[23]);
+    		interpretationOfSolvencyRatios.add(ls22);
+    		List<Object> ls23= new ArrayList<>();
+    		ls23.add("LT debt/Capitalazion");
+    		ls23.add(arrayObject[24]);
+    		interpretationOfSolvencyRatios.add(ls23);
+    		List<Object> ls24= new ArrayList<>();
+    		ls24.add("Interest coverage");
+    		ls24.add(arrayObject[25]);
+    		interpretationOfSolvencyRatios.add(ls24);
+    		out.setInterpretationOfSolvencyRatios(interpretationOfSolvencyRatios);
+    		
+    		
+    		List<List<Object>> riskRatio = new ArrayList<>();
+    		List<Object> ls25= new ArrayList<>();
+    		ls25.add("AR/Rev");
+    		ls25.add(arrayObject[26]);
+    		riskRatio.add(ls25);
+    		List<Object> ls26= new ArrayList<>();
+    		ls26.add("AR/Income");
+    		ls26.add(arrayObject[27]);
+    		riskRatio.add(ls26);
+    		List<Object> ls27= new ArrayList<>();
+    		ls27.add("A&P/Income");
+    		ls27.add(arrayObject[28]);
+    		riskRatio.add(ls27);
+    		out.setRiskRatio(riskRatio);
+    	}
+    	
         return out;
 		
 	}
