@@ -44,6 +44,11 @@ public class InvalueCoreController {
         return result;
     }
     
+    @GetMapping("/checkconnection")
+    public Integer checkconnection() {
+        return 1;
+    }
+    
     @PostMapping("/filter")
     public Collection<BasicFilterDTO> getFiltered(@Valid @RequestBody InputBasicFilterDTO inputBasicFilterDTO) {
 //    	ObjectOutput out= new ObjectOutput();
