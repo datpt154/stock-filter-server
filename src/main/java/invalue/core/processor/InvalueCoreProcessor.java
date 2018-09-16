@@ -25,15 +25,22 @@ import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.dto.SearchItemDTO;
-import invalue.core.entity.FinanceRatioQ;
-import invalue.core.entity.FinanceRatioY;
-import invalue.core.entity.NormalReportY;
+import invalue.core.entity.FinanceRatio;
+import invalue.core.entity.NormalReport;
+import invalue.core.entity.PlanOfYear;
+import invalue.core.entity.RecommendationsOfStock;
 import invalue.core.entity.Stock;
 import invalue.core.repository.FinanceRatioQRepository;
+import invalue.core.repository.FinanceRatioRepository;
 import invalue.core.repository.FinanceRatioYRepository;
+import invalue.core.repository.NormalReportRepository;
 import invalue.core.repository.NormalReportYRepository;
+import invalue.core.repository.PlanOfYearRepository;
+import invalue.core.repository.RecommendationsOfStockRepository;
+import invalue.core.repository.RecommendationsOfStockRepositoryCustom;
 import invalue.core.repository.StockRepository;
 import invalue.core.util.NumberFormatUtil;
+import invalue.core.util.StringUtil;
 import invalue.core.util.Unicode2English;
 
 @Component
@@ -48,14 +55,28 @@ public class InvalueCoreProcessor {
     @Autowired
     NormalReportYRepository normalReportYRepository;
     
+    @Autowired
+    FinanceRatioRepository financeRatioRepository;
+    
+    @Autowired
+    NormalReportRepository normalReportRepository;
+    
+    @Autowired
+    RecommendationsOfStockRepository recommendationsOfStockRepository;
+    
+    @Autowired
+    PlanOfYearRepository planOfYearRepository;
+    
+    
 	
     public Collection<BasicFilterDTO> getFiltered(InputBasicFilterDTO inputBasicFilterDTO) {
     	List<Object> result;
-    	if("quarter".toUpperCase().equals(inputBasicFilterDTO.getTime().toUpperCase())) {
-    		result = financeRatioQRepository.getFinanceRatioFillter(inputBasicFilterDTO);
-    	}else {
-    		result = financeRatioYRepository.getFinanceRatioFillter(inputBasicFilterDTO);
-    	}
+//    	if("quarter".toUpperCase().equals(inputBasicFilterDTO.getTime().toUpperCase())) {
+//    		result = financeRatioQRepository.getFinanceRatioFillter(inputBasicFilterDTO);
+//    	}else {
+//    		result = financeRatioYRepository.getFinanceRatioFillter(inputBasicFilterDTO);
+//    	}
+    	result = financeRatioRepository.getFinanceRatioFillter(inputBasicFilterDTO);
     	
     	Collection<BasicFilterDTO> basicFilterDTOs = new ArrayList<>();
     	if(!result.isEmpty()) {
@@ -69,12 +90,14 @@ public class InvalueCoreProcessor {
     
     public List<CompareFilterDTO> getCompareFiltered(InputCompareFilterDTO inputCompareFilterDTO){
     	List<Object> result;
-    	if("quarter".toUpperCase().equals(inputCompareFilterDTO.getTime().toUpperCase())) {
-    		result = financeRatioQRepository.getCompareFillter(inputCompareFilterDTO);
-    	}
-    	else {
-    		result = financeRatioYRepository.getCompareFillter(inputCompareFilterDTO);
-    	}
+//    	if("quarter".toUpperCase().equals(inputCompareFilterDTO.getTime().toUpperCase())) {
+//    		result = financeRatioQRepository.getCompareFillter(inputCompareFilterDTO);
+//    	}
+//    	else {
+//    		result = financeRatioYRepository.getCompareFillter(inputCompareFilterDTO);
+//    	}
+    	
+    	result = financeRatioRepository.getCompareFillter(inputCompareFilterDTO);
     	CompareFilterDTO sumCompareFilterDTO= new CompareFilterDTO();
     	ArrayList<SearchItemDTO> sumList = new ArrayList<>();
     	List<CompareFilterDTO> compareFilterDTOs = new ArrayList<>();
@@ -112,9 +135,9 @@ public class InvalueCoreProcessor {
     	}
         return compareFilterDTOs;
     }
-    
+
     @Transactional
-	public String importFinanceratio(MultipartFile multipartFile) {
+	public String importFinanceratio(MultipartFile multipartFile, String timeString) {
 		try {
 	    	if(multipartFile!=null) {
 			    File file= convert(multipartFile);
@@ -127,9 +150,7 @@ public class InvalueCoreProcessor {
 			    Sheet sheet = workbook.getSheetAt(0);
 			    List<String> listUpdateOld= new ArrayList<>();
 			    int rowIndex=-1;
-			    String timeString=file.getName();
-			    timeString=timeString.split("\\.")[0];
-			    if(timeString.contains("Q")) {
+			    if (timeString.matches("\\d{4}")||timeString.matches("\\d{4}Q\\d{1}")||"R".equals(timeString)) {
 			    	for (Row row : sheet) {
 				    	rowIndex++;
 				    	if(rowIndex<3) {
@@ -138,190 +159,130 @@ public class InvalueCoreProcessor {
 				    	if(null==row.getCell(0)) {
 				    		break;
 				    	}
-				    	FinanceRatioQ financeRatioQ = new FinanceRatioQ();
-				    	financeRatioQ.setStockCode(row.getCell(0).getStringCellValue());
-				    	System.out.println("row:"+financeRatioQ.getStockCode()); 
-				    	financeRatioQ.setCode(financeRatioQ.getStockCode()+timeString);
-				    	financeRatioQ.setType(1);
+				    	FinanceRatio financeRatio = new FinanceRatio();
+				    	financeRatio.setStockCode(row.getCell(0).getStringCellValue());
+				    	System.out.println("row:"+financeRatio.getStockCode()); 
+				    	financeRatio.setCode(financeRatio.getStockCode()+timeString);
+				    	financeRatio.setType(1);
 				    	
 				    	if(null != row.getCell(1) && "NEW".equals(row.getCell(1).getStringCellValue())) {
-				    		listUpdateOld.add(financeRatioQ.getStockCode());
-				    		financeRatioQ.setStatus(0);
+				    		listUpdateOld.add(financeRatio.getStockCode());
+				    		financeRatio.setStatus(0);
 				    	}else {
-				    		financeRatioQ.setStatus(1);
+				    		financeRatio.setStatus(1);
 				    	}
-				    	financeRatioQ.setCreatedTime(new Date());
-				    	financeRatioQ.setTimeString(timeString);
-				    	financeRatioQ.setStockId(1);
-				    	financeRatioQ.setNetRevenue(NumberFormatUtil.formatDouble(row.getCell(2).getNumericCellValue(),1));
-				    	financeRatioQ.setGrossProfit(NumberFormatUtil.formatDouble(row.getCell(3).getNumericCellValue(),1));
-				    	financeRatioQ.setNetIncome(NumberFormatUtil.formatDouble(row.getCell(4).getNumericCellValue(),1));
-				    	financeRatioQ.setShareSOustanding(NumberFormatUtil.formatDouble(row.getCell(5).getNumericCellValue(),1));
-				    	financeRatioQ.setEps(NumberFormatUtil.formatDouble(row.getCell(6).getNumericCellValue(),2));
-				    	financeRatioQ.setBookValue(NumberFormatUtil.formatDouble(row.getCell(7).getNumericCellValue(),2));
-				    	financeRatioQ.setMarketPrice(NumberFormatUtil.formatDouble(row.getCell(8).getNumericCellValue(),2));
-		//		    	financeRatioQ.setDayys(row.getCell(9).getNumericCellValue());
-				    	financeRatioQ.setCapex(row.getCell(10).getNumericCellValue());//N?A
-				    	financeRatioQ.setFcf(NumberFormatUtil.formatDouble(row.getCell(11).getNumericCellValue(),1));
-				    	financeRatioQ.setEbit(NumberFormatUtil.formatDouble(row.getCell(12).getNumericCellValue(),1));
-				    	financeRatioQ.setEbitda(NumberFormatUtil.formatDouble(row.getCell(13).getNumericCellValue(),1));
-				    	financeRatioQ.setNnwc(NumberFormatUtil.formatDouble(row.getCell(14).getNumericCellValue(),1));
-				    	financeRatioQ.setNetWorkingCapital(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
-				    	financeRatioQ.setEv(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
-				    	financeRatioQ.setMarketCapital(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
-				    	financeRatioQ.setNetRevenueYoy(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue()*100,1));
-				    	financeRatioQ.setGrossProfitYoy(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue()*100,1));
-				    	financeRatioQ.setEpsYoy(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue()*100,1));
-				    	financeRatioQ.setEbitdaYoy(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue()*100,1));
-				    	financeRatioQ.setDebtYoy(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue()*100,1));
-				    	financeRatioQ.setEquityYoy(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue()*100,1));
-				    	financeRatioQ.setMarketCapitalYoy(NumberFormatUtil.formatDouble(row.getCell(24).getNumericCellValue()*100,1));
-				    	financeRatioQ.setTotalAssetsYoy(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue()*100,1));
-				    	financeRatioQ.setPE(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
-				    	financeRatioQ.setPeg(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
-				    	financeRatioQ.setPB(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
-				    	financeRatioQ.setPS(NumberFormatUtil.formatDouble(row.getCell(29).getNumericCellValue(),1));
-				    	financeRatioQ.setEvEbitda(NumberFormatUtil.formatDouble(row.getCell(30).getNumericCellValue(),1));
-				    	financeRatioQ.setEvEbit(NumberFormatUtil.formatDouble(row.getCell(31).getNumericCellValue(),1));
-				    	financeRatioQ.setEvFcf(NumberFormatUtil.formatDouble(row.getCell(32).getNumericCellValue(),1));
-				    	financeRatioQ.setRevFcf(NumberFormatUtil.formatDouble(row.getCell(33).getNumericCellValue(),1));
-				    	financeRatioQ.setMcCfo(NumberFormatUtil.formatDouble(row.getCell(34).getNumericCellValue(),1));
-				    	financeRatioQ.setMcNwc(NumberFormatUtil.formatDouble(row.getCell(35).getNumericCellValue(),1));
-				    	financeRatioQ.setFcff(NumberFormatUtil.formatDouble(row.getCell(36).getNumericCellValue(),1));
-				    	financeRatioQ.setFcfe(NumberFormatUtil.formatDouble(row.getCell(37).getNumericCellValue(),1));
-				    	financeRatioQ.setCapexRev(NumberFormatUtil.formatDouble(row.getCell(38).getNumericCellValue()*100,1));
-				    	financeRatioQ.setRoic(NumberFormatUtil.formatDouble(row.getCell(39).getNumericCellValue()*100,1));
-				    	financeRatioQ.setRoce(NumberFormatUtil.formatDouble(row.getCell(40).getNumericCellValue()*100,1));
-				    	financeRatioQ.setRoe(NumberFormatUtil.formatDouble(row.getCell(41).getNumericCellValue()*100,1));
-				    	financeRatioQ.setRoa(NumberFormatUtil.formatDouble(row.getCell(42).getNumericCellValue()*100,1));
-				    	financeRatioQ.setGrossProfitMargin(NumberFormatUtil.formatDouble(row.getCell(43).getNumericCellValue()*100,1));
-				    	financeRatioQ.setOperatingProfitMargin(NumberFormatUtil.formatDouble(row.getCell(44).getNumericCellValue()*100,1));
-				    	financeRatioQ.setPretaxProfitMargin(NumberFormatUtil.formatDouble(row.getCell(45).getNumericCellValue()*100,1));
-				    	financeRatioQ.setNetProfitMargin(NumberFormatUtil.formatDouble(row.getCell(46).getNumericCellValue()*100,1));
-				    	financeRatioQ.setDivYield(NumberFormatUtil.formatDouble(row.getCell(47).getNumericCellValue()*100,1));
-				    	financeRatioQ.setEbitRev(NumberFormatUtil.formatDouble(row.getCell(48).getNumericCellValue()*100,1));
-				    	financeRatioQ.setEbitdaRev(NumberFormatUtil.formatDouble(row.getCell(49).getNumericCellValue()*100,1));
-				    	financeRatioQ.setSalesToTotalAssets(NumberFormatUtil.formatDouble(row.getCell(50).getNumericCellValue()*100,1));
-				    	financeRatioQ.setReceivableTurnover(NumberFormatUtil.formatDouble(row.getCell(51).getNumericCellValue()*100,1));
-				    	financeRatioQ.setPayableTurnover(NumberFormatUtil.formatDouble(row.getCell(52).getNumericCellValue()*100,1));
-				    	financeRatioQ.setInventoryTurnover(NumberFormatUtil.formatDouble(row.getCell(53).getNumericCellValue()*100,1));
-				    	financeRatioQ.setDebtToAssetsRatio(NumberFormatUtil.formatDouble(row.getCell(54).getNumericCellValue()*100,1));
-				    	financeRatioQ.setDebtToEquityRatio(NumberFormatUtil.formatDouble(row.getCell(55).getNumericCellValue()*100,1));
-				    	financeRatioQ.setLongTimeDebtTotalCapitalazion(NumberFormatUtil.formatDouble(row.getCell(56).getNumericCellValue()*100,1));
-				    	financeRatioQ.setInterestCoverage(NumberFormatUtil.formatDouble(row.getCell(57).getNumericCellValue()*100,1));
-				    	financeRatioQ.setCurrentRatio(NumberFormatUtil.formatDouble(row.getCell(58).getNumericCellValue()*100,2));
-				    	financeRatioQ.setQuickRatio(NumberFormatUtil.formatDouble(row.getCell(59).getNumericCellValue()*100,2));
-				    	financeRatioQ.setCashRatio(NumberFormatUtil.formatDouble(row.getCell(60).getNumericCellValue()*100,2));
-				    	financeRatioQ.setAccountReceivableToRevenue(NumberFormatUtil.formatDouble(row.getCell(61).getNumericCellValue()*100,2));
-				    	financeRatioQ.setAccountReceivableToNetIncome(NumberFormatUtil.formatDouble(row.getCell(62).getNumericCellValue()*100,2));
-				    	financeRatioQ.setAllowancesAndProvisionsToNetIncome(NumberFormatUtil.formatDouble(row.getCell(63).getNumericCellValue()*100,2));
-				    	financeRatioQ.setFScore(NumberFormatUtil.formatDouble(row.getCell(64).getNumericCellValue(),0));
-				    	financeRatioQ.setCScore(NumberFormatUtil.formatDouble(row.getCell(65).getNumericCellValue(),0));
-				    	financeRatioQ.setMScore(NumberFormatUtil.formatDouble(row.getCell(66).getNumericCellValue(),2));
-				    	financeRatioQ.setZScore(NumberFormatUtil.formatDouble(row.getCell(67).getNumericCellValue(),2));
-//				    	financeRatioQ.setId(1L);
-				    	financeRatioQRepository.save(financeRatioQ);
+				    	financeRatio.setCreatedTime(new Date());
+				    	financeRatio.setTimeString(timeString);
+				    	financeRatio.setStockId(1);
+				    	if (timeString.matches("\\d{4}")) {
+				    		financeRatio.setYQR("Y");
+				    	}else if (timeString.matches("\\d{4}Q\\d{1}")) {
+				    		financeRatio.setYQR("Q");
+				    	}else if ("R".equals(timeString)) {
+				    		financeRatio.setYQR("R");
+				    	}
+				    	//check code
+				    	Long id = financeRatioRepository.getFinanceRatioByCode(financeRatio.getCode());
+				    	if(null!=id) {
+				    		financeRatio.setId(id);
+				    	}
+				    	financeRatio.setNetRevenue(NumberFormatUtil.formatDouble(row.getCell(2).getNumericCellValue(),1));
+				    	financeRatio.setGrossProfit(NumberFormatUtil.formatDouble(row.getCell(3).getNumericCellValue(),1));
+				    	financeRatio.setNetIncome(NumberFormatUtil.formatDouble(row.getCell(4).getNumericCellValue(),1));
+				    	financeRatio.setShareSOustanding(NumberFormatUtil.formatDouble(row.getCell(5).getNumericCellValue(),1));
+				    	financeRatio.setEps(NumberFormatUtil.formatDouble(row.getCell(6).getNumericCellValue(),2));
+				    	financeRatio.setBookValue(NumberFormatUtil.formatDouble(row.getCell(7).getNumericCellValue(),2));
+				    	financeRatio.setMarketPrice(NumberFormatUtil.formatDouble(row.getCell(8).getNumericCellValue(),2));
+		//		    	financeRatio.setDayys(row.getCell(9).getNumericCellValue());
+				    	financeRatio.setCapex(row.getCell(10).getNumericCellValue());//N?A
+				    	financeRatio.setFcf(NumberFormatUtil.formatDouble(row.getCell(11).getNumericCellValue(),1));
+				    	financeRatio.setEbit(NumberFormatUtil.formatDouble(row.getCell(12).getNumericCellValue(),1));
+				    	financeRatio.setEbitda(NumberFormatUtil.formatDouble(row.getCell(13).getNumericCellValue(),1));
+				    	financeRatio.setNnwc(NumberFormatUtil.formatDouble(row.getCell(14).getNumericCellValue(),1));
+				    	financeRatio.setNetWorkingCapital(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
+				    	financeRatio.setEv(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
+				    	financeRatio.setMarketCapital(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
+				    	financeRatio.setNetRevenueYoy(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue()*100,1));
+				    	financeRatio.setGrossProfitYoy(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue()*100,1));
+				    	financeRatio.setEpsYoy(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue()*100,1));
+				    	financeRatio.setEbitdaYoy(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue()*100,1));
+				    	financeRatio.setDebtYoy(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue()*100,1));
+				    	financeRatio.setEquityYoy(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue()*100,1));
+				    	financeRatio.setMarketCapitalYoy(NumberFormatUtil.formatDouble(row.getCell(24).getNumericCellValue()*100,1));
+				    	financeRatio.setTotalAssetsYoy(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue()*100,1));
+				    	financeRatio.setPE(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
+				    	financeRatio.setPeg(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
+				    	financeRatio.setPB(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
+				    	financeRatio.setPS(NumberFormatUtil.formatDouble(row.getCell(29).getNumericCellValue(),1));
+				    	financeRatio.setEvEbitda(NumberFormatUtil.formatDouble(row.getCell(30).getNumericCellValue(),1));
+				    	financeRatio.setEvEbit(NumberFormatUtil.formatDouble(row.getCell(31).getNumericCellValue(),1));
+				    	financeRatio.setEvFcf(NumberFormatUtil.formatDouble(row.getCell(32).getNumericCellValue(),1));
+				    	financeRatio.setRevFcf(NumberFormatUtil.formatDouble(row.getCell(33).getNumericCellValue(),1));
+				    	financeRatio.setMcCfo(NumberFormatUtil.formatDouble(row.getCell(34).getNumericCellValue(),1));
+				    	financeRatio.setMcNwc(NumberFormatUtil.formatDouble(row.getCell(35).getNumericCellValue(),1));
+				    	financeRatio.setFcff(NumberFormatUtil.formatDouble(row.getCell(36).getNumericCellValue(),1));
+				    	financeRatio.setFcfe(NumberFormatUtil.formatDouble(row.getCell(37).getNumericCellValue(),1));
+				    	financeRatio.setCapexRev(NumberFormatUtil.formatDouble(row.getCell(38).getNumericCellValue()*100,1));
+				    	financeRatio.setRoic(NumberFormatUtil.formatDouble(row.getCell(39).getNumericCellValue()*100,1));
+				    	financeRatio.setRoce(NumberFormatUtil.formatDouble(row.getCell(40).getNumericCellValue()*100,1));
+				    	financeRatio.setRoe(NumberFormatUtil.formatDouble(row.getCell(41).getNumericCellValue()*100,1));
+				    	financeRatio.setRoa(NumberFormatUtil.formatDouble(row.getCell(42).getNumericCellValue()*100,1));
+				    	financeRatio.setGrossProfitMargin(NumberFormatUtil.formatDouble(row.getCell(43).getNumericCellValue()*100,1));
+				    	financeRatio.setOperatingProfitMargin(NumberFormatUtil.formatDouble(row.getCell(44).getNumericCellValue()*100,1));
+				    	financeRatio.setPretaxProfitMargin(NumberFormatUtil.formatDouble(row.getCell(45).getNumericCellValue()*100,1));
+				    	financeRatio.setNetProfitMargin(NumberFormatUtil.formatDouble(row.getCell(46).getNumericCellValue()*100,1));
+				    	financeRatio.setDivYield(NumberFormatUtil.formatDouble(row.getCell(47).getNumericCellValue()*100,1));
+				    	financeRatio.setEbitRev(NumberFormatUtil.formatDouble(row.getCell(48).getNumericCellValue()*100,1));
+				    	financeRatio.setEbitdaRev(NumberFormatUtil.formatDouble(row.getCell(49).getNumericCellValue()*100,1));
+				    	financeRatio.setSalesToTotalAssets(NumberFormatUtil.formatDouble(row.getCell(50).getNumericCellValue()*100,1));
+				    	financeRatio.setReceivableTurnover(NumberFormatUtil.formatDouble(row.getCell(51).getNumericCellValue()*100,1));
+				    	financeRatio.setPayableTurnover(NumberFormatUtil.formatDouble(row.getCell(52).getNumericCellValue()*100,1));
+				    	financeRatio.setInventoryTurnover(NumberFormatUtil.formatDouble(row.getCell(53).getNumericCellValue()*100,1));
+				    	financeRatio.setDebtToAssetsRatio(NumberFormatUtil.formatDouble(row.getCell(54).getNumericCellValue()*100,1));
+				    	financeRatio.setDebtToEquityRatio(NumberFormatUtil.formatDouble(row.getCell(55).getNumericCellValue()*100,1));
+				    	financeRatio.setLongTimeDebtTotalCapitalazion(NumberFormatUtil.formatDouble(row.getCell(56).getNumericCellValue()*100,1));
+				    	financeRatio.setInterestCoverage(NumberFormatUtil.formatDouble(row.getCell(57).getNumericCellValue()*100,1));
+				    	financeRatio.setCurrentRatio(NumberFormatUtil.formatDouble(row.getCell(58).getNumericCellValue()*100,2));
+				    	financeRatio.setQuickRatio(NumberFormatUtil.formatDouble(row.getCell(59).getNumericCellValue()*100,2));
+				    	financeRatio.setCashRatio(NumberFormatUtil.formatDouble(row.getCell(60).getNumericCellValue()*100,2));
+				    	financeRatio.setAccountReceivableToRevenue(NumberFormatUtil.formatDouble(row.getCell(61).getNumericCellValue()*100,2));
+				    	financeRatio.setAccountReceivableToNetIncome(NumberFormatUtil.formatDouble(row.getCell(62).getNumericCellValue()*100,2));
+				    	financeRatio.setAllowancesAndProvisionsToNetIncome(NumberFormatUtil.formatDouble(row.getCell(63).getNumericCellValue()*100,2));
+				    	financeRatio.setFScore(NumberFormatUtil.formatDouble(row.getCell(64).getNumericCellValue(),0));
+				    	financeRatio.setCScore(NumberFormatUtil.formatDouble(row.getCell(65).getNumericCellValue(),0));
+				    	financeRatio.setMScore(NumberFormatUtil.formatDouble(row.getCell(66).getNumericCellValue(),2));
+				    	financeRatio.setZScore(NumberFormatUtil.formatDouble(row.getCell(67).getNumericCellValue(),2));
+				    	financeRatio.setNim(NumberFormatUtil.formatDouble(row.getCell(68).getNumericCellValue(),2));
+				    	financeRatio.setLdr(NumberFormatUtil.formatDouble(row.getCell(69).getNumericCellValue(),2));
+				    	financeRatio.setTangTruongTinDung(NumberFormatUtil.formatDouble(row.getCell(70).getNumericCellValue(),2));
+				    	financeRatio.setTangTruongTienGui(NumberFormatUtil.formatDouble(row.getCell(71).getNumericCellValue(),2));
+				    	financeRatio.setBenjaminGrahamNetNets(NumberFormatUtil.formatDouble(row.getCell(72).getNumericCellValue(),2));
+				    	financeRatio.setBenjaminGrahamNcavBargain(NumberFormatUtil.formatDouble(row.getCell(73).getNumericCellValue(),2));
+				    	financeRatio.setCanslimNotUpcom(NumberFormatUtil.formatDouble(row.getCell(74).getNumericCellValue(),2));
+				    	financeRatio.setPhilipFisherGrowthBusinessInsiderY(NumberFormatUtil.formatDouble(row.getCell(75).getNumericCellValue(),2));
+				    	financeRatio.setJohnNeffValue(NumberFormatUtil.formatDouble(row.getCell(76).getNumericCellValue(),2));
+				    	financeRatio.setPeterLynchGrowth(NumberFormatUtil.formatDouble(row.getCell(77).getNumericCellValue(),2));
+				    	financeRatio.setGrahamChecklistY(NumberFormatUtil.formatDouble(row.getCell(78).getNumericCellValue(),2));
+				    	financeRatio.setSearch1(NumberFormatUtil.formatDouble(row.getCell(79).getNumericCellValue(),2));
+				    	financeRatio.setSearch2(NumberFormatUtil.formatDouble(row.getCell(80).getNumericCellValue(),2));
+				    	financeRatio.setSearch3(NumberFormatUtil.formatDouble(row.getCell(81).getNumericCellValue(),2));
+				    	financeRatio.setSearch4(NumberFormatUtil.formatDouble(row.getCell(82).getNumericCellValue(),2));
+				    	financeRatio.setSearch5(NumberFormatUtil.formatDouble(row.getCell(83).getNumericCellValue(),2));
+				    	financeRatio.setSearch6(NumberFormatUtil.formatDouble(row.getCell(84).getNumericCellValue(),2));
+				    	financeRatio.setSearch7(NumberFormatUtil.formatDouble(row.getCell(85).getNumericCellValue(),2));
+				    	financeRatio.setSearch8(NumberFormatUtil.formatDouble(row.getCell(86).getNumericCellValue(),2));
+				    	financeRatio.setSearch9(NumberFormatUtil.formatDouble(row.getCell(87).getNumericCellValue(),2));
+				    	financeRatio.setSearch10(NumberFormatUtil.formatDouble(row.getCell(88).getNumericCellValue(),2));
+				    	financeRatio.setForCouting(NumberFormatUtil.formatDouble(row.getCell(89).getNumericCellValue(),2));
+				    	financeRatio.setCanslimNi(NumberFormatUtil.formatDouble(row.getCell(90).getNumericCellValue(),2));
+
+				    	financeRatioRepository.save(financeRatio);
 				    }
 				    if(!listUpdateOld.isEmpty()) {
-				    	financeRatioQRepository.updateOldFinanceRatioFillter(listUpdateOld, timeString);
+				    	financeRatioRepository.updateOldFinanceRatioFillter(listUpdateOld, timeString);
 				    }
-			    }else if(timeString.contains("Y")) {
-			    	
-			    	for (Row row : sheet) {
-				    	rowIndex++;
-				    	if(rowIndex<3) {
-				    		continue;
-				    	}
-				    	if(null==row.getCell(0)) {
-				    		break;
-				    	}
-				    	FinanceRatioY financeRatioY = new FinanceRatioY();
-				    	financeRatioY.setStockCode(row.getCell(0).getStringCellValue());
-				    	System.out.println("row:"+financeRatioY.getStockCode()); 
-				    	financeRatioY.setCode(financeRatioY.getStockCode()+timeString);
-				    	financeRatioY.setType(1);
-				    	
-				    	if(null != row.getCell(1) && "NEW".equals(row.getCell(1).getStringCellValue())) {
-				    		listUpdateOld.add(financeRatioY.getStockCode());
-				    		financeRatioY.setStatus(0);
-				    	}else {
-				    		financeRatioY.setStatus(1);
-				    	}
-				    	financeRatioY.setCreatedTime(new Date());
-				    	financeRatioY.setTimeString(timeString);
-				    	financeRatioY.setStockId(1);
-				    	financeRatioY.setNetRevenue(NumberFormatUtil.formatDouble(row.getCell(2).getNumericCellValue(),1));
-				    	financeRatioY.setGrossProfit(NumberFormatUtil.formatDouble(row.getCell(3).getNumericCellValue(),1));
-				    	financeRatioY.setNetIncome(NumberFormatUtil.formatDouble(row.getCell(4).getNumericCellValue(),1));
-				    	financeRatioY.setShareSOustanding(NumberFormatUtil.formatDouble(row.getCell(5).getNumericCellValue(),1));
-				    	financeRatioY.setEps(NumberFormatUtil.formatDouble(row.getCell(6).getNumericCellValue(),2));
-				    	financeRatioY.setBookValue(NumberFormatUtil.formatDouble(row.getCell(7).getNumericCellValue(),2));
-				    	financeRatioY.setMarketPrice(NumberFormatUtil.formatDouble(row.getCell(8).getNumericCellValue(),2));
-		//		    	financeRatioY.setDayys(row.getCell(9).getNumericCellValue());
-				    	financeRatioY.setCapex(row.getCell(10).getNumericCellValue());//N?A
-				    	financeRatioY.setFcf(NumberFormatUtil.formatDouble(row.getCell(11).getNumericCellValue(),1));
-				    	financeRatioY.setEbit(NumberFormatUtil.formatDouble(row.getCell(12).getNumericCellValue(),1));
-				    	financeRatioY.setEbitda(NumberFormatUtil.formatDouble(row.getCell(13).getNumericCellValue(),1));
-				    	financeRatioY.setNnwc(NumberFormatUtil.formatDouble(row.getCell(14).getNumericCellValue(),1));
-				    	financeRatioY.setNetWorkingCapital(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
-				    	financeRatioY.setEv(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
-				    	financeRatioY.setMarketCapital(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
-				    	financeRatioY.setNetRevenueYoy(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue()*100,1));
-				    	financeRatioY.setGrossProfitYoy(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue()*100,1));
-				    	financeRatioY.setEpsYoy(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue()*100,1));
-				    	financeRatioY.setEbitdaYoy(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue()*100,1));
-				    	financeRatioY.setDebtYoy(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue()*100,1));
-				    	financeRatioY.setEquityYoy(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue()*100,1));
-				    	financeRatioY.setMarketCapitalYoy(NumberFormatUtil.formatDouble(row.getCell(24).getNumericCellValue()*100,1));
-				    	financeRatioY.setTotalAssetsYoy(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue()*100,1));
-				    	financeRatioY.setPE(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
-				    	financeRatioY.setPeg(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
-				    	financeRatioY.setPB(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
-				    	financeRatioY.setPS(NumberFormatUtil.formatDouble(row.getCell(29).getNumericCellValue(),1));
-				    	financeRatioY.setEvEbitda(NumberFormatUtil.formatDouble(row.getCell(30).getNumericCellValue(),1));
-				    	financeRatioY.setEvEbit(NumberFormatUtil.formatDouble(row.getCell(31).getNumericCellValue(),1));
-				    	financeRatioY.setEvFcf(NumberFormatUtil.formatDouble(row.getCell(32).getNumericCellValue(),1));
-				    	financeRatioY.setRevFcf(NumberFormatUtil.formatDouble(row.getCell(33).getNumericCellValue(),1));
-				    	financeRatioY.setMcCfo(NumberFormatUtil.formatDouble(row.getCell(34).getNumericCellValue(),1));
-				    	financeRatioY.setMcNwc(NumberFormatUtil.formatDouble(row.getCell(35).getNumericCellValue(),1));
-				    	financeRatioY.setFcff(NumberFormatUtil.formatDouble(row.getCell(36).getNumericCellValue(),1));
-				    	financeRatioY.setFcfe(NumberFormatUtil.formatDouble(row.getCell(37).getNumericCellValue(),1));
-				    	financeRatioY.setCapexRev(NumberFormatUtil.formatDouble(row.getCell(38).getNumericCellValue()*100,1));
-				    	financeRatioY.setRoic(NumberFormatUtil.formatDouble(row.getCell(39).getNumericCellValue()*100,1));
-				    	financeRatioY.setRoce(NumberFormatUtil.formatDouble(row.getCell(40).getNumericCellValue()*100,1));
-				    	financeRatioY.setRoe(NumberFormatUtil.formatDouble(row.getCell(41).getNumericCellValue()*100,1));
-				    	financeRatioY.setRoa(NumberFormatUtil.formatDouble(row.getCell(42).getNumericCellValue()*100,1));
-				    	financeRatioY.setGrossProfitMargin(NumberFormatUtil.formatDouble(row.getCell(43).getNumericCellValue()*100,1));
-				    	financeRatioY.setOperatingProfitMargin(NumberFormatUtil.formatDouble(row.getCell(44).getNumericCellValue()*100,1));
-				    	financeRatioY.setPretaxProfitMargin(NumberFormatUtil.formatDouble(row.getCell(45).getNumericCellValue()*100,1));
-				    	financeRatioY.setNetProfitMargin(NumberFormatUtil.formatDouble(row.getCell(46).getNumericCellValue()*100,1));
-				    	financeRatioY.setDivYield(NumberFormatUtil.formatDouble(row.getCell(47).getNumericCellValue()*100,1));
-				    	financeRatioY.setEbitRev(NumberFormatUtil.formatDouble(row.getCell(48).getNumericCellValue()*100,1));
-				    	financeRatioY.setEbitdaRev(NumberFormatUtil.formatDouble(row.getCell(49).getNumericCellValue()*100,1));
-				    	financeRatioY.setSalesToTotalAssets(NumberFormatUtil.formatDouble(row.getCell(50).getNumericCellValue()*100,1));
-				    	financeRatioY.setReceivableTurnover(NumberFormatUtil.formatDouble(row.getCell(51).getNumericCellValue()*100,1));
-				    	financeRatioY.setPayableTurnover(NumberFormatUtil.formatDouble(row.getCell(52).getNumericCellValue()*100,1));
-				    	financeRatioY.setInventoryTurnover(NumberFormatUtil.formatDouble(row.getCell(53).getNumericCellValue()*100,1));
-				    	financeRatioY.setDebtToAssetsRatio(NumberFormatUtil.formatDouble(row.getCell(54).getNumericCellValue()*100,1));
-				    	financeRatioY.setDebtToEquityRatio(NumberFormatUtil.formatDouble(row.getCell(55).getNumericCellValue()*100,1));
-				    	financeRatioY.setLongTimeDebtTotalCapitalazion(NumberFormatUtil.formatDouble(row.getCell(56).getNumericCellValue()*100,1));
-				    	financeRatioY.setInterestCoverage(NumberFormatUtil.formatDouble(row.getCell(57).getNumericCellValue()*100,1));
-				    	financeRatioY.setCurrentRatio(NumberFormatUtil.formatDouble(row.getCell(58).getNumericCellValue()*100,2));
-				    	financeRatioY.setQuickRatio(NumberFormatUtil.formatDouble(row.getCell(59).getNumericCellValue()*100,2));
-				    	financeRatioY.setCashRatio(NumberFormatUtil.formatDouble(row.getCell(60).getNumericCellValue()*100,2));
-				    	financeRatioY.setAccountReceivableToRevenue(NumberFormatUtil.formatDouble(row.getCell(61).getNumericCellValue()*100,2));
-				    	financeRatioY.setAccountReceivableToNetIncome(NumberFormatUtil.formatDouble(row.getCell(62).getNumericCellValue()*100,2));
-				    	financeRatioY.setAllowancesAndProvisionsToNetIncome(NumberFormatUtil.formatDouble(row.getCell(63).getNumericCellValue()*100,2));
-				    	financeRatioY.setFScore(NumberFormatUtil.formatDouble(row.getCell(64).getNumericCellValue(),0));
-				    	financeRatioY.setCScore(NumberFormatUtil.formatDouble(row.getCell(65).getNumericCellValue(),0));
-				    	financeRatioY.setMScore(NumberFormatUtil.formatDouble(row.getCell(66).getNumericCellValue(),2));
-				    	financeRatioY.setZScore(NumberFormatUtil.formatDouble(row.getCell(67).getNumericCellValue(),2));
-//				    	financeRatioY.setId(1L);
-				    	financeRatioYRepository.save(financeRatioY);
-				    }
-				    if(!listUpdateOld.isEmpty()) {
-				    	financeRatioYRepository.updateOldFinanceRatioFillter(listUpdateOld, timeString);
-				    }
+			    }else {
+			    	return "time String không đúng";
 			    }
 			    
 			    workbook.close();
@@ -332,7 +293,8 @@ public class InvalueCoreProcessor {
 		}
 		return "import file thanh cong";
 	}
-	
+    
+    @Transactional
 	public String importCty(MultipartFile multipartFile) {
 		try {
 	    	if(multipartFile!=null) {
@@ -353,6 +315,11 @@ public class InvalueCoreProcessor {
 			    	Stock stock = new Stock();
 			    	stock.setCode(row.getCell(0).getStringCellValue());
 			    	System.out.println("row:"+stock.getCode()); 
+			    	//check code
+			    	Long id = stockRepository.getStockByCode(stock.getCode());
+			    	if(null!=id) {
+			    		stock.setId(id);
+			    	}
 			    	stock.setType(1);//
 			    	stock.setStatus(0);
 			    	stock.setCreatedTime(new Date());
@@ -381,6 +348,9 @@ public class InvalueCoreProcessor {
 			    		stock.setType(0);
 			    	}
 			    	
+			    	if(null != row.getCell(4)) {
+			    		stock.setYearEnd(row.getCell(4).getStringCellValue());
+			    	}
 			    	
 			    	stockRepository.save(stock);
 			    }
@@ -393,7 +363,7 @@ public class InvalueCoreProcessor {
 	}
 	
 	@Transactional
-	public String importReportCty(MultipartFile multipartFile) {
+	public String importReportCty(MultipartFile multipartFile, String timeString) {
 		try {
 	    	if(multipartFile!=null) {
 			    File file= convert(multipartFile);
@@ -406,99 +376,109 @@ public class InvalueCoreProcessor {
 			    Sheet sheet = workbook.getSheetAt(0);
 			    List<String> listUpdateOld= new ArrayList<>();
 			    int rowIndex=-1;
-			    String timeString=file.getName();
-			    timeString=timeString.split("\\.")[0];
-			    if(timeString.contains("Q")) {
-			    	
-			    }else if(timeString.contains("Y")) {
+			    if (timeString.matches("\\d{4}")||timeString.matches("\\d{4}Q\\d{1}")||"R".equals(timeString)) {
 			    	
 			    	for (Row row : sheet) {
 				    	rowIndex++;
-				    	if(rowIndex<3) {
+				    	if(rowIndex<1) {
 				    		continue;
 				    	}
 				    	if(null==row.getCell(0)) {
 				    		break;
 				    	}
-				    	NormalReportY normalReportY = new NormalReportY();
-				    	normalReportY.setStockCode(row.getCell(0).getStringCellValue());
-				    	System.out.println("row:"+normalReportY.getStockCode()); 
-				    	normalReportY.setCode(normalReportY.getStockCode()+timeString);
-				    	normalReportY.setType(1);
+				    	NormalReport normalReport = new NormalReport();
+				    	normalReport.setStockCode(row.getCell(0).getStringCellValue());
+				    	System.out.println("row:"+normalReport.getStockCode()); 
+				    	
+				    	normalReport.setCode(normalReport.getStockCode()+timeString);
+				    	Long id = normalReportRepository.getNormalReportByCode(normalReport.getCode());
+				    	if(null!=id) {
+				    		normalReport.setId(id);
+				    	}
+				    	normalReport.setType(1);
 				    	
 //				    	if(null != row.getCell(1) && "NEW".equals(row.getCell(1).getStringCellValue())) {
 //				    		listUpdateOld.add(financeRatioY.getStockCode());
 //				    		financeRatioY.setStatus(0);
 //				    	}else {
-				    		normalReportY.setStatus(1);
+				    		normalReport.setStatus(1);
 //				    	}
-				    	normalReportY.setCreatedTime(new Date());
-				    	normalReportY.setTimeString(timeString);
-				    	normalReportY.setStockId(1);
+				    	normalReport.setCreatedTime(new Date());
+				    	normalReport.setTimeString(timeString);
+				    	normalReport.setStockId(1);
+				    	if (timeString.matches("\\d{4}")) {
+				    		normalReport.setYQR("Y");
+				    	}else if (timeString.matches("\\d{4}Q\\d{1}")) {
+				    		normalReport.setYQR("Q");
+				    	}else if ("R".equals(timeString)) {
+				    		normalReport.setYQR("R");
+				    	}
 				    	
-				    	normalReportY.setCurrentAsset(NumberFormatUtil.formatDouble(row.getCell(2).getNumericCellValue(),1));
-				    	normalReportY.setCashAndCashEquivalents(NumberFormatUtil.formatDouble(row.getCell(3).getNumericCellValue(),1));
-				    	normalReportY.setShortTermInvestments(NumberFormatUtil.formatDouble(row.getCell(4).getNumericCellValue(),1));
-				    	normalReportY.setAccountsReceivableShortTerm(NumberFormatUtil.formatDouble(row.getCell(5).getNumericCellValue(),1));
-				    	normalReportY.setInventories(NumberFormatUtil.formatDouble(row.getCell(6).getNumericCellValue(),1));
-				    	normalReportY.setOtherCurrentAssets(NumberFormatUtil.formatDouble(row.getCell(7).getNumericCellValue(),1));
-				    	normalReportY.setLongTermAssets(NumberFormatUtil.formatDouble(row.getCell(12).getNumericCellValue(),1));
-				    	normalReportY.setAccountReceivableLongTerm(NumberFormatUtil.formatDouble(row.getCell(13).getNumericCellValue(),1));
-				    	normalReportY.setFixedAssets(NumberFormatUtil.formatDouble(row.getCell(14).getNumericCellValue(),1));
-				    	normalReportY.setTangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
-				    	normalReportY.setFinanceTangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
-				    	normalReportY.setIntangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
-				    	normalReportY.setInvestmentProperty(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue(),1));
-				    	normalReportY.setContructionInProgress(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue(),1));
-				    	normalReportY.setLongTermInvestment(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue(),1));
-				    	normalReportY.setGoodWill(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue(),1));
-				    	normalReportY.setOtherLongTermAssets(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue(),1));
-				    	normalReportY.setTotalAssets(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue(),1));
-				    	normalReportY.setCurrentLiabilities(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue(),1));
-				    	normalReportY.setAccountPayableToSuppliers(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
-				    	normalReportY.setShortTermAdvancesFromCustomers(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
-				    	normalReportY.setShortTermUnearnedRevenue(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
-				    	normalReportY.setShortTermBorrowingsAndLiabilities(NumberFormatUtil.formatDouble(row.getCell(29).getNumericCellValue(),1));
-				    	normalReportY.setOtherShortTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(30).getNumericCellValue(),1));
-				    	normalReportY.setLongTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(31).getNumericCellValue(),1));
-				    	normalReportY.setLongTermAccountsPayable(NumberFormatUtil.formatDouble(row.getCell(32).getNumericCellValue(),1));
-				    	normalReportY.setLongTermadvancesFromCustomers(NumberFormatUtil.formatDouble(row.getCell(33).getNumericCellValue(),1));
-				    	normalReportY.setLongTermUnearnedRevenue(NumberFormatUtil.formatDouble(row.getCell(34).getNumericCellValue(),1));
-				    	normalReportY.setLongTermBorrowingsAndLiabilities(NumberFormatUtil.formatDouble(row.getCell(35).getNumericCellValue(),1));
-				    	normalReportY.setOtherLongTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(36).getNumericCellValue(),1));
-				    	normalReportY.setEquity(NumberFormatUtil.formatDouble(row.getCell(37).getNumericCellValue(),1));
-				    	normalReportY.setShareCapital(NumberFormatUtil.formatDouble(row.getCell(38).getNumericCellValue(),1));
-				    	normalReportY.setSharePremium(NumberFormatUtil.formatDouble(row.getCell(39).getNumericCellValue(),1));
-				    	normalReportY.setRetainedProfits(NumberFormatUtil.formatDouble(row.getCell(40).getNumericCellValue(),1));
-				    	normalReportY.setOtherCapitals(NumberFormatUtil.formatDouble(row.getCell(41).getNumericCellValue(),1));
-				    	normalReportY.setNonControllingInterest(NumberFormatUtil.formatDouble(row.getCell(42).getNumericCellValue(),1));
-				    	normalReportY.setTotalResources(NumberFormatUtil.formatDouble(row.getCell(43).getNumericCellValue(),1));
-				    	normalReportY.setNetRevenue(NumberFormatUtil.formatDouble(row.getCell(46).getNumericCellValue(),1));
-				    	normalReportY.setCostOfSales(NumberFormatUtil.formatDouble(row.getCell(47).getNumericCellValue(),1));
-				    	normalReportY.setGrossProfit(NumberFormatUtil.formatDouble(row.getCell(48).getNumericCellValue(),1));
-				    	normalReportY.setFinancialIncome(NumberFormatUtil.formatDouble(row.getCell(49).getNumericCellValue(),1));
-				    	normalReportY.setFinancialExpenses(NumberFormatUtil.formatDouble(row.getCell(50).getNumericCellValue(),1));
-				    	normalReportY.setInWhichInterestExpense(NumberFormatUtil.formatDouble(row.getCell(51).getNumericCellValue(),1));
-				    	normalReportY.setShareOfProfitInAssociates(NumberFormatUtil.formatDouble(row.getCell(52).getNumericCellValue(),1));
-				    	normalReportY.setSellingExpenses(NumberFormatUtil.formatDouble(row.getCell(53).getNumericCellValue(),1));
-				    	normalReportY.setGeneralAndAdministrationExpenses(NumberFormatUtil.formatDouble(row.getCell(54).getNumericCellValue(),1));
-				    	normalReportY.setNetOperatingProfit(NumberFormatUtil.formatDouble(row.getCell(55).getNumericCellValue(),1));
-				    	normalReportY.setOtherIncome(NumberFormatUtil.formatDouble(row.getCell(56).getNumericCellValue(),1));
-				    	normalReportY.setProfitBeforeTax(NumberFormatUtil.formatDouble(row.getCell(57).getNumericCellValue(),1));
-				    	normalReportY.setIncomeTaxExpense(NumberFormatUtil.formatDouble(row.getCell(58).getNumericCellValue(),1));
-				    	normalReportY.setNetProfitAfterTax(NumberFormatUtil.formatDouble(row.getCell(59).getNumericCellValue(),1));
-				    	normalReportY.setMinorityInterest(NumberFormatUtil.formatDouble(row.getCell(60).getNumericCellValue(),1));
-				    	normalReportY.setNetIncome(NumberFormatUtil.formatDouble(row.getCell(61).getNumericCellValue(),1));
-				    	normalReportY.setDepreciation(NumberFormatUtil.formatDouble(row.getCell(65).getNumericCellValue(),1));
-				    	normalReportY.setAllowancesAndProvisions(NumberFormatUtil.formatDouble(row.getCell(66).getNumericCellValue(),1));
-				    	normalReportY.setNetCashFlowsFromOperatingActivities(NumberFormatUtil.formatDouble(row.getCell(67).getNumericCellValue(),1));
-				    	normalReportY.setNetCashFlowsFromInvestingActivities(NumberFormatUtil.formatDouble(row.getCell(68).getNumericCellValue(),1));
-				    	normalReportY.setNetCashFlowsFromFinancingActivities(NumberFormatUtil.formatDouble(row.getCell(69).getNumericCellValue(),1));
-				    	normalReportY.setNetCashFlows(NumberFormatUtil.formatDouble(row.getCell(70).getNumericCellValue(),1));
-				    	normalReportY.setPaymentsOfDividends(NumberFormatUtil.formatDouble(row.getCell(71).getNumericCellValue(),1));
+				    	normalReport.setCurrentAsset(NumberFormatUtil.formatDouble(row.getCell(2).getNumericCellValue(),1));
+				    	normalReport.setCashAndCashEquivalents(NumberFormatUtil.formatDouble(row.getCell(3).getNumericCellValue(),1));
+				    	normalReport.setShortTermInvestments(NumberFormatUtil.formatDouble(row.getCell(4).getNumericCellValue(),1));
+				    	normalReport.setAccountsReceivableShortTerm(NumberFormatUtil.formatDouble(row.getCell(5).getNumericCellValue(),1));
+				    	normalReport.setInventories(NumberFormatUtil.formatDouble(row.getCell(6).getNumericCellValue(),1));
+				    	normalReport.setOtherCurrentAssets(NumberFormatUtil.formatDouble(row.getCell(7).getNumericCellValue(),1));
+				    	normalReport.setLongTermAssets(NumberFormatUtil.formatDouble(row.getCell(12).getNumericCellValue(),1));
+				    	normalReport.setAccountReceivableLongTerm(NumberFormatUtil.formatDouble(row.getCell(13).getNumericCellValue(),1));
+				    	normalReport.setFixedAssets(NumberFormatUtil.formatDouble(row.getCell(14).getNumericCellValue(),1));
+				    	normalReport.setTangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
+				    	normalReport.setFinanceTangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
+				    	normalReport.setIntangibleFixedAssets(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
+				    	normalReport.setInvestmentProperty(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue(),1));
+				    	normalReport.setContructionInProgress(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue(),1));
+				    	normalReport.setLongTermInvestment(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue(),1));
+				    	normalReport.setGoodWill(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue(),1));
+				    	normalReport.setOtherLongTermAssets(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue(),1));
+				    	normalReport.setTotalAssets(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue(),1));
+				    	normalReport.setCurrentLiabilities(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue(),1));
+				    	normalReport.setAccountPayableToSuppliers(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
+				    	normalReport.setShortTermAdvancesFromCustomers(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
+				    	normalReport.setShortTermUnearnedRevenue(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
+				    	normalReport.setShortTermBorrowingsAndLiabilities(NumberFormatUtil.formatDouble(row.getCell(29).getNumericCellValue(),1));
+				    	normalReport.setOtherShortTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(30).getNumericCellValue(),1));
+				    	normalReport.setLongTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(31).getNumericCellValue(),1));
+				    	normalReport.setLongTermAccountsPayable(NumberFormatUtil.formatDouble(row.getCell(32).getNumericCellValue(),1));
+				    	normalReport.setLongTermadvancesFromCustomers(NumberFormatUtil.formatDouble(row.getCell(33).getNumericCellValue(),1));
+				    	normalReport.setLongTermUnearnedRevenue(NumberFormatUtil.formatDouble(row.getCell(34).getNumericCellValue(),1));
+				    	normalReport.setLongTermBorrowingsAndLiabilities(NumberFormatUtil.formatDouble(row.getCell(35).getNumericCellValue(),1));
+				    	normalReport.setOtherLongTermLiabilities(NumberFormatUtil.formatDouble(row.getCell(36).getNumericCellValue(),1));
+				    	normalReport.setEquity(NumberFormatUtil.formatDouble(row.getCell(37).getNumericCellValue(),1));
+				    	normalReport.setShareCapital(NumberFormatUtil.formatDouble(row.getCell(38).getNumericCellValue(),1));
+				    	normalReport.setSharePremium(NumberFormatUtil.formatDouble(row.getCell(39).getNumericCellValue(),1));
+				    	normalReport.setRetainedProfits(NumberFormatUtil.formatDouble(row.getCell(40).getNumericCellValue(),1));
+				    	normalReport.setOtherCapitals(NumberFormatUtil.formatDouble(row.getCell(41).getNumericCellValue(),1));
+				    	normalReport.setNonControllingInterest(NumberFormatUtil.formatDouble(row.getCell(42).getNumericCellValue(),1));
+				    	normalReport.setTotalResources(NumberFormatUtil.formatDouble(row.getCell(43).getNumericCellValue(),1));
+				    	normalReport.setNetRevenue(NumberFormatUtil.formatDouble(row.getCell(46).getNumericCellValue(),1));
+				    	normalReport.setCostOfSales(NumberFormatUtil.formatDouble(row.getCell(47).getNumericCellValue(),1));
+				    	normalReport.setGrossProfit(NumberFormatUtil.formatDouble(row.getCell(48).getNumericCellValue(),1));
+				    	normalReport.setFinancialIncome(NumberFormatUtil.formatDouble(row.getCell(49).getNumericCellValue(),1));
+				    	normalReport.setFinancialExpenses(NumberFormatUtil.formatDouble(row.getCell(50).getNumericCellValue(),1));
+				    	normalReport.setInWhichInterestExpense(NumberFormatUtil.formatDouble(row.getCell(51).getNumericCellValue(),1));
+				    	normalReport.setShareOfProfitInAssociates(NumberFormatUtil.formatDouble(row.getCell(52).getNumericCellValue(),1));
+				    	normalReport.setSellingExpenses(NumberFormatUtil.formatDouble(row.getCell(53).getNumericCellValue(),1));
+				    	normalReport.setGeneralAndAdministrationExpenses(NumberFormatUtil.formatDouble(row.getCell(54).getNumericCellValue(),1));
+				    	normalReport.setNetOperatingProfit(NumberFormatUtil.formatDouble(row.getCell(55).getNumericCellValue(),1));
+				    	normalReport.setOtherIncome(NumberFormatUtil.formatDouble(row.getCell(56).getNumericCellValue(),1));
+				    	normalReport.setProfitBeforeTax(NumberFormatUtil.formatDouble(row.getCell(57).getNumericCellValue(),1));
+				    	normalReport.setIncomeTaxExpense(NumberFormatUtil.formatDouble(row.getCell(58).getNumericCellValue(),1));
+				    	normalReport.setNetProfitAfterTax(NumberFormatUtil.formatDouble(row.getCell(59).getNumericCellValue(),1));
+				    	normalReport.setMinorityInterest(NumberFormatUtil.formatDouble(row.getCell(60).getNumericCellValue(),1));
+				    	normalReport.setNetIncome(NumberFormatUtil.formatDouble(row.getCell(61).getNumericCellValue(),1));
+				    	normalReport.setDepreciation(NumberFormatUtil.formatDouble(row.getCell(65).getNumericCellValue(),1));
+				    	normalReport.setAllowancesAndProvisions(NumberFormatUtil.formatDouble(row.getCell(66).getNumericCellValue(),1));
+				    	normalReport.setNetCashFlowsFromOperatingActivities(NumberFormatUtil.formatDouble(row.getCell(67).getNumericCellValue(),1));
+				    	normalReport.setNetCashFlowsFromInvestingActivities(NumberFormatUtil.formatDouble(row.getCell(68).getNumericCellValue(),1));
+				    	normalReport.setNetCashFlowsFromFinancingActivities(NumberFormatUtil.formatDouble(row.getCell(69).getNumericCellValue(),1));
+				    	normalReport.setNetCashFlows(NumberFormatUtil.formatDouble(row.getCell(70).getNumericCellValue(),1));
+				    	if(null!=row.getCell(71)) {
+				    		normalReport.setPaymentsOfDividends(NumberFormatUtil.formatDouble(row.getCell(71).getNumericCellValue(),1));
+				    	}
 
 
-				    	normalReportYRepository.save(normalReportY);
+				    	normalReportRepository.save(normalReport);
 				    }
 				    
 			    }
@@ -512,6 +492,133 @@ public class InvalueCoreProcessor {
 		return "import file thanh cong";
 	}
 	
+	@Transactional
+	public String importRecommandations(MultipartFile multipartFile) {
+		try {
+	    	if(multipartFile!=null) {
+			    File currDir = new File(".");
+	//		    String fileLocation = file.substring(0, path.length() - 1) + file.getOriginalFilename();
+			    File file= convert(multipartFile);
+			    if(null==file) {
+			    	return "false";
+			    }
+			    FileInputStream input = new FileInputStream(file.getPath());
+			    Workbook workbook = new XSSFWorkbook(input);
+			    Sheet sheet = workbook.getSheetAt(0);
+			    
+			    int rowIndex=-1;
+			    for (Row row : sheet) {
+			    	rowIndex++;
+			    	if(rowIndex<1) {
+			    		continue;
+			    	}
+			    	if(null==row.getCell(0)) {
+			    		break;
+			    	}
+			    	RecommendationsOfStock recommendationsOfStock = new RecommendationsOfStock();
+			    	recommendationsOfStock.setStockCode(row.getCell(0).getStringCellValue());
+			    	System.out.println("row:"+recommendationsOfStock.getStockCode()); 
+			    	
+			    	recommendationsOfStock.setType(1);//
+			    	recommendationsOfStock.setStatus(0);
+			    	recommendationsOfStock.setCreatedTime(new Date());
+			    	recommendationsOfStock.setStockId(1);
+			    	if(null!=row.getCell(1)) {
+			    		recommendationsOfStock.setCompanyRecommendations(row.getCell(1).getStringCellValue());
+			    	}
+			    	if(null!=row.getCell(2)) {
+			    		recommendationsOfStock.setCompanyRecommendationsAction(row.getCell(2).getStringCellValue());
+			    	}
+			    	if(null!=row.getCell(3)) {
+			    		recommendationsOfStock.setTargetPrice(row.getCell(3).getNumericCellValue());
+			    	}
+			    	if(null!=row.getCell(4)) {
+			    		recommendationsOfStock.setRevenue(row.getCell(4).getNumericCellValue());
+			    	}
+			    	if(null!=row.getCell(5)) {
+			    		recommendationsOfStock.setPretaxProfit(row.getCell(5).getNumericCellValue());
+			    	}
+			    	if(null!=row.getCell(6)) {
+			    		recommendationsOfStock.setNetProfit(row.getCell(6).getNumericCellValue());
+			    	}
+			    	if(null!=row.getCell(7)) {
+			    		recommendationsOfStock.setTimeRecommendations(row.getCell(7).getDateCellValue());
+			    	}
+			    	if(null!=row.getCell(8)) {
+			    		recommendationsOfStock.setPathFile(row.getCell(8).getStringCellValue());
+			    	}
+			    	
+			    	recommendationsOfStockRepository.save(recommendationsOfStock);
+			    }
+			    workbook.close();
+	    	}
+    	}catch(Exception ex) {
+			System.out.println(ex);
+		}
+		return "import file thanh cong";
+	}
+	
+	@Transactional
+	public String importPlanOfYear(MultipartFile multipartFile, String timeString) {
+		try {
+	    	if(multipartFile!=null) {
+			    File currDir = new File(".");
+	//		    String fileLocation = file.substring(0, path.length() - 1) + file.getOriginalFilename();
+			    File file= convert(multipartFile);
+			    if(null==file) {
+			    	return "false";
+			    }
+			    FileInputStream input = new FileInputStream(file.getPath());
+			    Workbook workbook = new XSSFWorkbook(input);
+			    Sheet sheet = workbook.getSheetAt(0);
+			    
+			    int rowIndex=-1;
+			    for (Row row : sheet) {
+			    	rowIndex++;
+			    	if(rowIndex<1) {
+			    		continue;
+			    	}
+			    	if(null==row.getCell(0)) {
+			    		break;
+			    	}
+			    	PlanOfYear planOfYear = new PlanOfYear();
+			    	planOfYear.setStockCode(row.getCell(0).getStringCellValue());
+			    	System.out.println("row:"+planOfYear.getStockCode()); 
+			    	
+			    	planOfYear.setCode(planOfYear.getStockCode()+timeString);
+			    	planOfYear.setTimeString(timeString);
+			    	Long id = planOfYearRepository.getPlanOfYearByCode(planOfYear.getCode());
+			    	if(null!=id) {
+			    		planOfYear.setId(id);
+			    	}
+			    	planOfYear.setType(1);//
+			    	planOfYear.setStatus(0);
+			    	planOfYear.setCreatedTime(new Date());
+			    	planOfYear.setStockId(1);
+			    	
+			    	if(null!=row.getCell(1)) {
+			    		planOfYear.setRevenue(row.getCell(1).getNumericCellValue());
+			    	}
+			    	if(null!=row.getCell(2)) {
+			    		planOfYear.setPretaxProfit(row.getCell(2).getNumericCellValue());
+			    	}
+			    	if(null!=row.getCell(3)) {
+			    		planOfYear.setNetProfit(row.getCell(3).getNumericCellValue());
+			    	}
+			    	
+			    	if(null!=row.getCell(4)) {
+			    		planOfYear.setPaymentsOfDividends(row.getCell(4).getNumericCellValue());
+			    	}
+			    	
+			    	planOfYearRepository.save(planOfYear);
+			    }
+			    workbook.close();
+	    	}
+    	}catch(Exception ex) {
+			System.out.println(ex);
+		}
+		return "import file thanh cong";
+	}
 	
 	public List<ObjectOutPutDTO> autoCompleteStock(String searchPattern) {
 		List<Object> result = stockRepository.autoCompleteStock(searchPattern.toUpperCase());
@@ -527,12 +634,18 @@ public class InvalueCoreProcessor {
 		
 	}
 	
-	public ObjectOutPutDetailStockDTO detailStock(String code) {
+	public ObjectOutPutDetailStockDTO detailStock(String code, String time) {
 		ObjectOutPutDetailStockDTO out = new ObjectOutPutDetailStockDTO();
 		List<String> header= new ArrayList<>();
-		List<Object> resultHeader =normalReportYRepository.searchHeaderReportData(code.toUpperCase());
 		
-		header.add("Year End 30th Sep");
+		if(!StringUtil.isNullOrEmpty(time) && "quarter".toUpperCase().equals(time)) {
+			time="Q";
+		}else {
+			time="Y";
+		}
+		List<Object> resultHeader =normalReportRepository.searchHeaderReportData(code.toUpperCase(),time);
+		
+		header.add("Year End");
 		if(!resultHeader.isEmpty()) {
 			for (Object object : resultHeader) {
 				header.add(object.toString());
@@ -540,7 +653,7 @@ public class InvalueCoreProcessor {
 		}
 		out.setHeaders(header);
 		
-		List<Object> result =normalReportYRepository.searchReportData(code.toUpperCase());
+		List<Object> result =normalReportRepository.searchReportData(code.toUpperCase(),time);
 		List<List<Object>> data = new ArrayList<>();
     	if(!result.isEmpty()) {
     		List<Object> ls0= new ArrayList<>();
@@ -828,6 +941,8 @@ public class InvalueCoreProcessor {
     		ls27.add(arrayObject[28]);
     		riskRatio.add(ls27);
     		out.setRiskRatio(riskRatio);
+    		
+    		out.getHeaders().set(0, "Year End "+arrayObject[29]);
     	}
     	
         return out;

@@ -7,7 +7,7 @@ import invalue.core.entity.FinanceRatioQ;
 
 
 /**
- * Created by rajeevkumarsingh on 27/06/17.
+ * Created by HUYNP4 on 15/09/2018.
  */
 
 @Repository

@@ -58,6 +58,10 @@ public class Stock implements java.io.Serializable {
 	@Basic
 	@Column(name = "STOCK_EXCHANGE_CODE", nullable = false)
 	private String stockExchangeCode;
+	
+	@Basic
+	@Column(name = "YEAR_END")
+	private String yearEnd="30 Tháng 9";
 
 	public Long getId() {
 		return id;
@@ -129,6 +133,14 @@ public class Stock implements java.io.Serializable {
 
 	public void setNameText(String nameText) {
 		this.nameText = nameText;
+	}
+
+	public String getYearEnd() {
+		return yearEnd;
+	}
+
+	public void setYearEnd(String yearEnd) {
+		this.yearEnd = yearEnd;
 	}
 
 	

@@ -3,6 +3,8 @@ package invalue.core.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import invalue.core.entity.PlanOfYear;
+import invalue.core.entity.RecommendationsOfStock;
 import invalue.core.entity.Stock;
 
 
@@ -11,8 +13,6 @@ import invalue.core.entity.Stock;
  */
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Long>, StockRepositoryCustom {
+public interface PlanOfYearRepository extends JpaRepository<PlanOfYear, Long>, PlanOfYearRepositoryCustom {
 
-//    @Query("SELECT p FROM Note p WHERE 1=2")
-//    public List<Note> find1();
 }

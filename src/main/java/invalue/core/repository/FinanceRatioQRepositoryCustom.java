@@ -5,6 +5,10 @@ import java.util.List;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
 
+/**
+ * Created by HUYNP4 on 15/09/2018.
+ */
+
 public interface FinanceRatioQRepositoryCustom {
 	public List<Object> getFinanceRatioFillter(InputBasicFilterDTO inputBasicFilterDTO);
 	public List<Object> getCompareFillter(InputCompareFilterDTO inputCompareFilterDTO);

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
 /**
- * Created by gkatzioura on 6/3/16.
+ * Created by HUYNP4 on 15/09/2018.
  */
 @Repository
 @Transactional(readOnly = true)

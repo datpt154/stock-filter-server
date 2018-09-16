@@ -70,8 +70,8 @@ public class InvalueCoreController {
     }
     
     @PostMapping("/importfinanceratio")
-    public String importFinanceratio(@Valid @RequestBody MultipartFile multipartFile) {
-    	return invalueCoreProcessor.importFinanceratio(multipartFile);
+    public String importFinanceratio(@Valid @RequestBody MultipartFile multipartFile, String timeString) {
+    	return invalueCoreProcessor.importFinanceratio(multipartFile,timeString);
     }
     
     @PostMapping("/importcty")
@@ -80,8 +80,16 @@ public class InvalueCoreController {
     }
     
     @PostMapping("/importreportcty")
-    public String importReportCty(@Valid @RequestBody MultipartFile multipartFile) {
-    	return invalueCoreProcessor.importReportCty(multipartFile);
+    public String importReportCty(@Valid @RequestBody MultipartFile multipartFile, String timeString) {
+    	return invalueCoreProcessor.importReportCty(multipartFile,timeString);
+    }
+    @PostMapping("/importrecommandations")
+    public String importRecommandations(@Valid @RequestBody MultipartFile multipartFile) {
+    	return invalueCoreProcessor.importRecommandations(multipartFile);
+    }
+    @PostMapping("/importplanofyear")
+    public String importPlanOfYear(@Valid @RequestBody MultipartFile multipartFile, String timeString) {
+    	return invalueCoreProcessor.importPlanOfYear(multipartFile, timeString);
     }
     
 //    @GetMapping("/autocompletestock")
@@ -98,14 +106,14 @@ public class InvalueCoreController {
     }
     
     @GetMapping("/detailstock/{code}")
-    public ObjectOutPutDetailStockDTO detailStock(@PathVariable(value = "code") String code) {
+    public ObjectOutPutDetailStockDTO detailStock(@PathVariable(value = "code") String code, String time) {
 		
 //		Gson gson = new Gson();
 //		Map<String,Object> map = new HashMap<String,Object>();
 //		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
 //		String searchCode=(String) map.get("searchPattern");
     	
-    	return invalueCoreProcessor.detailStock(code);
+    	return invalueCoreProcessor.detailStock(code, time);
     }
     
     @PostMapping("/Compare")

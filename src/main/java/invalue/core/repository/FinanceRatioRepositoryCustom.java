@@ -7,8 +7,9 @@ import invalue.core.dto.InputCompareFilterDTO;
 /**
  * Created by HUYNP4 on 15/09/2018.
  */
-public interface FinanceRatioYRepositoryCustom {
+public interface FinanceRatioRepositoryCustom {
 	public List<Object> getFinanceRatioFillter(InputBasicFilterDTO inputBasicFilterDTO);
 	public List<Object> getCompareFillter(InputCompareFilterDTO inputCompareFilterDTO);
 	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString );
+	public Long getFinanceRatioByCode(String code );
 }

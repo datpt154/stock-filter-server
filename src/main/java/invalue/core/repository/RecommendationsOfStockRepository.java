@@ -3,6 +3,7 @@ package invalue.core.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import invalue.core.entity.RecommendationsOfStock;
 import invalue.core.entity.Stock;
 
 
@@ -11,8 +12,6 @@ import invalue.core.entity.Stock;
  */
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Long>, StockRepositoryCustom {
+public interface RecommendationsOfStockRepository extends JpaRepository<RecommendationsOfStock, Long>, RecommendationsOfStockRepositoryCustom {
 
-//    @Query("SELECT p FROM Note p WHERE 1=2")
-//    public List<Note> find1();
 }

@@ -16,36 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(readOnly = true)
-public class StockRepositoryImpl implements StockRepositoryCustom {
+public class PlanOfYearRepositoryImpl implements PlanOfYearRepositoryCustom {
 	@PersistenceContext
     EntityManager entityManager;
 
 	@Override
-	public List<Object> autoCompleteStock(String searchPattern) {
-		StringBuilder sql = new StringBuilder();
-    	Query query = entityManager.createNativeQuery("");
-    	sql.append(" select id,code,name from stock where code like ? or Name_Text like ? ");
-    	
-		
-        query = entityManager.createNativeQuery(sql.toString());
-        searchPattern="%"+searchPattern+"%";
-        query.setParameter(1, searchPattern);
-        query.setParameter(2, searchPattern);
-
-        return query.getResultList();
-	}
-
-	@Override
-	public Long getStockByCode(String code) {
+	public Long getPlanOfYearByCode(String code) {
 		StringBuilder sql = new StringBuilder();
     	StringBuilder select = new StringBuilder();
     	StringBuilder where = new StringBuilder();
     	StringBuilder from = new StringBuilder();
     	List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("");
-    	select.append(" SELECT s.id");
-    	from.append(" from stock s ");
-    	where.append(" where 1 = 1 and s.CODE = ? and s.status<> -1 ");
+    	select.append(" SELECT p.id");
+    	from.append(" from plan_of_year p ");
+    	where.append(" where 1 = 1 and p.CODE = ? and p.status<> -1 ");
     	params.add(code);
     	
 		sql.append(select).append(from).append(where);
@@ -60,7 +45,7 @@ public class StockRepositoryImpl implements StockRepositoryCustom {
         }
         return null ;
 	}
-   
-    
-   
+
+	
+
 }
