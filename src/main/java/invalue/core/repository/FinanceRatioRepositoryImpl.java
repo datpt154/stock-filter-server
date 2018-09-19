@@ -163,5 +163,31 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
         }
         return null ;
 	}
+	
+	@Override
+	public Double getNewPriceByStockCode(String stockCode) {
+		StringBuilder sql = new StringBuilder();
+    	StringBuilder select = new StringBuilder();
+    	StringBuilder where = new StringBuilder();
+    	StringBuilder from = new StringBuilder();
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	select.append(" select f.MARKET_PRICE ");
+    	from.append(" from finance_ratio f ");
+    	where.append(" where f.stock_code=? and f.y_q_r='Q' order by f.time_string desc limit 1 ");
+    	params.add(stockCode);
+    	
+		sql.append(select).append(from).append(where);
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+
+        List<Object> rs = query.getResultList();
+        if(!rs.isEmpty()) {
+        	return Double.parseDouble(rs.get(0).toString());
+        }
+        return null ;
+	}
    
 }

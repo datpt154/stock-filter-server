@@ -65,7 +65,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	sql.append(" ,IFNULL(f.ROCE, 0) ");
     	sql.append(" from normal_report n   ");
     	sql.append(" left join finance_ratio f  on n.code = f.code ");
-    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code limit 5");
+    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 5");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());
@@ -81,7 +81,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
 		List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("");
     	sql.append(" select s.code, s.name ");
-    	sql.append(" ,999 plan_revenue, 999 LNTT, 999 LNST, 999 CoTuc ");
+    	sql.append(" ,p.REVENUE , p.PRETAX_PROFIT , p.NET_PROFIT LNST, p.PAYMENTS_OF_DIVIDENDS CoTuc ");
     	sql.append(" ,f.P_E ");
     	sql.append(" ,f.PEG ");
     	sql.append(" ,f.P_B ");
@@ -109,7 +109,8 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
 
     	sql.append(" from stock s  ");
     	sql.append(" left join finance_ratio f  on s.code = f.stock_code ");
-    	sql.append(" where s.code=? and f.time_string=? and f.Y_Q_R=? ");
+    	sql.append(" left join plan_of_year p  on s.code = p.stock_code ");
+    	sql.append(" where s.code=? and f.time_string=? and (f.Y_Q_R=? or f.Y_Q_R='R') order by f.time_string desc limit 1 ");
     	params.add(code);
     	params.add(timeString);
     	params.add(time);
@@ -127,7 +128,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	Query query = entityManager.createNativeQuery("");
     	sql.append(" select n.TIME_STRING ");
     	sql.append(" from normal_report n   ");
-    	sql.append(" where n.stock_code = ? and n.Y_Q_R=? order by n.code limit 5  ");
+    	sql.append(" where n.stock_code = ? and n.Y_Q_R=? order by n.code desc limit 5  ");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());

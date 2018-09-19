@@ -6,7 +6,7 @@ public class ObjectOutPutDetailStockDTO {
 	private String name;
 	private String code;
 	private Double price;
-	private List<Object> recommended;
+	private List<RecommendationsDTO> recommended;
 	private List<String> headers;
 	private List<List<Object>> rows;
 	private List<List<Object>> plans;
@@ -33,12 +33,6 @@ public class ObjectOutPutDetailStockDTO {
 	}
 	public void setPrice(Double price) {
 		this.price = price;
-	}
-	public List<Object> getRecommended() {
-		return recommended;
-	}
-	public void setRecommended(List<Object> recommended) {
-		this.recommended = recommended;
 	}
 	public List<String> getHeaders() {
 		return headers;
@@ -93,6 +87,12 @@ public class ObjectOutPutDetailStockDTO {
 	}
 	public void setRiskRatio(List<List<Object>> riskRatio) {
 		this.riskRatio = riskRatio;
+	}
+	public List<RecommendationsDTO> getRecommended() {
+		return recommended;
+	}
+	public void setRecommended(List<RecommendationsDTO> recommended) {
+		this.recommended = recommended;
 	}
 	
 	

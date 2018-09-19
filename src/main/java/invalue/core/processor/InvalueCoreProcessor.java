@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +23,10 @@ import invalue.core.dto.BasicFilterDTO;
 import invalue.core.dto.CompareFilterDTO;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
+import invalue.core.dto.InputSearchStockDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
+import invalue.core.dto.RecommendationsDTO;
 import invalue.core.dto.SearchItemDTO;
 import invalue.core.entity.FinanceRatio;
 import invalue.core.entity.NormalReport;
@@ -37,7 +40,6 @@ import invalue.core.repository.NormalReportRepository;
 import invalue.core.repository.NormalReportYRepository;
 import invalue.core.repository.PlanOfYearRepository;
 import invalue.core.repository.RecommendationsOfStockRepository;
-import invalue.core.repository.RecommendationsOfStockRepositoryCustom;
 import invalue.core.repository.StockRepository;
 import invalue.core.util.NumberFormatUtil;
 import invalue.core.util.StringUtil;
@@ -587,7 +589,7 @@ public class InvalueCoreProcessor {
 			    	
 			    	planOfYear.setCode(planOfYear.getStockCode()+timeString);
 			    	planOfYear.setTimeString(timeString);
-			    	Long id = planOfYearRepository.getPlanOfYearByCode(planOfYear.getCode());
+			    	Long id = planOfYearRepository.getPlanOfYearByCode(planOfYear.getStockCode());
 			    	if(null!=id) {
 			    		planOfYear.setId(id);
 			    	}
@@ -634,16 +636,16 @@ public class InvalueCoreProcessor {
 		
 	}
 	
-	public ObjectOutPutDetailStockDTO detailStock(String code, String time) {
+	public ObjectOutPutDetailStockDTO detailStock(InputSearchStockDTO inputSearchStockDTO) {
 		ObjectOutPutDetailStockDTO out = new ObjectOutPutDetailStockDTO();
 		List<String> header= new ArrayList<>();
-		
-		if(!StringUtil.isNullOrEmpty(time) && "quarter".toUpperCase().equals(time)) {
+		String time;
+		if(!StringUtil.isNullOrEmpty(inputSearchStockDTO.getTime()) && "quarter".toUpperCase().equals(inputSearchStockDTO.getTime())) {
 			time="Q";
 		}else {
 			time="Y";
 		}
-		List<Object> resultHeader =normalReportRepository.searchHeaderReportData(code.toUpperCase(),time);
+		List<Object> resultHeader =normalReportRepository.searchHeaderReportData(inputSearchStockDTO.getCode().toUpperCase(),time);
 		
 		header.add("Year End");
 		if(!resultHeader.isEmpty()) {
@@ -651,9 +653,10 @@ public class InvalueCoreProcessor {
 				header.add(object.toString());
 			}
 		}
+		Collections.reverse(header);
 		out.setHeaders(header);
 		
-		List<Object> result =normalReportRepository.searchReportData(code.toUpperCase(),time);
+		List<Object> result =normalReportRepository.searchReportData(inputSearchStockDTO.getCode().toUpperCase(),time);
 		List<List<Object>> data = new ArrayList<>();
     	if(!result.isEmpty()) {
     		List<Object> ls0= new ArrayList<>();
@@ -804,15 +807,16 @@ public class InvalueCoreProcessor {
 	    		}
 			}
     	}
+    	Collections.reverse(data);
     	out.setRows(data);
-    	List<Object> result1 =normalReportYRepository.searchInfoCtyAnCurrenData(code.toUpperCase(),resultHeader.get(resultHeader.size()-1).toString());
+    	List<Object> result1 =normalReportRepository.searchInfoCtyAnCurrenData(inputSearchStockDTO.getCode().toUpperCase(),resultHeader.get(resultHeader.size()-1).toString(),time);
     	
     	if(!result1.isEmpty()) {
     		List<List<Object>> plans = new ArrayList<>();
     		Object[] arrayObject = (Object[])result1.get(0);
     		out.setCode(arrayObject[0].toString());
     		out.setName(arrayObject[1].toString());
-    		out.setPrice(9999D);
+    		
     		List<Object> ls1= new ArrayList<>();
     		ls1.add("Doanh thu(bil)");
     		ls1.add(arrayObject[2]);
@@ -941,8 +945,44 @@ public class InvalueCoreProcessor {
     		ls27.add(arrayObject[28]);
     		riskRatio.add(ls27);
     		out.setRiskRatio(riskRatio);
-    		
-    		out.getHeaders().set(0, "Year End "+arrayObject[29]);
+    		if(null!=arrayObject[29])
+    			out.getHeaders().set(0, "Year End "+arrayObject[29]);
+    	}
+    	List<Object> resultR =normalReportRepository.searchReportData(inputSearchStockDTO.getCode().toUpperCase(),"R");
+    	if(null!=resultR && !resultR.isEmpty()) {
+    		for (Object object : resultR) {
+        		Object[] arrayObject = (Object[]) object;
+        		for(int i=0; i<arrayObject.length;i++) {
+        			if(!"null".equals(arrayObject[i])) {
+        				data.get(i).add(arrayObject[i]);
+        			}
+        		}
+    		}
+    		out.getHeaders().add("Rolling");
+    	}
+    	
+    	Double price=financeRatioRepository.getNewPriceByStockCode(inputSearchStockDTO.getCode().toUpperCase());
+    	if(null!=price) {
+    		out.setPrice(price);
+    	}
+    	List<Object> resultRecommendations =recommendationsOfStockRepository.GetListRecommendationsOfStock(inputSearchStockDTO.getCode().toUpperCase());
+    	
+    	if(!resultRecommendations.isEmpty()) {
+    		List<RecommendationsDTO> listRe= new ArrayList<>();
+    		for (Object object : resultRecommendations) {
+    			RecommendationsDTO re = new RecommendationsDTO();
+
+    			Object[] arrayObject = (Object[]) object;
+    			re.setCompanyRecommendations((String) arrayObject[0]);
+    			re.setCompanyRecommendationsAction((String) arrayObject[1]);
+    			re.setTargetPrice((Double) arrayObject[2]);
+    			re.setRevenue((Double) arrayObject[3]);
+    			re.setPretaxProfit((Double) arrayObject[4]);
+    			re.setNetProfit((Double) arrayObject[5]);
+    			re.setTimeRecommendations((Date) arrayObject[6]);
+    			listRe.add(re);
+    		}
+    		out.setRecommended(listRe);
     	}
     	
         return out;

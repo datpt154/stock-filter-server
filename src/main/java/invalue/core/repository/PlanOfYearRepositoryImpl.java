@@ -21,7 +21,7 @@ public class PlanOfYearRepositoryImpl implements PlanOfYearRepositoryCustom {
     EntityManager entityManager;
 
 	@Override
-	public Long getPlanOfYearByCode(String code) {
+	public Long getPlanOfYearByCode(String stockCode) {
 		StringBuilder sql = new StringBuilder();
     	StringBuilder select = new StringBuilder();
     	StringBuilder where = new StringBuilder();
@@ -30,8 +30,8 @@ public class PlanOfYearRepositoryImpl implements PlanOfYearRepositoryCustom {
     	Query query = entityManager.createNativeQuery("");
     	select.append(" SELECT p.id");
     	from.append(" from plan_of_year p ");
-    	where.append(" where 1 = 1 and p.CODE = ? and p.status<> -1 ");
-    	params.add(code);
+    	where.append(" where 1 = 1 and p.STOCK_CODE = ? and p.status<> -1 ");
+    	params.add(stockCode);
     	
 		sql.append(select).append(from).append(where);
         query = entityManager.createNativeQuery(sql.toString());

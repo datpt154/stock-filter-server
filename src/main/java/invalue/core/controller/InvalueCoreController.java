@@ -20,6 +20,7 @@ import invalue.core.dto.BasicFilterDTO;
 import invalue.core.dto.CompareFilterDTO;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
+import invalue.core.dto.InputSearchStockDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.processor.InvalueCoreProcessor;
@@ -105,15 +106,15 @@ public class InvalueCoreController {
     	return invalueCoreProcessor.autoCompleteStock(searchPattern);
     }
     
-    @GetMapping("/detailstock/{code}")
-    public ObjectOutPutDetailStockDTO detailStock(@PathVariable(value = "code") String code, String time) {
+    @PostMapping("/detailstock")
+    public ObjectOutPutDetailStockDTO detailStock(@Valid @RequestBody InputSearchStockDTO inputSearchStockDTO) {
 		
 //		Gson gson = new Gson();
 //		Map<String,Object> map = new HashMap<String,Object>();
 //		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
 //		String searchCode=(String) map.get("searchPattern");
     	
-    	return invalueCoreProcessor.detailStock(code, time);
+    	return invalueCoreProcessor.detailStock(inputSearchStockDTO);
     }
     
     @PostMapping("/Compare")

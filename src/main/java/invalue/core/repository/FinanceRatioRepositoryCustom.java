@@ -12,4 +12,5 @@ public interface FinanceRatioRepositoryCustom {
 	public List<Object> getCompareFillter(InputCompareFilterDTO inputCompareFilterDTO);
 	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString );
 	public Long getFinanceRatioByCode(String code );
+	public Double getNewPriceByStockCode(String code );
 }

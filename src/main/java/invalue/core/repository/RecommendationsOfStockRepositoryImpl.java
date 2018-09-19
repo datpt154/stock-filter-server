@@ -24,7 +24,7 @@ public class RecommendationsOfStockRepositoryImpl implements RecommendationsOfSt
 	public List<Object> GetListRecommendationsOfStock(String stockCode){
 		StringBuilder sql = new StringBuilder();
     	Query query = entityManager.createNativeQuery("");
-    	sql.append(" select COMPANY_RECOMMENDATIONS, RECOMMENDATIONS_ACTION, TARGET_PRICE, REVENUE, PRETAX_PROFIT, NET_PROFIT, TIME_RECOMMENDATIONS from recommendations_of_stock where STOCK_CODE = ? order by TIME_RECOMMENDATIONS desc LIMIT 30");
+    	sql.append(" select COMPANY_RECOMMENDATIONS, RECOMMENDATIONS_ACTION, TARGET_PRICE, REVENUE, PRETAX_PROFIT, NET_PROFIT, TIME_RECOMMENDATIONS from recommendations_of_stock where STOCK_CODE = ? order by TIME_RECOMMENDATIONS desc LIMIT 5");
 
         query = entityManager.createNativeQuery(sql.toString());
         query.setParameter(1, stockCode);
