@@ -6,6 +6,7 @@ import java.util.List;
  */
 public interface NormalReportCustom {
 	public List<Object> searchReportData(String searchPattern, String time);
+	public List<Object> searchReportDataDetail(String searchPattern, String time);
 	public List<Object> searchInfoCtyAnCurrenData(String searchPattern, String timeString, String time);
 	public List<Object> searchHeaderReportData(String searchPattern, String time);
 	public Long getNormalReportByCode(String code );

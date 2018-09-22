@@ -75,6 +75,86 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
         return query.getResultList();
 		
 	}
+	
+	@Override
+	public List<Object> searchReportDataDetail(String code, String time) {
+		StringBuilder sql = new StringBuilder();
+		List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select IFNULL(n.CURRENT_ASSET, 0) ");
+    	sql.append(" ,IFNULL(n.CASH_AND_CASH_EQUIVALENTS, 0) ");
+    	sql.append(" ,IFNULL(n.SHORT_TERM_INVESTMENTS, 0) ");
+    	sql.append(" ,IFNULL(n.ACCOUNTS_RECEIVABLE_SHORT_TERM, 0) ");
+    	sql.append(" ,IFNULL(n.INVENTORIES, 0) ");
+    	sql.append(" ,IFNULL(n.OTHER_CURRENT_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERM_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.ACCOUNT_RECEIVABLE_LONG_TERM, 0) ");
+    	sql.append(" ,IFNULL(n.FIXED_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.TANGIBLE_FIXED_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.FINANCE_TANGIBLE_FIXED_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.INTANGIBLE_FIXED_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.INVESTMENT_PROPERTY, 0) ");
+    	sql.append(" ,IFNULL(n.CONTRUCTION_IN_PROGRESS, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERM_INVESTMENT, 0) ");
+    	sql.append(" ,IFNULL(n.GOOD_WILL, 0) ");
+    	sql.append(" ,IFNULL(n.OTHER_LONG_TERM_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.TOTAL_ASSETS, 0) ");
+    	sql.append(" ,IFNULL(n.CURRENT_LIABILITIES, 0) ");
+    	sql.append(" ,IFNULL(n.ACCOUNT_PAYABLE_TO_SUPPLIERS, 0) ");
+    	sql.append(" ,IFNULL(n.SHORT_TERM_ADVANCES_FROM_CUSTOMERS, 0) ");
+    	sql.append(" ,IFNULL(n.SHORT_TERM_UNEARNED_REVENUE, 0) ");
+    	sql.append(" ,IFNULL(n.SHORT_TERM_BORROWINGS_AND_LIABILITIES, 0) ");
+    	sql.append(" ,IFNULL(n.OTHER_SHORT_TERM_LIABILITIES, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERM_LIABILITIES, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERM_ACCOUNTS_PAYABLE, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERMADVANCES_FROM_CUSTOMERS, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERM_UNEARNED_REVENUE, 0) ");
+    	sql.append(" ,IFNULL(n.LONG_TERM_BORROWINGS_AND_LIABILITIES, 0) ");
+    	sql.append(" ,IFNULL(n.OTHER_LONG_TERM_LIABILITIES, 0) ");
+    	sql.append(" ,IFNULL(n.EQUITY, 0) ");
+    	sql.append(" ,IFNULL(n.SHARE_CAPITAL, 0) ");
+    	sql.append(" ,IFNULL(n.SHARE_PREMIUM, 0) ");
+    	sql.append(" ,IFNULL(n.RETAINED_PROFITS, 0) ");
+    	sql.append(" ,IFNULL(n.OTHER_CAPITALS, 0) ");
+    	sql.append(" ,IFNULL(n.NON_CONTROLLING_INTEREST, 0) ");
+    	sql.append(" ,IFNULL(n.TOTAL_RESOURCES, 0) ");
+    	sql.append(" ,'null' SPACE_1 ");
+    	sql.append(" ,IFNULL(n.NET_REVENUE, 0) ");
+    	sql.append(" ,IFNULL(n.COST_OF_SALES, 0) ");
+    	sql.append(" ,IFNULL(n.GROSS_PROFIT, 0) ");
+    	sql.append(" ,IFNULL(n.FINANCIAL_INCOME, 0) ");
+    	sql.append(" ,IFNULL(n.FINANCIAL_EXPENSES, 0) ");
+    	sql.append(" ,IFNULL(n.IN_WHICH_INTEREST_EXPENSE, 0) ");
+    	sql.append(" ,IFNULL(n.SHARE_OF_PROFIT_IN_ASSOCIATES, 0) ");
+    	sql.append(" ,IFNULL(n.SELLING_EXPENSES, 0) ");
+    	sql.append(" ,IFNULL(n.GENERAL_AND_ADMINISTRATION_EXPENSES, 0) ");
+    	sql.append(" ,IFNULL(n.NET_OPERATING_PROFIT, 0) ");
+    	sql.append(" ,IFNULL(n.OTHER_INCOME, 0) ");
+    	sql.append(" ,IFNULL(n.PROFIT_BEFORE_TAX, 0) ");
+    	sql.append(" ,IFNULL(n.INCOME_TAX_EXPENSE, 0) ");
+    	sql.append(" ,IFNULL(n.NET_PROFIT_AFTER_TAX, 0) ");
+    	sql.append(" ,IFNULL(n.MINORITY_INTEREST, 0) ");
+    	sql.append(" ,IFNULL(n.NET_INCOME, 0) ");
+    	sql.append(" ,'null' SPACE_2 ");
+    	sql.append(" ,IFNULL(n.DEPRECIATION, 0) ");
+    	sql.append(" ,IFNULL(n.ALLOWANCES_AND_PROVISIONS, 0) ");
+    	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_OPERATING_ACTIVITIES, 0) ");
+    	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_INVESTING_ACTIVITIES, 0) ");
+    	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_FINANCING_ACTIVITIES, 0) ");
+    	sql.append(" ,IFNULL(n.PAYMENTS_OF_DIVIDENDS, 0) ");
+
+    	sql.append(" from normal_report n   ");
+    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 5");
+    	params.add(code);
+    	params.add(time);
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+		
+	}
+	
 	@Override
 	public List<Object> searchInfoCtyAnCurrenData(String code, String timeString, String time) {
 		StringBuilder sql = new StringBuilder();

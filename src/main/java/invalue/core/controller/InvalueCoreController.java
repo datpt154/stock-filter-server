@@ -108,13 +108,12 @@ public class InvalueCoreController {
     
     @PostMapping("/detailstock")
     public ObjectOutPutDetailStockDTO detailStock(@Valid @RequestBody InputSearchStockDTO inputSearchStockDTO) {
-		
-//		Gson gson = new Gson();
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
-//		String searchCode=(String) map.get("searchPattern");
-    	
     	return invalueCoreProcessor.detailStock(inputSearchStockDTO);
+    }
+    
+    @PostMapping("/detailstockmore")
+    public ObjectOutPutDetailStockDTO detailStockMore(@Valid @RequestBody InputSearchStockDTO inputSearchStockDTO) {
+    	return invalueCoreProcessor.detailStockMore(inputSearchStockDTO);
     }
     
     @PostMapping("/Compare")

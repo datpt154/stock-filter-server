@@ -13,4 +13,6 @@ public interface FinanceRatioRepositoryCustom {
 	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString );
 	public Long getFinanceRatioByCode(String code );
 	public Double getNewPriceByStockCode(String code );
+	public List<Object> searchReportDataDetail(String code, String time);
+	public List<Object> searchHeaderReportData(String searchPattern, String time);
 }
