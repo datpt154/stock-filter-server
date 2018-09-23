@@ -23,6 +23,7 @@ import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.InputSearchStockDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
+import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
 import invalue.core.processor.InvalueCoreProcessor;
 import invalue.core.repository.FinanceRatioQRepository;
 
@@ -112,7 +113,7 @@ public class InvalueCoreController {
     }
     
     @PostMapping("/detailstockmore")
-    public ObjectOutPutDetailStockDTO detailStockMore(@Valid @RequestBody InputSearchStockDTO inputSearchStockDTO) {
+    public ObjectOutPutDetailStockMoreDTO detailStockMore(@Valid @RequestBody InputSearchStockDTO inputSearchStockDTO) {
     	return invalueCoreProcessor.detailStockMore(inputSearchStockDTO);
     }
     

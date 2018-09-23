@@ -26,6 +26,7 @@ import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.InputSearchStockDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
+import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
 import invalue.core.dto.RecommendationsDTO;
 import invalue.core.dto.SearchItemDTO;
 import invalue.core.entity.FinanceRatio;
@@ -993,13 +994,11 @@ public class InvalueCoreProcessor {
 		
 	}
 	
-	public ObjectOutPutDetailStockDTO detailStockMore(InputSearchStockDTO inputSearchStockDTO) {
-		ObjectOutPutDetailStockDTO out = new ObjectOutPutDetailStockDTO();
+	public ObjectOutPutDetailStockMoreDTO detailStockMore(InputSearchStockDTO inputSearchStockDTO) {
+		ObjectOutPutDetailStockMoreDTO out = new ObjectOutPutDetailStockMoreDTO();
 		List<String> headerNormal= new ArrayList<>();
 		List<String> headerFinance= new ArrayList<>();
 		String time;
-		System.out.println("--------------"+inputSearchStockDTO.getTime());
-		System.out.println("--------------"+inputSearchStockDTO.getCode());
 		if(!StringUtil.isNullOrEmpty(inputSearchStockDTO.getTime()) && "quarter".toUpperCase().equals(inputSearchStockDTO.getTime().toUpperCase())) {
 			time="Q";
 		}else {
@@ -1024,7 +1023,7 @@ public class InvalueCoreProcessor {
 			}
 		}
 		Collections.reverse(headerFinance);
-		out.setHeaders(headerFinance);
+		out.setHeaderFinance(headerFinance);
 		
 		List<Object> resultNormal =normalReportRepository.searchReportDataDetail(inputSearchStockDTO.getCode().toUpperCase(),time);
 		List<Object> resultFinance =financeRatioRepository.searchReportDataDetail(inputSearchStockDTO.getCode().toUpperCase(),time);
@@ -1033,186 +1032,305 @@ public class InvalueCoreProcessor {
 		
     	if(!resultNormal.isEmpty()) {
     		List<Object> ls0= new ArrayList<>();
+    		ls0.add(1);
     		ls0.add("Current Asset");
     		dataNormal.add(ls0);
+    		
     		List<Object> ls1= new ArrayList<>();
+    		ls1.add(2);
     		ls1.add("Cash and Cash equivalents");
     		dataNormal.add(ls1);
+    		
     		List<Object> ls2= new ArrayList<>();
+    		ls2.add(2);
     		ls2.add("short-term Investments");
     		dataNormal.add(ls2);
+    		
     		List<Object> ls3= new ArrayList<>();
+    		ls3.add(2);
     		ls3.add("Accounts receivable - short-term");
     		dataNormal.add(ls3);
+    		
     		List<Object> ls4= new ArrayList<>();
+    		ls4.add(2);
     		ls4.add("Inventories");
     		dataNormal.add(ls4);
+    		
     		List<Object> ls5= new ArrayList<>();
+    		ls5.add(2);
     		ls5.add("other current assets");
     		dataNormal.add(ls5);
+    		
     		List<Object> ls6= new ArrayList<>();
+    		ls6.add(1);
     		ls6.add("Long-term assets");
     		dataNormal.add(ls6);
+    		
     		List<Object> ls7= new ArrayList<>();
+    		ls7.add(2);
     		ls7.add("Account receivable - Long-term");
     		dataNormal.add(ls7);
+    		
     		List<Object> ls8= new ArrayList<>();
+    		ls8.add(2);
     		ls8.add("Fixed assets");
     		dataNormal.add(ls8);
+    		
     		List<Object> ls9= new ArrayList<>();
+    		ls9.add(3);
     		ls9.add("Tangible fixed assets");
     		dataNormal.add(ls9);
+    		
     		List<Object> ls10= new ArrayList<>();
+    		ls10.add(3);
     		ls10.add("Finance tangible fixed assets");
     		dataNormal.add(ls10);
+    		
     		List<Object> ls11= new ArrayList<>();
+    		ls11.add(3);
     		ls11.add("intangible fixed assets");
     		dataNormal.add(ls11);
+    		
     		List<Object> ls12= new ArrayList<>();
+    		ls12.add(2);
     		ls12.add("Investment property");
     		dataNormal.add(ls12);
+    		
     		List<Object> ls13= new ArrayList<>();
+    		ls13.add(2);
     		ls13.add("Contruction in progress");
     		dataNormal.add(ls13);
+    		
     		List<Object> ls14= new ArrayList<>();
+    		ls14.add(2);
     		ls14.add("Long-term investment");
     		dataNormal.add(ls14);
+    		
     		List<Object> ls15= new ArrayList<>();
+    		ls15.add(2);
     		ls15.add("Good will");
     		dataNormal.add(ls15);
+    		
     		List<Object> ls16= new ArrayList<>();
+    		ls16.add(2);
     		ls16.add("Other long-term assets");
     		dataNormal.add(ls16);
+    		
     		List<Object> ls17= new ArrayList<>();
+    		ls17.add(4);
     		ls17.add("TOTAL ASSETS");
     		dataNormal.add(ls17);
+    		
     		List<Object> ls18= new ArrayList<>();
+    		ls18.add(1);
     		ls18.add("Current liabilities");
     		dataNormal.add(ls18);
+    		
     		List<Object> ls19= new ArrayList<>();
+    		ls19.add(2);
     		ls19.add("Account payable to suppliers");
     		dataNormal.add(ls19);
+    		
     		List<Object> ls20= new ArrayList<>();
+    		ls20.add(2);
     		ls20.add(" Advances from customers");
     		dataNormal.add(ls20);
+    		
     		List<Object> ls21= new ArrayList<>();
+    		ls21.add(2);
     		ls21.add(" Short-term Unearned revenue");
     		dataNormal.add(ls21);
+    		
     		List<Object> ls22= new ArrayList<>();
+    		ls22.add(2);
     		ls22.add(" Short-term borrowings and liabilities ");
     		dataNormal.add(ls22);
+    		
     		List<Object> ls23= new ArrayList<>();
+    		ls23.add(2);
     		ls23.add("Other short-term liabilities");
     		dataNormal.add(ls23);
+    		
     		List<Object> ls24= new ArrayList<>();
+    		ls24.add(1);
     		ls24.add(" Long-term liabilities ");
     		dataNormal.add(ls24);
+    		
     		List<Object> ls25= new ArrayList<>();
+    		ls25.add(2);
     		ls25.add("Long-term accounts payable  ");
     		dataNormal.add(ls25);
+    		
     		List<Object> ls26= new ArrayList<>();
+    		ls26.add(2);
     		ls26.add(" Advances from customers");
     		dataNormal.add(ls26);
+    		
     		List<Object> ls27= new ArrayList<>();
+    		ls27.add(2);
     		ls27.add("Long-term Unearned revenue");
     		dataNormal.add(ls27);
+    		
     		List<Object> ls28= new ArrayList<>();
+    		ls28.add(2);
     		ls28.add(" Long-term borrowings and liabilities");
     		dataNormal.add(ls28);
+    		
     		List<Object> ls29= new ArrayList<>();
+    		ls29.add(2);
     		ls29.add("Other long-term liabilities");
     		dataNormal.add(ls29);
+    		
     		List<Object> ls30= new ArrayList<>();
+    		ls30.add(1);
     		ls30.add("EQUITY ");
     		dataNormal.add(ls30);
+    		
     		List<Object> ls31= new ArrayList<>();
+    		ls31.add(2);
     		ls31.add(" Share capital");
     		dataNormal.add(ls31);
+    		
     		List<Object> ls32= new ArrayList<>();
+    		ls32.add(2);
     		ls32.add("Share premium ");
     		dataNormal.add(ls32);
+    		
     		List<Object> ls33= new ArrayList<>();
+    		ls33.add(2);
     		ls33.add("Retained profits ");
     		dataNormal.add(ls33);
+    		
     		List<Object> ls34= new ArrayList<>();
+    		ls34.add(2);
     		ls34.add("other capitals");
     		dataNormal.add(ls34);
+    		
     		List<Object> ls35= new ArrayList<>();
+    		ls35.add(2);
     		ls35.add("Non-controlling interest");
     		dataNormal.add(ls35);
+    		
     		List<Object> ls36= new ArrayList<>();
+    		ls36.add(4);
     		ls36.add("TOTAL RESOURCES");
     		dataNormal.add(ls36);
-    		List<Object> ls37= new ArrayList<>();
+    		
+    		List<Object> ls37= new ArrayList<>();//---------------------------------------
     		ls37.add("Incom statement");
     		dataNormal.add(ls37);
+    		
     		List<Object> ls38= new ArrayList<>();
+    		ls38.add(1);
     		ls38.add("Net revenue");
     		dataNormal.add(ls38);
+    		
     		List<Object> ls39= new ArrayList<>();
+    		ls39.add(2);
     		ls39.add("Cost of sales");
     		dataNormal.add(ls39);
+    		
     		List<Object> ls40= new ArrayList<>();
+    		ls40.add(1);
     		ls40.add("Gross profit");
     		dataNormal.add(ls40);
+    		
     		List<Object> ls41= new ArrayList<>();
+    		ls41.add(2);
     		ls41.add("Financial income ");
     		dataNormal.add(ls41);
+    		
     		List<Object> ls42= new ArrayList<>();
+    		ls42.add(2);
     		ls42.add("Financial expenses");
     		dataNormal.add(ls42);
+    		
     		List<Object> ls43= new ArrayList<>();
+    		ls4.add(3);
     		ls43.add("In which: Interest expense ");
     		dataNormal.add(ls43);
+    		
     		List<Object> ls44= new ArrayList<>();
+    		ls44.add(2);
     		ls44.add("Share of profit in associates");
     		dataNormal.add(ls44);
+    		
     		List<Object> ls45= new ArrayList<>();
+    		ls45.add(2);
     		ls45.add("Selling expenses");
     		dataNormal.add(ls45);
+    		
     		List<Object> ls46= new ArrayList<>();
+    		ls46.add(2);
     		ls46.add("General and administration expenses ");
     		dataNormal.add(ls46);
+    		
     		List<Object> ls47= new ArrayList<>();
+    		ls47.add(1);
     		ls47.add("Net operating profit ");
     		dataNormal.add(ls47);
+    		
     		List<Object> ls48= new ArrayList<>();
+    		ls48.add(2);
     		ls48.add("Other income ");
     		dataNormal.add(ls48);
+    		
     		List<Object> ls49= new ArrayList<>();
+    		ls49.add(1);
     		ls49.add("Profit before tax");
     		dataNormal.add(ls49);
+    		
     		List<Object> ls50= new ArrayList<>();
+    		ls50.add(2);
     		ls50.add("Income tax expense ");
     		dataNormal.add(ls50);
+    		
     		List<Object> ls51= new ArrayList<>();
+    		ls51.add(1);
     		ls51.add("Net profit after tax ");
     		dataNormal.add(ls51);
+    		
     		List<Object> ls52= new ArrayList<>();
+    		ls52.add(2);
     		ls52.add("Minority interest");
     		dataNormal.add(ls52);
+    		
     		List<Object> ls53= new ArrayList<>();
+    		ls53.add(1);
     		ls53.add("Net Income");
     		dataNormal.add(ls53);
-    		List<Object> ls54= new ArrayList<>();
+    		
+    		List<Object> ls54= new ArrayList<>();//-----------------------------
     		ls54.add("Cash flows statement");
     		dataNormal.add(ls54);
+    		
     		List<Object> ls55= new ArrayList<>();
+    		ls55.add(2);
     		ls55.add("Depreciation ");
     		dataNormal.add(ls55);
+    		
     		List<Object> ls56= new ArrayList<>();
+    		ls56.add(2);
     		ls56.add("Allowances and provisions");
     		dataNormal.add(ls56);
+    		
     		List<Object> ls57= new ArrayList<>();
+    		ls57.add(2);
     		ls57.add("Net cash flows from operating activities ");
     		dataNormal.add(ls57);
+    		
     		List<Object> ls58= new ArrayList<>();
+    		ls58.add(2);
     		ls58.add("Net cash flows from investing activities ");
     		dataNormal.add(ls58);
+    		
     		List<Object> ls59= new ArrayList<>();
+    		ls59.add(2);
     		ls59.add("Net cash flows from financing activities ");
     		dataNormal.add(ls59);
+    		
     		List<Object> ls60= new ArrayList<>();
+    		ls60.add(2);
     		ls60.add("Payments of dividends ");
     		dataNormal.add(ls60);
 
@@ -1461,8 +1579,7 @@ public class InvalueCoreProcessor {
 	    		}
 			}
     	}
-    	Collections.reverse(dataNormal);
-    	out.setRows(dataNormal);
+    	out.setRowsFinance(dataFinance);
         return out;
 		
 	}
