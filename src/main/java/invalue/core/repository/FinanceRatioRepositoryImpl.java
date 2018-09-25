@@ -64,7 +64,8 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
         for(int i=0;i<params.size();i++){
         	query.setParameter(i+1, params.get(i));
         }
-
+        System.out.println(sql);
+        System.out.println(params);
         return query.getResultList();
     }
 
