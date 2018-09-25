@@ -31,7 +31,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	StringBuilder from = new StringBuilder();
     	List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("");
-    	select.append(" SELECT f.stock_code, s.name, s.STOCK_EXCHANGE_CODE ");
+    	select.append(" SELECT f.stock_code, s.name, s.STOCK_EXCHANGE_CODE, f.MARKET_PRICE prices ");
     	from.append(" from finance_ratio f, stock s ");
     	where.append(" where 1 = 1 and f.STOCK_CODE = s.code and f.status = 0 ");
     	where.append(" and Y_Q_R = ? ");
@@ -64,8 +64,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
         for(int i=0;i<params.size();i++){
         	query.setParameter(i+1, params.get(i));
         }
-        System.out.println(sql);
-        System.out.println(params);
+
         return query.getResultList();
     }
 
