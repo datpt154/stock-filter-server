@@ -81,7 +81,8 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
 		StringBuilder sql = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("");
-    	sql.append(" select IFNULL(n.CURRENT_ASSET, 0) ");
+    	sql.append(" select 'null' SPACE_1 ");
+    	sql.append(" ,IFNULL(n.CURRENT_ASSET, 0) ");
     	sql.append(" ,IFNULL(n.CASH_AND_CASH_EQUIVALENTS, 0) ");
     	sql.append(" ,IFNULL(n.SHORT_TERM_INVESTMENTS, 0) ");
     	sql.append(" ,IFNULL(n.ACCOUNTS_RECEIVABLE_SHORT_TERM, 0) ");
@@ -118,7 +119,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	sql.append(" ,IFNULL(n.OTHER_CAPITALS, 0) ");
     	sql.append(" ,IFNULL(n.NON_CONTROLLING_INTEREST, 0) ");
     	sql.append(" ,IFNULL(n.TOTAL_RESOURCES, 0) ");
-    	sql.append(" ,'null' SPACE_1 ");
+    	sql.append(" ,'null' SPACE_2 ");
     	sql.append(" ,IFNULL(n.NET_REVENUE, 0) ");
     	sql.append(" ,IFNULL(n.COST_OF_SALES, 0) ");
     	sql.append(" ,IFNULL(n.GROSS_PROFIT, 0) ");
@@ -135,13 +136,10 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	sql.append(" ,IFNULL(n.NET_PROFIT_AFTER_TAX, 0) ");
     	sql.append(" ,IFNULL(n.MINORITY_INTEREST, 0) ");
     	sql.append(" ,IFNULL(n.NET_INCOME, 0) ");
-    	sql.append(" ,'null' SPACE_2 ");
-    	sql.append(" ,IFNULL(n.DEPRECIATION, 0) ");
-    	sql.append(" ,IFNULL(n.ALLOWANCES_AND_PROVISIONS, 0) ");
+    	sql.append(" ,'null' SPACE_3 ");
     	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_OPERATING_ACTIVITIES, 0) ");
     	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_INVESTING_ACTIVITIES, 0) ");
     	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_FINANCING_ACTIVITIES, 0) ");
-    	sql.append(" ,IFNULL(n.PAYMENTS_OF_DIVIDENDS, 0) ");
 
     	sql.append(" from normal_report n   ");
     	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 5");

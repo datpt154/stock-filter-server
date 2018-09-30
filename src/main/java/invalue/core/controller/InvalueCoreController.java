@@ -117,6 +117,11 @@ public class InvalueCoreController {
     	return invalueCoreProcessor.detailStockMore(inputSearchStockDTO);
     }
     
+    @PostMapping("/detailstockfinanceratio")
+    public ObjectOutPutDetailStockMoreDTO detailStockFinanceRatio(@Valid @RequestBody InputSearchStockDTO inputSearchStockDTO) {
+    	return invalueCoreProcessor.detailStockFinanceRatio(inputSearchStockDTO);
+    }
+    
     @PostMapping("/Compare")
     public Collection<CompareFilterDTO> getCompareFiltered(@Valid @RequestBody InputCompareFilterDTO inputCompareFilterDTO) {
 //    	ObjectOutput out= new ObjectOutput();

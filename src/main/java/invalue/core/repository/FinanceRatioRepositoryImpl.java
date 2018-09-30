@@ -233,8 +233,8 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" ,IFNULL(f.REV_FCF, 0) ");
     	sql.append(" ,IFNULL(f.MC_CFO, 0) ");
     	sql.append(" ,IFNULL(f.MC_NWC, 0) ");
-//    	sql.append(" ,IFNULL(f.FCFF, 0) ");
-//    	sql.append(" ,IFNULL(f.FCFE, 0) ");
+    	sql.append(" ,IFNULL(f.FCFF, 0) ");
+    	sql.append(" ,IFNULL(f.FCFE, 0) ");
     	sql.append(" ,'null' SPACE_4 ");
     	sql.append(" ,IFNULL(f.CAPEX_REV, 0) ");
     	sql.append(" ,IFNULL(f.ROIC, 0) ");
