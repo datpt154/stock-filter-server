@@ -69,12 +69,13 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     }
 
 	@Override
-	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString) {
+	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString, String time) {
 		StringBuilder sql = new StringBuilder();
 		Query query = entityManager.createNativeQuery("");
 		List<Object> params = new ArrayList<Object>();
-		sql.append("update finance_ratio set status = 1 where status = 0 and TIME_STRING< ? and stock_code in (");
+		sql.append("update finance_ratio set status = 1 where status = 0 and TIME_STRING< ? and Y_Q_R=? and stock_code in (");
 		params.add(timeString);
+		params.add(time);
 		for(int i=0;i<listCode.size();i++){
 			if(i == 0) {
 				sql.append(" ?");
@@ -233,8 +234,8 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" ,IFNULL(f.REV_FCF, 0) ");
     	sql.append(" ,IFNULL(f.MC_CFO, 0) ");
     	sql.append(" ,IFNULL(f.MC_NWC, 0) ");
-    	sql.append(" ,IFNULL(f.FCFF, 0) ");
-    	sql.append(" ,IFNULL(f.FCFE, 0) ");
+//    	sql.append(" ,IFNULL(f.FCFF, 0) ");
+//    	sql.append(" ,IFNULL(f.FCFE, 0) ");
     	sql.append(" ,'null' SPACE_4 ");
     	sql.append(" ,IFNULL(f.CAPEX_REV, 0) ");
     	sql.append(" ,IFNULL(f.ROIC, 0) ");

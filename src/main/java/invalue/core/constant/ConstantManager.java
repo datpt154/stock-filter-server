@@ -84,9 +84,229 @@ public class ConstantManager implements Serializable{
             put("C_SCORE", new MapingColum(64,"C_SCORE","C_SCORE"));
             put("M_SCORE", new MapingColum(65,"M_SCORE","M_SCORE"));
             put("Z_SCORE", new MapingColum(66,"Z_SCORE","Z_SCORE"));
-
-
         }
-    };
-	
+	};
+        //List 
+        public static final  String[] vDetailStockFinanceRatio= new String[]{ "Dữ liệu tài chính"//0
+        		,"Doanh thu thuần"//1
+        		,"Lợi nhuận gộp"//2
+        		,"LNST"//3
+        		,"KL Cổ phiếu"//4
+        		,"EPS"//5
+        		,"Giá trị sổ sách"//6
+        		,"Giá thị trường"//7
+        		,"Chi phí đầu tư (Capex)"//9
+        		,"Dòng tiền tự do"//10
+        		,"EBIT"//11
+        		,"EBITDA"//12
+        		,"N-NWC"//13
+        		,"Vốn lưu động"//14
+        		,"Giá trị doanh nghiệp (EV)"//15
+        		,"Vốn hóa"//16
+        		,"Tăng trưởng so với cùng kỳ"//17
+        		,"TT Doanh thu "//18
+        		,"TT LNST"//19
+        		,"TT EPS"//20
+        		,"TT EBITDA"//21
+        		,"TT Nợ"//22
+        		,"TT VCSH"//23
+        		,"TT Vốn hóa"//24
+        		,"TT Tài sản"//25
+        		,"Tỷ số định giá"//26
+        		,"P/E"//27
+        		,"Peg"//28
+        		,"P/B"//29
+        		,"P/S"//30
+        		,"EV/EBITDA"//31
+        		,"EV/EBIT"//32
+        		,"EV/FCF"//33
+        		,"Doanh thu/ Dòng tiền tự do"//34
+        		,"Vốn hóa/ Dòng tiền HĐKD"//35
+        		,"Vốn hóa/ Vốn lưu động"//36
+        		,"Hiệu quả đầu tư"//37
+        		,"Capex/Rev"//38
+        		,"ROIC"//39
+        		,"ROCE"//40
+        		,"ROE"//41
+        		,"ROA"//42
+        		,"Lợi nhuận biên"//43
+        		,"Tỷ lệ lãi gộp"//44
+        		,"LN hoạt động biên"//45
+        		,"LN trước thuế biên"//46
+        		,"Tỷ lệ lãi ròng"//47
+        		,"Tỷ suất cổ tức"//48
+        		,"Tỷ suất EBIT"//49
+        		,"Tỷ suất EBITDA"//50
+        		,"Hiệu quả hoạt động"//51
+        		,"Vòng quay tài sản"//52
+        		,"Vòng quay phải thu"//53
+        		,"Vòng quay phải trả"//54
+        		,"Vòng quay tồn kho"//55
+        		,"Đòn bẩy tài chính"//56
+        		,"Nợ/Tổng tài sản"//57
+        		,"Nợ/Vốn chủ sở hữu"//58
+        		,"Nợ dài hạn/Vốn hóa"//59
+        		,"Khả năng trả lãi vay"//60
+        		,"Hệ số thanh toán"//61
+        		,"Hệ số thanh toán hiện hành"//62
+        		,"Hệ số thanh toán nhanh"//63
+        		,"Hệ số thanh toán tiền mặt"//64
+        		,"Rủi ro"//65
+        		,"Phải thu/ Doanh thu"//66
+        		,"Phải thu/ LNST"//67
+        		,"Dự phòng/ LNST"//68
+        		,"Đánh giá BCTC"//69
+        		,"F-Score (Chất lượng BCTC)"//70
+        		,"C-score (sửa đổi BCTC)"//71
+        		,"M-score (Làm giả lợi nhuận)"//72
+        		,"Z-score (khả năng phá sản)"
+        }; 
+        public static final  String[] eDetailStockFinanceRatio= new String[]{ "Finance" //0
+        		,"Revenue"//1
+        		,"Gross profit"//2
+        		,"Income"//3
+        		,"Shares"//4
+        		,"EPS"//5
+        		,"BV"//6
+        		,"Price"//7
+        		,"Capex "//8
+        		,"FCF"//9
+        		,"EBIT"//10
+        		,"EBITDA"//11
+        		,"NNWC"//12
+        		,"Net working capital"//13
+        		,"EV"//14
+        		,"Capitalization"//15
+        		,"Finance Growth"//16
+        		,"Revenue Growth"//17
+        		,"Income Growth"//18
+        		,"EPS Growth"//19
+        		,"EBITDA Growth"//20
+        		,"Debt Growth"//21
+        		,"Equity Growth"//22
+        		,"Capitalization Growth"//23
+        		,"Assets Growth"//24
+        		,"Price ratio"//25
+        		,"P/E"//26
+        		,"Peg"//27
+        		,"P/B"//28
+        		,"P/S"//29
+        		,"EV/EBITDA"//30
+        		,"EV/EBIT"//31
+        		,"EV/FCF"//32
+        		,"Rev/FCF"//33
+        		,"MC/CFO"//34
+        		,"MC/NWC"//35
+        		,"Profitabilities ratio"//36
+        		,"Capex/Rev"//37
+        		,"ROIC"//38
+        		,"ROCE"//39
+        		,"ROE"//40
+        		,"ROA"//41
+        		,"Margin"//42
+        		,"Gross Margin"//43
+        		,"Operating Margin"//44
+        		,"Pretax Margin"//45
+        		,"Profit margin"//46
+        		,"Div Yield"//47
+        		,"EBIT/Rev"//48
+        		,"EBITDA/Rev"//49
+        		,"Activity turnover"//50
+        		,"Asset Turnover"//51
+        		,"Receivable turnover"//52
+        		,"Payable turnover"//53
+        		,"Inventory turnover"//54
+        		,"Interpretation of Solvency ratios"//55
+        		,"Debt to Assets "//56
+        		,"Debt to Equity "//57
+        		,"LT debt/Capitalazion"//58
+        		,"Interest coverage"//59
+        		,"Liquidity Ratio"//60
+        		,"Current ratio"//61
+        		,"Quick ratio"//62
+        		,"Cash ratio"//63
+        		,"Risk ratio"//64
+        		,"AR/Rev"//65
+        		,"AR/Income"//66
+        		,"A&P/Income"//67
+        		,"Score"//68
+        		,"F-Score"//69
+        		,"C-score"//70
+        		,"M-score"//71
+        		,"Z-score"//72
+        };
+        public static final  String[] detailStockFinanceRatioLevel= new String[]{ "level1"//0
+        		,"level3"//1
+        		,"level3"//2
+        		,"level3"//3
+        		,"level3"//4
+        		,"level3"//5
+        		,"level3"//6
+        		,"level3"//7
+        		,"level3"//8
+        		,"level3"//9
+        		,"level3"//10
+        		,"level3"//11
+        		,"level3"//12
+        		,"level3"//13
+        		,"level3"//14
+        		,"level3"//15
+        		,"level1"//16
+        		,"level3"//17
+        		,"level3"//18
+        		,"level3"//19
+        		,"level3"//20
+        		,"level3"//21
+        		,"level3"//22
+        		,"level3"//23
+        		,"level3"//24
+        		,"level1"//25
+        		,"level3"//26
+        		,"level3"//27
+        		,"level3"//28
+        		,"level3"//29
+        		,"level3"//30
+        		,"level3"//31
+        		,"level3"//32
+        		,"level3"//33
+        		,"level3"//34
+        		,"level3"//35
+        		,"level1"//36
+        		,"level3"//37
+        		,"level3"//38
+        		,"level3"//39
+        		,"level3"//40
+        		,"level3"//41
+        		,"level1"//42
+        		,"level3"//43
+        		,"level3"//44
+        		,"level3"//45
+        		,"level3"//46
+        		,"level3"//47
+        		,"level3"//48
+        		,"level3"//49
+        		,"level1"//50
+        		,"level3"//51
+        		,"level3"//52
+        		,"level3"//53
+        		,"level3"//54
+        		,"level1"//55
+        		,"level3"//56
+        		,"level3"//57
+        		,"level3"//58
+        		,"level3"//59
+        		,"level1"//60
+        		,"level3"//61
+        		,"level3"//62
+        		,"level3"//63
+        		,"level1"//64
+        		,"level3"//65
+        		,"level3"//66
+        		,"level3"//67
+        		,"level1"//68
+        		,"level3"//69
+        		,"level3"//70
+        		,"level3"//71
+        		,"level3"//72
+        };
 }

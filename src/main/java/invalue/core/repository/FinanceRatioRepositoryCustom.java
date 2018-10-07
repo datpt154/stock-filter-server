@@ -10,7 +10,7 @@ import invalue.core.dto.InputCompareFilterDTO;
 public interface FinanceRatioRepositoryCustom {
 	public List<Object> getFinanceRatioFillter(InputBasicFilterDTO inputBasicFilterDTO);
 	public List<Object> getCompareFillter(InputCompareFilterDTO inputCompareFilterDTO);
-	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString );
+	public void updateOldFinanceRatioFillter(List<String> listCode, String timeString, String time);
 	public Long getFinanceRatioByCode(String code );
 	public Double getNewPriceByStockCode(String code );
 	public List<Object> searchReportDataDetail(String code, String time);

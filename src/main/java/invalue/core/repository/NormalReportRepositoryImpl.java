@@ -65,7 +65,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	sql.append(" ,IFNULL(f.ROCE, 0) ");
     	sql.append(" from normal_report n   ");
     	sql.append(" left join finance_ratio f  on n.code = f.code ");
-    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 5");
+    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 6");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());
@@ -142,7 +142,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	sql.append(" ,IFNULL(n.NET_CASH_FLOWS_FROM_FINANCING_ACTIVITIES, 0) ");
 
     	sql.append(" from normal_report n   ");
-    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 5");
+    	sql.append(" where n.stock_code = ?  and n.Y_Q_R=?  order by n.code desc limit 6");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());
@@ -206,7 +206,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	Query query = entityManager.createNativeQuery("");
     	sql.append(" select n.TIME_STRING ");
     	sql.append(" from normal_report n   ");
-    	sql.append(" where n.stock_code = ? and n.Y_Q_R=? order by n.code desc limit 5  ");
+    	sql.append(" where n.stock_code = ? and n.Y_Q_R=? order by n.code desc limit 6  ");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());
