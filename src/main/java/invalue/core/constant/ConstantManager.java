@@ -16,6 +16,11 @@ public class ConstantManager implements Serializable{
 	/**
 	 * 
 	 */
+	public static final String average="Trung bình";
+	public static final String endYear="Năm tài chính";
+	public static final String report="Báo cáo";
+	public static final String reportFinanceRatio="Chỉ số tài chính";
+	public static final String unit="ĐV";
 	public static final Map<String, MapingColum> mapingColumFinanceRatio = new HashMap<String, MapingColum>(){
         {
             put("NET_REVENUE", new MapingColum(1,"NET_REVENUE","NET_REVENUE"));
@@ -308,5 +313,324 @@ public class ConstantManager implements Serializable{
         		,"level3"//70
         		,"level3"//71
         		,"level3"//72
+        };
+        public static final  String[] detailStockFinanceRatioUnit= new String[]{ ""//0
+        		,"$b"//1
+        		,"$b"//2
+        		,"$b"//3
+        		,"mil"//4
+        		,"$k"//5
+        		,"$k"//6
+        		,"$k"//7
+        		,"$b"//8
+        		,"$b"//9
+        		,"$b"//10
+        		,"$b"//11
+        		,"$b"//12
+        		,"$b"//13
+        		,"$b"//14
+        		,"$b"//15
+        		,"$b"//16
+        		,""//17
+        		,"%"//18
+        		,"%"//19
+        		,"%"//20
+        		,"%"//21
+        		,"%"//22
+        		,"%"//23
+        		,"%"//24
+        		,"%"//25
+        		,""//26
+        		,"x"//27
+        		,"x"//28
+        		,"x"//29
+        		,"x"//30
+        		,"x"//31
+        		,"x"//32
+        		,"x"//33
+        		,"x"//34
+        		,"x"//35
+        		,"x"//36
+        		,""//37
+        		,"%"//38
+        		,"%"//39
+        		,"%"//40
+        		,"%"//41
+        		,"%"//42
+        		,""//43
+        		,"%"//44
+        		,"%"//45
+        		,"%"//46
+        		,"%"//47
+        		,"%"//48
+        		,"%"//49
+        		,"%"//50
+        		,""//51
+        		,"x"//52
+        		,"x"//53
+        		,"x"//54
+        		,"x"//55
+        		,""//56
+        		,"x"//57
+        		,"x"//58
+        		,"x"//59
+        		,"x"//60
+        		,""//61
+        		,"x"//62
+        		,"x"//63
+        		,"x"//64
+        		,""//65
+        		,"x"//66
+        		,"x"//67
+        		,"x"//68
+        		,""//69
+        		,"p"//70
+        		,"p"//71
+        		,"p"//72
+        };
+        public static final  String[] vDetailStockNomalReport= new String[]{ "Bảng Cân Đối Kế Toán"//0
+        		,"Tài sản Ngắn hạn"//1
+        		,"Tiền và tương đương tiền"//2
+        		,"ĐTTC ngắn hạn"//3
+        		,"Phải thu ngắn hạn"//4
+        		,"Hàng tồn kho"//5
+        		,"TS ngắn hạn khác"//6
+        		,"Tài sản dài hạn"//7
+        		,"Phải thu dài hạn"//8
+        		,"Tài sản cố định ròng"//9
+        		,"Tài sản cố định hữu hình"//10
+        		,"Tài sản cố định thuê tài chính"//11
+        		,"Tài sản cố định vô hình"//12
+        		,"Bất động sản đầu tư"//13
+        		,"Tài sản dở dang"//14
+        		,"ĐTTC dài hạn"//15
+        		,"Lợi thế thương mại"//16
+        		,"Tài sản dài hạn khác"//17
+        		,"TỔNG TÀI SẢN"//18
+        		,"Nợ ngắn hạn"//19
+        		,"Phải trả người bán ngắn"//20
+        		,"Người mua trả trước ngắn hạn"//21
+        		,"Doanh thu chưa thực hiện"//22
+        		,"Vay và nợ thuê tài chính ngắn hạn"//23
+        		,"Nợ ngắn hạn khác"//24
+        		,"Nợ dài hạn"//25
+        		,"Phải trả nhà cung cấp dài hạn"//26
+        		,"Người mua trả tiền trước dài hạn"//27
+        		,"Doanh thu chưa thực hiện"//28
+        		,"Vay và nợ thuê tài chính dài hạn"//29
+        		,"Nợ dài hạn khác"//30
+        		,"Vốn Chủ Sở hữu"//31
+        		,"Vốn điều lệ"//32
+        		,"Thặng dư vốn cổ phần"//33
+        		,"Lợi nhuận chưa phân phối"//34
+        		,"Vốn khác"//35
+        		,"Lợi ích cổ đông thiểu số"//36
+        		,"TỔNG NGUỒN VỐN"//37
+        		,"Báo cáo kết quả kinh doanh"//38
+        		,"Doanh thu thuần"//39
+        		,"Giá vốn hàng bán"//40
+        		,"Lãi gộp"//41
+        		,"Thu nhập tài chính"//42
+        		,"Chi phí tài chính"//43
+        		,"trong đó: Chi phí lãi vay"//44
+        		,"Lãi/lỗ liên doanh liên kết"//45
+        		,"Chi phí bán hàng"//46
+        		,"Chi phí quản lý Doanh nghiệp"//47
+        		,"Lãi/lỗ từ HĐ Kinh doanh"//48
+        		,"Thu nhập/(chi phí) khác"//49
+        		,"Lãi/(lỗ) trước thuế"//50
+        		,"Thuế TNDN"//51
+        		,"Lãi/(lỗ) ròng"//52
+        		,"Lợi ích CĐTS"//53
+        		,"Lãi/(lỗ) thuần của CĐCT mẹ"//54
+        		,"Báo cáo lưu chuyển tiền"//55
+        		,"LCTT từ hoạt động kinh doanh"//56
+        		,"LCTT từ hoạt động đầu tư"//57
+        		,"LCTT từ hoạt động tài chính"//58
+        		,"Lưu chuyển tiền tệ ròng"//59
+        };
+        public static final  String[] eDetailStockNomalReport= new String[]{ "Balance Sheet"//0
+        		,"Current Asset"//1
+        		,"Cash and Cash equivalents"//2
+        		,"short-term Investments"//3
+        		,"Accounts receivable - short-term"//4
+        		,"Inventories"//5
+        		,"other current assets"//6
+        		,"Long-term assets"//7
+        		,"Account receivable - Long-term"//8
+        		,"Fixed assets"//9
+        		,"Tangible fixed assets"//10
+        		,"Finance tangible fixed assets"//11
+        		,"intangible fixed assets"//12
+        		,"Investment property"//13
+        		,"Contruction in progress"//14
+        		,"Long-term investment"//15
+        		,"Good will"//16
+        		,"Other long-term assets"//17
+        		,"TOTAL ASSETS"//18
+        		,"Current liabilities"//19
+        		,"Account payable to suppliers"//20
+        		,"Advances from customers"//21
+        		,"Short-term Unearned revenue"//22
+        		,"Short-term borrowings and liabilities "//23
+        		,"Other short-term liabilities"//24
+        		,"Long-term liabilities "//25
+        		,"Long-term accounts payable  "//26
+        		,"Advances from customers"//27
+        		,"Long-term Unearned revenue"//28
+        		,"Long-term borrowings and liabilities"//29
+        		,"Other long-term liabilities"//30
+        		,"EQUITY "//31
+        		,"Share capital"//32
+        		,"Share premium "//33
+        		,"Retained profits "//34
+        		,"other capitals"//35
+        		,"Non-controlling interest"//36
+        		,"TOTAL RESOURCES"//37
+        		,"Incom statement"//38
+        		,"Net revenue"//39
+        		,"Cost of sales"//40
+        		,"Gross profit"//41
+        		,"Financial income "//42
+        		,"Financial expenses"//43
+        		,"In which: Interest expense "//44
+        		,"Share of profit in associates"//45
+        		,"Selling expenses"//46
+        		,"General and administration expenses "//47
+        		,"Net operating profit "//48
+        		,"Other income "//49
+        		,"Profit before tax"//50
+        		,"Income tax expense "//51
+        		,"Net profit after tax "//52
+        		,"Minority interest"//53
+        		,"Net Income"//54
+        		,"Cash flows statement"//55
+        		,"Net cash flows from operating activities "//56
+        		,"Net cash flows from investing activities "//57
+        		,"Net cash flows from financing activities "//58
+        		,"Net cash flows"//59
+        };
+        public static final  String[] detailStockNomalReportLevel= new String[]{ "level1"//0
+        		,"level2"//1
+        		,"level3"//2
+        		,"level3"//3
+        		,"level3"//4
+        		,"level3"//5
+        		,"level3"//6
+        		,"level2"//7
+        		,"level3"//8
+        		,"level3"//9
+        		,"level4"//10
+        		,"level4"//11
+        		,"level4"//12
+        		,"level3"//13
+        		,"level3"//14
+        		,"level3"//15
+        		,"level3"//16
+        		,"level3"//17
+        		,"level2"//18
+        		,"level2"//19
+        		,"level3"//20
+        		,"level3"//21
+        		,"level3"//22
+        		,"level3"//23
+        		,"level3"//24
+        		,"level2"//25
+        		,"level3"//26
+        		,"level3"//27
+        		,"level3"//28
+        		,"level3"//29
+        		,"level3"//30
+        		,"level2"//31
+        		,"level3"//32
+        		,"level3"//33
+        		,"level3"//34
+        		,"level3"//35
+        		,"level3"//36
+        		,"level2"//37
+        		,"level1"//38
+        		,"level3"//39
+        		,"level3"//40
+        		,"level3"//41
+        		,"level3"//42
+        		,"level3"//43
+        		,"level4"//44
+        		,"level3"//45
+        		,"level3"//46
+        		,"level3"//47
+        		,"level3"//48
+        		,"level3"//49
+        		,"level3"//50
+        		,"level3"//51
+        		,"level3"//52
+        		,"level3"//53
+        		,"level3"//54
+        		,"level1"//55
+        		,"level3"//56
+        		,"level3"//57
+        		,"level3"//58
+        		,"level3"//59
+
+        };
+        public static final  String[] detailStockNomalReportUnit= new String[]{ ""//0
+        		,"$b"//1
+        		,"$b"//2
+        		,"$b"//3
+        		,"$b"//4
+        		,"$b"//5
+        		,"$b"//6
+        		,"$b"//7
+        		,"$b"//8
+        		,"$b"//9
+        		,"$b"//10
+        		,"$b"//11
+        		,"$b"//12
+        		,"$b"//13
+        		,"$b"//14
+        		,"$b"//15
+        		,"$b"//16
+        		,"$b"//17
+        		,"$b"//18
+        		,"$b"//19
+        		,"$b"//20
+        		,"$b"//21
+        		,"$b"//22
+        		,"$b"//23
+        		,"$b"//24
+        		,"$b"//25
+        		,"$b"//26
+        		,"$b"//27
+        		,"$b"//28
+        		,"$b"//29
+        		,"$b"//30
+        		,"$b"//31
+        		,"$b"//32
+        		,"$b"//33
+        		,"$b"//34
+        		,"$b"//35
+        		,"$b"//36
+        		,"$b"//37
+        		,""//38
+        		,"$b"//39
+        		,"$b"//40
+        		,"$b"//41
+        		,"$b"//42
+        		,"$b"//43
+        		,"$b"//44
+        		,"$b"//45
+        		,"$b"//46
+        		,"$b"//47
+        		,"$b"//48
+        		,"$b"//49
+        		,"$b"//50
+        		,"$b"//51
+        		,"$b"//52
+        		,"$b"//53
+        		,"$b"//54
+        		,"$b"//55
+        		,"$b"//56
+        		,"$b"//57
+        		,"$b"//58
+        		,"$b"//59
         };
 }

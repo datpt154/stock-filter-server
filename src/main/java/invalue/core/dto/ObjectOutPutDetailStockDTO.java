@@ -16,6 +16,7 @@ public class ObjectOutPutDetailStockDTO {
 	private List<List<Object>> activityTurnover;
 	private List<List<Object>> interpretationOfSolvencyRatios;
 	private List<List<Object>> riskRatio;
+	private String yearOfPlan;
 	public String getName() {
 		return name;
 	}
@@ -93,6 +94,12 @@ public class ObjectOutPutDetailStockDTO {
 	}
 	public void setRecommended(List<RecommendationsDTO> recommended) {
 		this.recommended = recommended;
+	}
+	public String getYearOfPlan() {
+		return yearOfPlan;
+	}
+	public void setYearOfPlan(String yearOfPlan) {
+		this.yearOfPlan = yearOfPlan;
 	}
 	
 	

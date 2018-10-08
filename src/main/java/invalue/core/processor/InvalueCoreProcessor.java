@@ -43,6 +43,7 @@ import invalue.core.repository.NormalReportYRepository;
 import invalue.core.repository.PlanOfYearRepository;
 import invalue.core.repository.RecommendationsOfStockRepository;
 import invalue.core.repository.StockRepository;
+import invalue.core.repository.SystemConfigRepository;
 import invalue.core.util.NumberFormatUtil;
 import invalue.core.util.StringUtil;
 import invalue.core.util.Unicode2English;
@@ -70,6 +71,9 @@ public class InvalueCoreProcessor {
     
     @Autowired
     PlanOfYearRepository planOfYearRepository;
+    
+    @Autowired
+    SystemConfigRepository systemConfigRepository;
     
     
 	
@@ -129,7 +133,7 @@ public class InvalueCoreProcessor {
     			}
 	    		
 	    	}
-	    	sumCompareFilterDTO.setCompanyCode("Trung binh");
+	    	sumCompareFilterDTO.setCompanyCode(ConstantManager.average);
 	    	int totalItem=compareFilterDTOs.size();
 	    	sumCompareFilterDTO.setPrice(NumberFormatUtil.formatDouble(sumCompareFilterDTO.getPrice()/totalItem,2));
 	    	for(int i=0;i<sumCompareFilterDTO.getSearchItems().size();i++) {
@@ -660,10 +664,15 @@ public class InvalueCoreProcessor {
 			
 			if(!resultHeader.isEmpty()) {
 				for (Object object : resultHeader) {
-					header.add(object.toString());
+					String h=object.toString();
+					String[] arayTmp=h.split("Q");
+					if(arayTmp.length==2) {
+						h="Q"+arayTmp[1]+"/"+arayTmp[0];
+					}
+					header.add(h);
 				}
 			}
-			header.add("Year End");
+			header.add(ConstantManager.endYear);
 			Collections.reverse(header);
 			out.setHeaders(header);
 			
@@ -887,18 +896,22 @@ public class InvalueCoreProcessor {
 	    		List<List<Object>> score = new ArrayList<>();
 	    		List<Object> ls11= new ArrayList<>();
 	    		ls11.add("F-Score");
+	    		ls11.add("p");
 	    		ls11.add(arrayObject[12]);
 	    		score.add(ls11);
 	    		List<Object> ls12= new ArrayList<>();
 	    		ls12.add("C-score");
+	    		ls12.add("p");
 	    		ls12.add(arrayObject[13]);
 	    		score.add(ls12);
 	    		List<Object> ls13= new ArrayList<>();
 	    		ls13.add("M-score");
+	    		ls13.add("p");
 	    		ls13.add(arrayObject[14]);
 	    		score.add(ls13);
 	    		List<Object> ls14= new ArrayList<>();
 	    		ls14.add("Z-score");
+	    		ls14.add("p");
 	    		ls14.add(arrayObject[15]);
 	    		score.add(ls14);
 	    		out.setScore(score);
@@ -981,7 +994,7 @@ public class InvalueCoreProcessor {
 	    		riskRatio.add(ls27);
 	    		out.setRiskRatio(riskRatio);
 	    		if(null!=arrayObject[29])
-	    			out.getHeaders().set(0, "Year End "+arrayObject[29]);
+	    			out.getHeaders().set(0, ConstantManager.endYear+" - "+arrayObject[29]);
 	    	}
 	    	List<Object> resultR =normalReportRepository.searchReportData(inputSearchStockDTO.getCode().toUpperCase(),"R");
 	    	if(null!=resultR && !resultR.isEmpty()) {
@@ -1021,7 +1034,10 @@ public class InvalueCoreProcessor {
     		}
     		out.setRecommended(listRe);
     	}
-    	
+    	String yearOfPlan=systemConfigRepository.getSystemConfigByCode("YEAROFPLAN");
+    	if(!StringUtil.isNullOrEmpty(yearOfPlan)) {
+    		out.setYearOfPlan(yearOfPlan);
+    	}
         return out;
 		
 	}
@@ -1040,10 +1056,16 @@ public class InvalueCoreProcessor {
 		
 		if(!resultHeaderNormal.isEmpty()) {
 			for (Object object : resultHeaderNormal) {
-				headerNormal.add(object.toString());
+				String h=object.toString();
+				String[] arayTmp=h.split("Q");
+				if(arayTmp.length==2) {
+					h="Q"+arayTmp[1]+"/"+arayTmp[0];
+				}
+				headerNormal.add(h);
 			}
 		}
-		headerNormal.add("Report:");
+		headerNormal.add(ConstantManager.unit);
+		headerNormal.add(ConstantManager.report);
 		Collections.reverse(headerNormal);
 		out.setHeaders(headerNormal);
 		
@@ -1052,317 +1074,13 @@ public class InvalueCoreProcessor {
 		List<List<Object>> dataNormal = new ArrayList<>();
 		
     	if(!resultNormal.isEmpty()) {
-    		List<Object> ls0= new ArrayList<>();
-    		ls0.add("level1");
-    		ls0.add("Balance Sheet");//---------------------------------------
-    		dataNormal.add(ls0);
-    		
-    		List<Object> ls1= new ArrayList<>();
-    		ls1.add("level2");
-    		ls1.add("Current Asset");
-    		dataNormal.add(ls1);
-    		
-    		List<Object> ls2= new ArrayList<>();
-    		ls2.add("level3");
-    		ls2.add("Cash and Cash equivalents");
-    		dataNormal.add(ls2);
-    		
-    		List<Object> ls3= new ArrayList<>();
-    		ls3.add("level3");
-    		ls3.add("short-term Investments");
-    		dataNormal.add(ls3);
-    		
-    		List<Object> ls4= new ArrayList<>();
-    		ls4.add("level3");
-    		ls4.add("Accounts receivable - short-term");
-    		dataNormal.add(ls4);
-    		
-    		List<Object> ls5= new ArrayList<>();
-    		ls5.add("level3");
-    		ls5.add("Inventories");
-    		dataNormal.add(ls5);
-    		
-    		List<Object> ls6= new ArrayList<>();
-    		ls6.add("level3");
-    		ls6.add("other current assets");
-    		dataNormal.add(ls6);
-    		
-    		List<Object> ls7= new ArrayList<>();
-    		ls7.add("level2");
-    		ls7.add("Long-term assets");
-    		dataNormal.add(ls7);
-    		
-    		List<Object> ls8= new ArrayList<>();
-    		ls8.add("level3");
-    		ls8.add("Account receivable - Long-term");
-    		dataNormal.add(ls8);
-    		
-    		List<Object> ls9= new ArrayList<>();
-    		ls9.add("level3");
-    		ls9.add("Fixed assets");
-    		dataNormal.add(ls9);
-    		
-    		List<Object> ls10= new ArrayList<>();
-    		ls10.add("level4");
-    		ls10.add("Tangible fixed assets");
-    		dataNormal.add(ls10);
-    		
-    		List<Object> ls11= new ArrayList<>();
-    		ls11.add("level4");
-    		ls11.add("Finance tangible fixed assets");
-    		dataNormal.add(ls11);
-    		
-    		List<Object> ls12= new ArrayList<>();
-    		ls12.add("level4");
-    		ls12.add("intangible fixed assets");
-    		dataNormal.add(ls12);
-    		
-    		List<Object> ls13= new ArrayList<>();
-    		ls13.add("level3");
-    		ls13.add("Investment property");
-    		dataNormal.add(ls13);
-    		
-    		List<Object> ls14= new ArrayList<>();
-    		ls14.add("level3");
-    		ls14.add("Contruction in progress");
-    		dataNormal.add(ls14);
-    		
-    		List<Object> ls15= new ArrayList<>();
-    		ls15.add("level3");
-    		ls15.add("Long-term investment");
-    		dataNormal.add(ls15);
-    		
-    		List<Object> ls16= new ArrayList<>();
-    		ls16.add("level3");
-    		ls16.add("Good will");
-    		dataNormal.add(ls16);
-    		
-    		List<Object> ls17= new ArrayList<>();
-    		ls17.add("level3");
-    		ls17.add("Other long-term assets");
-    		dataNormal.add(ls17);
-    		
-    		List<Object> ls18= new ArrayList<>();
-    		ls18.add("level2");
-    		ls18.add("TOTAL ASSETS");
-    		dataNormal.add(ls18);
-    		
-    		List<Object> ls19= new ArrayList<>();
-    		ls19.add("level2");
-    		ls19.add("Current liabilities");
-    		dataNormal.add(ls19);
-    		
-    		List<Object> ls20= new ArrayList<>();
-    		ls20.add("level3");
-    		ls20.add("Account payable to suppliers");
-    		dataNormal.add(ls20);
-    		
-    		List<Object> ls21= new ArrayList<>();
-    		ls21.add("level3");
-    		ls21.add(" Advances from customers");
-    		dataNormal.add(ls21);
-    		
-    		List<Object> ls22= new ArrayList<>();
-    		ls22.add("level3");
-    		ls22.add(" Short-term Unearned revenue");
-    		dataNormal.add(ls22);
-    		
-    		List<Object> ls23= new ArrayList<>();
-    		ls23.add("level3");
-    		ls23.add(" Short-term borrowings and liabilities ");
-    		dataNormal.add(ls23);
-    		
-    		List<Object> ls24= new ArrayList<>();
-    		ls24.add("level3");
-    		ls24.add("Other short-term liabilities");
-    		dataNormal.add(ls24);
-    		
-    		List<Object> ls25= new ArrayList<>();
-    		ls25.add("level2");
-    		ls25.add(" Long-term liabilities ");
-    		dataNormal.add(ls25);
-    		
-    		List<Object> ls26= new ArrayList<>();
-    		ls26.add("level3");
-    		ls26.add("Long-term accounts payable  ");
-    		dataNormal.add(ls26);
-    		
-    		List<Object> ls27= new ArrayList<>();
-    		ls27.add("level3");
-    		ls27.add(" Advances from customers");
-    		dataNormal.add(ls27);
-    		
-    		List<Object> ls28= new ArrayList<>();
-    		ls28.add("level3");
-    		ls28.add("Long-term Unearned revenue");
-    		dataNormal.add(ls28);
-    		
-    		List<Object> ls29= new ArrayList<>();
-    		ls29.add("level3");
-    		ls29.add(" Long-term borrowings and liabilities");
-    		dataNormal.add(ls29);
-    		
-    		List<Object> ls30= new ArrayList<>();
-    		ls30.add("level3");
-    		ls30.add("Other long-term liabilities");
-    		dataNormal.add(ls30);
-    		
-    		List<Object> ls31= new ArrayList<>();
-    		ls31.add("level2");
-    		ls31.add("EQUITY ");
-    		dataNormal.add(ls31);
-    		
-    		List<Object> ls32= new ArrayList<>();
-    		ls32.add("level3");
-    		ls32.add(" Share capital");
-    		dataNormal.add(ls32);
-    		
-    		List<Object> ls33= new ArrayList<>();
-    		ls33.add("level3");
-    		ls33.add("Share premium ");
-    		dataNormal.add(ls33);
-    		
-    		List<Object> ls34= new ArrayList<>();
-    		ls34.add("level3");
-    		ls34.add("Retained profits ");
-    		dataNormal.add(ls34);
-    		
-    		List<Object> ls35= new ArrayList<>();
-    		ls35.add("level3");
-    		ls35.add("other capitals");
-    		dataNormal.add(ls35);
-    		
-    		List<Object> ls36= new ArrayList<>();
-    		ls36.add("level3");
-    		ls36.add("Non-controlling interest");
-    		dataNormal.add(ls36);
-    		
-    		List<Object> ls37= new ArrayList<>();
-    		ls37.add("level2");
-    		ls37.add("TOTAL RESOURCES");
-    		dataNormal.add(ls37);
-    		
-    		List<Object> ls38= new ArrayList<>();//---------------------------------------
-    		ls38.add("level1");
-    		ls38.add("Incom statement");
-    		dataNormal.add(ls38);
-    		
-    		List<Object> ls39= new ArrayList<>();
-    		ls39.add("level3");
-    		ls39.add("Net revenue");
-    		dataNormal.add(ls39);
-    		
-    		List<Object> ls40= new ArrayList<>();
-    		ls40.add("level3");
-    		ls40.add("Cost of sales");
-    		dataNormal.add(ls40);
-    		
-    		List<Object> ls41= new ArrayList<>();
-    		ls41.add("level3");
-    		ls41.add("Gross profit");
-    		dataNormal.add(ls41);
-    		
-    		List<Object> ls42= new ArrayList<>();
-    		ls42.add("level3");
-    		ls42.add("Financial income ");
-    		dataNormal.add(ls42);
-    		
-    		List<Object> ls43= new ArrayList<>();
-    		ls43.add("level3");
-    		ls43.add("Financial expenses");
-    		dataNormal.add(ls43);
-    		
-    		List<Object> ls44= new ArrayList<>();
-    		ls44.add("level4");
-    		ls44.add("In which: Interest expense ");
-    		dataNormal.add(ls44);
-    		
-    		List<Object> ls45= new ArrayList<>();
-    		ls45.add("level3");
-    		ls45.add("Share of profit in associates");
-    		dataNormal.add(ls45);
-    		
-    		List<Object> ls46= new ArrayList<>();
-    		ls46.add("level3");
-    		ls46.add("Selling expenses");
-    		dataNormal.add(ls46);
-    		
-    		List<Object> ls47= new ArrayList<>();
-    		ls47.add("level3");
-    		ls47.add("General and administration expenses ");
-    		dataNormal.add(ls47);
-    		
-    		List<Object> ls48= new ArrayList<>();
-    		ls48.add("level3");
-    		ls48.add("Net operating profit ");
-    		dataNormal.add(ls48);
-    		
-    		List<Object> ls49= new ArrayList<>();
-    		ls49.add("level3");
-    		ls49.add("Other income ");
-    		dataNormal.add(ls49);
-    		
-    		List<Object> ls50= new ArrayList<>();
-    		ls50.add("level3");
-    		ls50.add("Profit before tax");
-    		dataNormal.add(ls50);
-    		
-    		List<Object> ls51= new ArrayList<>();
-    		ls51.add("level3");
-    		ls51.add("Income tax expense ");
-    		dataNormal.add(ls51);
-    		
-    		List<Object> ls52= new ArrayList<>();
-    		ls52.add("level3");
-    		ls52.add("Net profit after tax ");
-    		dataNormal.add(ls52);
-    		
-    		List<Object> ls53= new ArrayList<>();
-    		ls53.add("level3");
-    		ls53.add("Minority interest");
-    		dataNormal.add(ls53);
-    		
-    		List<Object> ls54= new ArrayList<>();
-    		ls54.add("level3");
-    		ls54.add("Net Income");
-    		dataNormal.add(ls54);
-    		
-    		List<Object> ls55= new ArrayList<>();//-----------------------------
-    		ls55.add("level1");
-    		ls55.add("Cash flows statement");
-    		dataNormal.add(ls55);
-    		
-//    		List<Object> ls55= new ArrayList<>();//-----------------HIDE------------
-//    		ls55.add("level2");
-//    		ls55.add("Depreciation ");
-//    		dataNormal.add(ls55);
-//    		
-//    		List<Object> ls56= new ArrayList<>();//------------------HIDE-----------
-//    		ls56.add("level2");
-//    		ls56.add("Allowances and provisions");
-//    		dataNormal.add(ls56);
-    		
-    		List<Object> ls56= new ArrayList<>();
-    		ls56.add("level3");
-    		ls56.add("Net cash flows from operating activities ");
-    		dataNormal.add(ls56);
-    		
-    		List<Object> ls57= new ArrayList<>();
-    		ls57.add("level3");
-    		ls57.add("Net cash flows from investing activities ");
-    		dataNormal.add(ls57);
-    		
-    		List<Object> ls58= new ArrayList<>();
-    		ls58.add("level3");
-    		ls58.add("Net cash flows from financing activities ");
-    		dataNormal.add(ls58);
-    		
-//    		List<Object> ls59= new ArrayList<>();//------------------HIDE-----------
-//    		ls59.add("level2");
-//    		ls59.add("Payments of dividends ");
-//    		dataNormal.add(ls59);
-
-
+    		for(int i=0; i<ConstantManager.detailStockNomalReportLevel.length;i++) {
+    			List<Object> ls= new ArrayList<>();
+        		ls.add(ConstantManager.detailStockNomalReportLevel[i]);
+        		ls.add(ConstantManager.vDetailStockNomalReport[i]);
+        		ls.add(ConstantManager.detailStockNomalReportUnit[i]);
+        		dataNormal.add(ls);
+    		}
 	    	for (Object object : resultNormal) {
 	    		Object[] arrayObject = (Object[]) object;
 	    		for(int i=0; i<arrayObject.length;i++) {
@@ -1371,18 +1089,7 @@ public class InvalueCoreProcessor {
 	    			}
 	    		}
 			}
-	    	List<Object> resultR =normalReportRepository.searchReportDataDetail(inputSearchStockDTO.getCode().toUpperCase(),"R");
-	    	if(null!=resultR && !resultR.isEmpty()) {
-	    		for (Object object : resultR) {
-	        		Object[] arrayObject = (Object[]) object;
-	        		for(int i=0; i<arrayObject.length;i++) {
-	        			if(!"null".equals(arrayObject[i])) {
-	        				dataNormal.get(i).add(arrayObject[i]);
-	        			}
-	        		}
-	    		}
-	    		out.getHeaders().add("TTM");
-	    	}
+	    	
     	}
     	out.setRows(dataNormal);
 
@@ -1403,10 +1110,16 @@ public class InvalueCoreProcessor {
 		
 		if(!resultHeaderFinance.isEmpty()) {
 			for (Object object : resultHeaderFinance) {
-				header.add(object.toString());
+				String h=object.toString();
+				String[] arayTmp=h.split("Q");
+				if(arayTmp.length==2) {
+					h="Q"+arayTmp[1]+"/"+arayTmp[0];
+				}
+				header.add(h);
 			}
 		}
-		header.add("Finance ratio:");
+		header.add(ConstantManager.unit);
+		header.add(ConstantManager.reportFinanceRatio);
 		Collections.reverse(header);
 		out.setHeaders(header);
 		
@@ -1415,383 +1128,11 @@ public class InvalueCoreProcessor {
 		List<List<Object>> dataFinance = new ArrayList<>();
     	
     	if(!resultFinance.isEmpty()) {
-//    		List<Object> ls0= new ArrayList<>();
-//    		ls0.add("level1");
-//    		ls0.add("Finance data");
-//    		dataFinance.add(ls0);
-//    		List<Object> ls1= new ArrayList<>();
-//    		ls1.add("level3");
-//    		ls1.add("Net revenue");
-//    		dataFinance.add(ls1);
-//    		
-//    		List<Object> ls2= new ArrayList<>();
-//    		ls2.add("level3");
-//    		ls2.add("Gross profit");
-//    		dataFinance.add(ls2);
-//    		
-//    		List<Object> ls3= new ArrayList<>();
-//    		ls3.add("level3");
-//    		ls3.add("Net income");
-//    		dataFinance.add(ls3);
-//    		
-//    		List<Object> ls4= new ArrayList<>();
-//    		ls4.add("level3");
-//    		ls4.add("Share's oustanding");
-//    		dataFinance.add(ls4);
-//    		
-//    		List<Object> ls5= new ArrayList<>();
-//    		ls5.add("level3");
-//    		ls5.add("EPS");
-//    		dataFinance.add(ls5);
-//    		
-//    		List<Object> ls6= new ArrayList<>();
-//    		ls6.add("level3");
-//    		ls6.add("Book value");
-//    		dataFinance.add(ls6);
-//    		
-//    		List<Object> ls7= new ArrayList<>();
-//    		ls7.add("level3");
-//    		ls7.add("Market price");
-//    		dataFinance.add(ls7);
-//    		
-//    		List<Object> ls8= new ArrayList<>();
-//    		ls8.add("level3");
-//    		ls8.add("Capex ");
-//    		dataFinance.add(ls8);
-//    		
-//    		List<Object> ls9= new ArrayList<>();
-//    		ls9.add("level3");
-//    		ls9.add("FCF");
-//    		dataFinance.add(ls9);
-//    		
-//    		List<Object> ls10= new ArrayList<>();
-//    		ls10.add("level3");
-//    		ls10.add("EBIT");
-//    		dataFinance.add(ls10);
-//    		
-//    		List<Object> ls11= new ArrayList<>();
-//    		ls11.add("level3");
-//    		ls11.add("EBITDA");
-//    		dataFinance.add(ls11);
-//    		
-//    		List<Object> ls12= new ArrayList<>();
-//    		ls12.add("level3");
-//    		ls12.add("NNWC");
-//    		dataFinance.add(ls12);
-//    		
-//    		List<Object> ls13= new ArrayList<>();
-//    		ls13.add("level3");
-//    		ls13.add("Net working capital");
-//    		dataFinance.add(ls13);
-//    		
-//    		List<Object> ls14= new ArrayList<>();
-//    		ls14.add("level3");
-//    		ls14.add("EV");
-//    		dataFinance.add(ls14);
-//    		
-//    		List<Object> ls15= new ArrayList<>();
-//    		ls15.add("level3");
-//    		ls15.add("Market capital");
-//    		dataFinance.add(ls15);
-//    		
-//    		List<Object> ls16= new ArrayList<>();
-//    		ls16.add("level1");
-//    		ls16.add("%YOY increase");
-//    		dataFinance.add(ls16);
-//    		
-//    		List<Object> ls17= new ArrayList<>();
-//    		ls17.add("level3");
-//    		ls17.add("Net revenue (%YOY)");
-//    		dataFinance.add(ls17);
-//    		
-//    		List<Object> ls18= new ArrayList<>();
-//    		ls18.add("level3");
-//    		ls18.add("Gross profit (%YOY)");
-//    		dataFinance.add(ls18);
-//    		
-//    		List<Object> ls19= new ArrayList<>();
-//    		ls19.add("level3");
-//    		ls19.add("EPS (%YOY)");
-//    		dataFinance.add(ls19);
-//    		
-//    		List<Object> ls20= new ArrayList<>();
-//    		ls20.add("level3");
-//    		ls20.add("EBITDA (%YOY)");
-//    		dataFinance.add(ls20);
-//    		
-//    		List<Object> ls21= new ArrayList<>();
-//    		ls21.add("level3");
-//    		ls21.add("Debt (%YOY)");
-//    		dataFinance.add(ls21);
-//    		
-//    		List<Object> ls22= new ArrayList<>();
-//    		ls22.add("level3");
-//    		ls22.add("Equity (%YOY)");
-//    		dataFinance.add(ls22);
-//    		
-//    		List<Object> ls23= new ArrayList<>();
-//    		ls23.add("level3");
-//    		ls23.add("Market capital (%YOY)");
-//    		dataFinance.add(ls23);
-//    		
-//    		List<Object> ls24= new ArrayList<>();
-//    		ls24.add("level3");
-//    		ls24.add("Total assets (%YOY)");
-//    		dataFinance.add(ls24);
-//    		
-//    		List<Object> ls25= new ArrayList<>();
-//    		ls25.add("level1");
-//    		ls25.add("Price ratio");
-//    		dataFinance.add(ls25);
-//    		
-//    		List<Object> ls26= new ArrayList<>();
-//    		ls26.add("level3");
-//    		ls26.add("P/E");
-//    		dataFinance.add(ls26);
-//    		
-//    		List<Object> ls27= new ArrayList<>();
-//    		ls27.add("level3");
-//    		ls27.add("Peg");
-//    		dataFinance.add(ls27);
-//    		
-//    		List<Object> ls28= new ArrayList<>();
-//    		ls28.add("level3");
-//    		ls28.add("P/B");
-//    		dataFinance.add(ls28);
-//    		
-//    		List<Object> ls29= new ArrayList<>();
-//    		ls29.add("level3");
-//    		ls29.add("P/S");
-//    		dataFinance.add(ls29);
-//    		
-//    		List<Object> ls30= new ArrayList<>();
-//    		ls30.add("level3");
-//    		ls30.add("EV/EBITDA");
-//    		dataFinance.add(ls30);
-//    		
-//    		List<Object> ls31= new ArrayList<>();
-//    		ls31.add("level3");
-//    		ls31.add("EV/EBIT");
-//    		dataFinance.add(ls31);
-//    		
-//    		List<Object> ls32= new ArrayList<>();
-//    		ls32.add("level3");
-//    		ls32.add("EV/FCF");
-//    		dataFinance.add(ls32);
-//    		
-//    		List<Object> ls33= new ArrayList<>();
-//    		ls33.add("level3");
-//    		ls33.add("Rev/FCF");
-//    		dataFinance.add(ls33);
-//    		
-//    		List<Object> ls34= new ArrayList<>();
-//    		ls34.add("level3");
-//    		ls34.add("MC/CFO");
-//    		dataFinance.add(ls34);
-//    		
-//    		List<Object> ls35= new ArrayList<>();
-//    		ls35.add("level3");
-//    		ls35.add("MC/NWC");
-//    		dataFinance.add(ls35);
-//    		
-//    		List<Object> ls36= new ArrayList<>();
-//    		ls36.add("level3");
-//    		ls36.add("FCFF");
-//    		dataFinance.add(ls36);
-//    		
-//    		List<Object> ls37= new ArrayList<>();
-//    		ls37.add("level3");
-//    		ls37.add("FCFE");
-//    		dataFinance.add(ls37);
-//    		
-//    		List<Object> ls38= new ArrayList<>();
-//    		ls38.add("level1");
-//    		ls38.add("Profitabilities ratio");
-//    		dataFinance.add(ls38);
-//    		
-//    		List<Object> ls39= new ArrayList<>();
-//    		ls39.add("level3");
-//    		ls39.add("Capex/Rev");
-//    		dataFinance.add(ls39);
-//    		
-//    		List<Object> ls40= new ArrayList<>();
-//    		ls40.add("level3");
-//    		ls40.add("ROIC");
-//    		dataFinance.add(ls40);
-//    		
-//    		List<Object> ls41= new ArrayList<>();
-//    		ls41.add("level3");
-//    		ls41.add("ROCE");
-//    		dataFinance.add(ls41);
-//    		
-//    		List<Object> ls42= new ArrayList<>();
-//    		ls42.add("level3");
-//    		ls42.add("ROE");
-//    		dataFinance.add(ls42);
-//    		
-//    		List<Object> ls43= new ArrayList<>();
-//    		ls43.add("level3");
-//    		ls43.add("ROA");
-//    		dataFinance.add(ls43);
-//    		
-//    		List<Object> ls44= new ArrayList<>();
-//    		ls44.add("level1");
-//    		ls44.add("Margin");
-//    		dataFinance.add(ls44);
-//    		
-//    		List<Object> ls45= new ArrayList<>();
-//    		ls45.add("level3");
-//    		ls45.add("Gross profit margin");
-//    		dataFinance.add(ls45);
-//    		
-//    		List<Object> ls46= new ArrayList<>();
-//    		ls46.add("level3");
-//    		ls46.add("Operating profit Margin");
-//    		dataFinance.add(ls46);
-//    		
-//    		List<Object> ls47= new ArrayList<>();
-//    		ls47.add("level3");
-//    		ls47.add("Pretax profit Margin");
-//    		dataFinance.add(ls47);
-//    		
-//    		List<Object> ls48= new ArrayList<>();
-//    		ls48.add("level3");
-//    		ls48.add("Net profit margin");
-//    		dataFinance.add(ls48);
-//    		
-//    		List<Object> ls49= new ArrayList<>();
-//    		ls49.add("level3");
-//    		ls49.add("Div Yield");
-//    		dataFinance.add(ls49);
-//    		
-//    		List<Object> ls50= new ArrayList<>();
-//    		ls50.add("level3");
-//    		ls50.add("EBIT/REV");
-//    		dataFinance.add(ls50);
-//    		
-//    		List<Object> ls51= new ArrayList<>();
-//    		ls51.add("level3");
-//    		ls51.add("EBITDA/REV");
-//    		dataFinance.add(ls51);
-//    		
-//    		List<Object> ls52= new ArrayList<>();
-//    		ls52.add("level1");
-//    		ls52.add("Activity turnover");
-//    		dataFinance.add(ls52);
-//    		
-//    		List<Object> ls53= new ArrayList<>();
-//    		ls53.add("level3");
-//    		ls53.add("sales-to-total assets");
-//    		dataFinance.add(ls53);
-//    		
-//    		List<Object> ls54= new ArrayList<>();
-//    		ls54.add("level3");
-//    		ls54.add("Receivable turnover");
-//    		dataFinance.add(ls54);
-//    		
-//    		List<Object> ls55= new ArrayList<>();
-//    		ls55.add("level3");
-//    		ls55.add("Payable turnover");
-//    		dataFinance.add(ls55);
-//    		
-//    		List<Object> ls56= new ArrayList<>();
-//    		ls56.add("level3");
-//    		ls56.add("inventory turnover");
-//    		dataFinance.add(ls56);
-//    		
-//    		List<Object> ls57= new ArrayList<>();
-//    		ls57.add("level1");
-//    		ls57.add("Interpretation of Solvency ratios");
-//    		dataFinance.add(ls57);
-//    		
-//    		List<Object> ls58= new ArrayList<>();
-//    		ls58.add("level3");
-//    		ls58.add("debt-to-assets ratio");
-//    		dataFinance.add(ls58);
-//    		
-//    		List<Object> ls59= new ArrayList<>();
-//    		ls59.add("level3");
-//    		ls59.add("Debt-to-equity ratio");
-//    		dataFinance.add(ls59);
-//    		
-//    		List<Object> ls60= new ArrayList<>();
-//    		ls60.add("level3");
-//    		ls60.add("Long-time debt/total capitalazion");
-//    		dataFinance.add(ls60);
-//    		
-//    		List<Object> ls61= new ArrayList<>();
-//    		ls61.add("level3");
-//    		ls61.add("interest coverage");
-//    		dataFinance.add(ls61);
-//    		
-//    		List<Object> ls62= new ArrayList<>();
-//    		ls62.add("level1");
-//    		ls62.add("Liquidity Ratio");
-//    		dataFinance.add(ls62);
-//    		
-//    		List<Object> ls63= new ArrayList<>();
-//    		ls63.add("level3");
-//    		ls63.add("Current ratio");
-//    		dataFinance.add(ls63);
-//    		
-//    		List<Object> ls64= new ArrayList<>();
-//    		ls64.add("level3");
-//    		ls64.add("Quick ratio");
-//    		dataFinance.add(ls64);
-//    		
-//    		List<Object> ls65= new ArrayList<>();
-//    		ls65.add("level3");
-//    		ls65.add("Cash ratio");
-//    		dataFinance.add(ls65);
-//    		
-//    		List<Object> ls66= new ArrayList<>();
-//    		ls66.add("level1");
-//    		ls66.add("Risk ratio");
-//    		dataFinance.add(ls66);
-//    		
-//    		List<Object> ls67= new ArrayList<>();
-//    		ls67.add("level3");
-//    		ls67.add("Account receivable-to-revenue");
-//    		dataFinance.add(ls67);
-//    		
-//    		List<Object> ls68= new ArrayList<>();
-//    		ls68.add("level3");
-//    		ls68.add("Account receivable-to-net income");
-//    		dataFinance.add(ls68);
-//    		
-//    		List<Object> ls69= new ArrayList<>();
-//    		ls69.add("level3");
-//    		ls69.add("Allowances and provisions-to-net income");
-//    		dataFinance.add(ls69);
-//    		
-//    		List<Object> ls70= new ArrayList<>();
-//    		ls70.add("level1");
-//    		ls70.add("Score");
-//    		dataFinance.add(ls70);
-//    		
-//    		List<Object> ls71= new ArrayList<>();
-//    		ls71.add("level3");
-//    		ls71.add("F-Score");
-//    		dataFinance.add(ls71);
-//    		
-//    		List<Object> ls72= new ArrayList<>();
-//    		ls72.add("level3");
-//    		ls72.add("C-score");
-//    		dataFinance.add(ls72);
-//    		
-//    		List<Object> ls73= new ArrayList<>();
-//    		ls73.add("level3");
-//    		ls73.add("M-score");
-//    		dataFinance.add(ls73);
-//    		
-//    		List<Object> ls74= new ArrayList<>();
-//    		ls74.add("level3");
-//    		ls74.add("Z-score");
-//    		dataFinance.add(ls74);
     		for(int i=0; i<ConstantManager.detailStockFinanceRatioLevel.length;i++) {
     			List<Object> ls= new ArrayList<>();
         		ls.add(ConstantManager.detailStockFinanceRatioLevel[i]);
-        		ls.add(ConstantManager.eDetailStockFinanceRatio[i]);
+        		ls.add(ConstantManager.vDetailStockFinanceRatio[i]);
+        		ls.add(ConstantManager.detailStockFinanceRatioUnit[i]);
         		dataFinance.add(ls);
     		}
     		for (Object object : resultFinance) {
@@ -1803,18 +1144,7 @@ public class InvalueCoreProcessor {
 	    			}
 	    		}
 			}
-    		List<Object> resultR =financeRatioRepository.searchReportDataDetail(inputSearchStockDTO.getCode().toUpperCase(),"R");
-	    	if(null!=resultR && !resultR.isEmpty()) {
-	    		for (Object object : resultR) {
-	        		Object[] arrayObject = (Object[]) object;
-	        		for(int i=0; i<arrayObject.length;i++) {
-	        			if(!"null".equals(arrayObject[i])) {
-	        				dataFinance.get(i).add(arrayObject[i]);
-	        			}
-	        		}
-	    		}
-	    		out.getHeaders().add("TTM");
-	    	}
+    		
     	}
     	out.setRows(dataFinance);
     	

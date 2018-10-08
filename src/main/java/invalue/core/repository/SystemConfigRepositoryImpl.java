@@ -11,43 +11,29 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import invalue.core.dto.InputBasicFilterDTO;
+import invalue.core.dto.InputCompareFilterDTO;
 /**
  * Created by HUYNP4 on 15/09/2018.
  */
 @Repository
 @Transactional(readOnly = true)
-public class StockRepositoryImpl implements StockRepositoryCustom {
+public class SystemConfigRepositoryImpl implements SystemConfigRepositoryCustom {
 	@PersistenceContext
     EntityManager entityManager;
 
 	@Override
-	public List<Object> autoCompleteStock(String searchPattern) {
-		StringBuilder sql = new StringBuilder();
-    	Query query = entityManager.createNativeQuery("");
-    	sql.append(" select id,code,name,case when code like ? then 1 when name like ? then 2 end priority from stock where code like ? or Name_Text like ? order by priority LIMIT 5 ");
-    	
-		
-        query = entityManager.createNativeQuery(sql.toString());
-        searchPattern="%"+searchPattern+"%";
-        query.setParameter(1, searchPattern);
-        query.setParameter(2, searchPattern);
-        query.setParameter(3, searchPattern);
-        query.setParameter(4, searchPattern);
-
-        return query.getResultList();
-	}
-
-	@Override
-	public Long getStockByCode(String code) {
+	public String getSystemConfigByCode(String code) {
 		StringBuilder sql = new StringBuilder();
     	StringBuilder select = new StringBuilder();
     	StringBuilder where = new StringBuilder();
     	StringBuilder from = new StringBuilder();
     	List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("");
-    	select.append(" SELECT s.id");
-    	from.append(" from stock s ");
-    	where.append(" where 1 = 1 and s.CODE = ? and s.status<> -1 ");
+    	select.append(" SELECT s.value");
+    	from.append(" from system_config s ");
+    	where.append(" where 1 = 1 and s.code = ? and status=0 ");
     	params.add(code);
     	
 		sql.append(select).append(from).append(where);
@@ -58,11 +44,10 @@ public class StockRepositoryImpl implements StockRepositoryCustom {
 
         List<Object> rs = query.getResultList();
         if(!rs.isEmpty()) {
-        	return Long.parseLong(rs.get(0).toString());
+        	return rs.get(0).toString();
         }
         return null ;
 	}
    
-    
    
 }
