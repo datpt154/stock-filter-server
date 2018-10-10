@@ -146,6 +146,7 @@ public class InvalueCoreProcessor {
 
     @Transactional
 	public String importFinanceratio(MultipartFile multipartFile, String timeString) {
+    	String logRow="";
 		try {
 	    	if(multipartFile!=null) {
 			    File file= convert(multipartFile);
@@ -169,7 +170,7 @@ public class InvalueCoreProcessor {
 			    	}
 			    	for (Row row : sheet) {
 				    	rowIndex++;
-				    	if(rowIndex<3) {
+				    	if(rowIndex<1) {
 				    		continue;
 				    	}
 				    	if(null==row.getCell(0)) {
@@ -178,6 +179,7 @@ public class InvalueCoreProcessor {
 				    	FinanceRatio financeRatio = new FinanceRatio();
 				    	financeRatio.setStockCode(row.getCell(0).getStringCellValue());
 				    	System.out.println("row:"+financeRatio.getStockCode()); 
+				    	logRow=financeRatio.getStockCode();
 				    	financeRatio.setCode(financeRatio.getStockCode()+timeString);
 				    	financeRatio.setType(1);
 				    	
@@ -212,14 +214,14 @@ public class InvalueCoreProcessor {
 				    	financeRatio.setNetWorkingCapital(NumberFormatUtil.formatDouble(row.getCell(15).getNumericCellValue(),1));
 				    	financeRatio.setEv(NumberFormatUtil.formatDouble(row.getCell(16).getNumericCellValue(),1));
 				    	financeRatio.setMarketCapital(NumberFormatUtil.formatDouble(row.getCell(17).getNumericCellValue(),1));
-				    	financeRatio.setNetRevenueYoy(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue(),1));
-				    	financeRatio.setGrossProfitYoy(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue(),1));
-				    	financeRatio.setEpsYoy(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue(),1));
-				    	financeRatio.setEbitdaYoy(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue(),1));
-				    	financeRatio.setDebtYoy(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue(),1));
-				    	financeRatio.setEquityYoy(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue(),1));
-				    	financeRatio.setMarketCapitalYoy(NumberFormatUtil.formatDouble(row.getCell(24).getNumericCellValue(),1));
-				    	financeRatio.setTotalAssetsYoy(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue(),1));
+				    	financeRatio.setNetRevenueYoy(NumberFormatUtil.formatDouble(row.getCell(18).getNumericCellValue()*100,1));
+				    	financeRatio.setGrossProfitYoy(NumberFormatUtil.formatDouble(row.getCell(19).getNumericCellValue()*100,1));
+				    	financeRatio.setEpsYoy(NumberFormatUtil.formatDouble(row.getCell(20).getNumericCellValue()*100,1));
+				    	financeRatio.setEbitdaYoy(NumberFormatUtil.formatDouble(row.getCell(21).getNumericCellValue()*100,1));
+				    	financeRatio.setDebtYoy(NumberFormatUtil.formatDouble(row.getCell(22).getNumericCellValue()*100,1));
+				    	financeRatio.setEquityYoy(NumberFormatUtil.formatDouble(row.getCell(23).getNumericCellValue()*100,1));
+				    	financeRatio.setMarketCapitalYoy(NumberFormatUtil.formatDouble(row.getCell(24).getNumericCellValue()*100,1));
+				    	financeRatio.setTotalAssetsYoy(NumberFormatUtil.formatDouble(row.getCell(25).getNumericCellValue()*100,1));
 				    	financeRatio.setPE(NumberFormatUtil.formatDouble(row.getCell(26).getNumericCellValue(),1));
 				    	financeRatio.setPeg(NumberFormatUtil.formatDouble(row.getCell(27).getNumericCellValue(),1));
 				    	financeRatio.setPB(NumberFormatUtil.formatDouble(row.getCell(28).getNumericCellValue(),1));
@@ -300,13 +302,14 @@ public class InvalueCoreProcessor {
 	    	}
     	}catch(Exception ex) {
 			System.out.println(ex);
-			return "Loi khi import file:"+ex.getMessage();
+			return logRow+"=====Loi khi import file:"+ex.getMessage();
 		}
 		return "import file thanh cong";
 	}
     
     @Transactional
 	public String importCty(MultipartFile multipartFile) {
+    	String logRow="";
 		try {
 	    	if(multipartFile!=null) {
 			    File currDir = new File(".");
@@ -318,14 +321,19 @@ public class InvalueCoreProcessor {
 			    FileInputStream input = new FileInputStream(file.getPath());
 			    Workbook workbook = new XSSFWorkbook(input);
 			    Sheet sheet = workbook.getSheetAt(0);
-			    
+			    int rowIndex=0;
 			    for (Row row : sheet) {
+			    	rowIndex++;
+			    	if(rowIndex<1) {
+			    		continue;
+			    	}
 			    	if(null==row.getCell(0)) {
 			    		break;
 			    	}
 			    	Stock stock = new Stock();
 			    	stock.setCode(row.getCell(0).getStringCellValue());
 			    	System.out.println("row:"+stock.getCode()); 
+			    	logRow=stock.getCode();
 			    	//check code
 			    	Long id = stockRepository.getStockByCode(stock.getCode());
 			    	if(null!=id) {
@@ -369,13 +377,14 @@ public class InvalueCoreProcessor {
 	    	}
     	}catch(Exception ex) {
 			System.out.println(ex);
-			return "Loi khi import file:"+ex.getMessage();
+			return logRow+"=====Loi khi import file:"+ex.getMessage();
 		}
 		return "import file thanh cong";
 	}
 	
 	@Transactional
 	public String importReportCty(MultipartFile multipartFile, String timeString) {
+		String logRow="";
 		try {
 	    	if(multipartFile!=null) {
 			    File file= convert(multipartFile);
@@ -408,7 +417,7 @@ public class InvalueCoreProcessor {
 				    	NormalReport normalReport = new NormalReport();
 				    	normalReport.setStockCode(row.getCell(0).getStringCellValue());
 				    	System.out.println("row:"+normalReport.getStockCode()); 
-				    	
+				    	logRow=normalReport.getStockCode();
 				    	normalReport.setCode(normalReport.getStockCode()+timeString);
 				    	Long id = normalReportRepository.getNormalReportByCode(normalReport.getCode());
 				    	if(null!=id) {
@@ -501,13 +510,14 @@ public class InvalueCoreProcessor {
 	    	}
     	}catch(Exception ex) {
 			System.out.println(ex);
-			return "Loi khi import file:"+ex.getMessage();
+			return logRow+"=====Loi khi import file:"+ex.getMessage();
 		}
 		return "import file thanh cong";
 	}
 	
 	@Transactional
 	public String importRecommandations(MultipartFile multipartFile) {
+		String logRow="";
 		try {
 	    	if(multipartFile!=null) {
 			    File currDir = new File(".");
@@ -532,7 +542,7 @@ public class InvalueCoreProcessor {
 			    	RecommendationsOfStock recommendationsOfStock = new RecommendationsOfStock();
 			    	recommendationsOfStock.setStockCode(row.getCell(0).getStringCellValue());
 			    	System.out.println("row:"+recommendationsOfStock.getStockCode()); 
-			    	
+			    	logRow=recommendationsOfStock.getStockCode();
 			    	recommendationsOfStock.setType(1);//
 			    	recommendationsOfStock.setStatus(0);
 			    	recommendationsOfStock.setCreatedTime(new Date());
@@ -568,13 +578,14 @@ public class InvalueCoreProcessor {
 	    	}
     	}catch(Exception ex) {
 			System.out.println(ex);
-			return "Loi khi import file:"+ex.getMessage();
+			return logRow+"====Loi khi import file:"+ex.getMessage();
 		}
 		return "import file thanh cong";
 	}
 	
 	@Transactional
 	public String importPlanOfYear(MultipartFile multipartFile, String timeString) {
+		String logRow="";
 		try {
 	    	if(multipartFile!=null) {
 			    File currDir = new File(".");
@@ -599,7 +610,7 @@ public class InvalueCoreProcessor {
 			    	PlanOfYear planOfYear = new PlanOfYear();
 			    	planOfYear.setStockCode(row.getCell(0).getStringCellValue());
 			    	System.out.println("row:"+planOfYear.getStockCode()); 
-			    	
+			    	logRow=planOfYear.getStockCode();
 			    	planOfYear.setCode(planOfYear.getStockCode()+timeString);
 			    	planOfYear.setTimeString(timeString);
 			    	Long id = planOfYearRepository.getPlanOfYearByCode(planOfYear.getStockCode());
@@ -631,7 +642,7 @@ public class InvalueCoreProcessor {
 	    	}
     	}catch(Exception ex) {
 			System.out.println(ex);
-			return "Loi khi import file:"+ex.getMessage();
+			return logRow+"====Loi khi import file:"+ex.getMessage();
 		}
 		return "import file thanh cong";
 	}
@@ -680,145 +691,14 @@ public class InvalueCoreProcessor {
 			Collections.reverse(result);
 			List<List<Object>> data = new ArrayList<>();
 	    	if(!result.isEmpty()) {
-	    		List<Object> ls0= new ArrayList<>();
-	    		ls0.add("Revenue");
-	    		ls0.add("$b");
-	    		data.add(ls0);
-	    		List<Object> ls1= new ArrayList<>();
-	    		ls1.add("Operating Profit");
-	    		ls1.add("$b");
-	    		data.add(ls1);
-	    		List<Object> ls2= new ArrayList<>();
-	    		ls2.add("Net Profit");
-	    		ls2.add("$b");
-	    		data.add(ls2);
-	    		List<Object> ls3= new ArrayList<>();
-	    		ls3.add("Balance Sheet");
-	    		data.add(ls3);
-	    		List<Object> ls4= new ArrayList<>();
-	    		ls4.add("Total asset");
-	    		ls4.add("$b");
-	    		data.add(ls4);
-	    		List<Object> ls5= new ArrayList<>();
-	    		ls5.add("Current asset");
-	    		ls5.add("$b");
-	    		data.add(ls5);
-	    		List<Object> ls6= new ArrayList<>();
-	    		ls6.add("Long-term asset");
-	    		ls6.add("$b");
-	    		data.add(ls6);
-	    		List<Object> ls7= new ArrayList<>();
-	    		ls7.add("Current liabilities");
-	    		ls7.add("$b");
-	    		data.add(ls7);
-	    		List<Object> ls8= new ArrayList<>();
-	    		ls8.add("Long-term liabilities ");
-	    		ls8.add("$b");
-	    		data.add(ls8);
-	    		List<Object> ls9= new ArrayList<>();
-	    		ls9.add("Equity");
-	    		ls9.add("$b");
-	    		data.add(ls9);
-	    		List<Object> ls10= new ArrayList<>();
-	    		ls10.add("Cash Flow");
-	    		data.add(ls10);
-	    		List<Object> ls11= new ArrayList<>();
-	    		ls11.add("CFO");
-	    		ls11.add("$b");
-	    		data.add(ls11);
-	    		List<Object> ls12= new ArrayList<>();
-	    		ls12.add("CFI");
-	    		ls12.add("$b");
-	    		data.add(ls12);
-	    		List<Object> ls13= new ArrayList<>();
-	    		ls13.add("CFF");
-	    		ls13.add("$b");
-	    		data.add(ls13);
-				List<Object> ls14= new ArrayList<>();
-	    		ls14.add("NET CASH");
-	    		ls14.add("$b");
-	    		data.add(ls14);
-	    		List<Object> ls15= new ArrayList<>();
-	    		ls15.add("Profit");
-	    		data.add(ls15);
-	    		List<Object> ls16= new ArrayList<>();
-	    		ls16.add("EPS ");
-	    		ls16.add("$k");
-	    		data.add(ls16);
-	    		List<Object> ls17= new ArrayList<>();
-	    		ls17.add("BV");
-	    		ls17.add("$k");
-	    		data.add(ls17);
-	    		List<Object> ls18= new ArrayList<>();
-	    		ls18.add("EBITDA");
-	    		ls18.add("$b");
-	    		data.add(ls18);
-	    		List<Object> ls19= new ArrayList<>();
-	    		ls19.add("Capitalization");
-	    		ls19.add("$b");
-	    		data.add(ls19);
-	    		List<Object> ls20= new ArrayList<>();
-	    		ls20.add("Growth");
-	    		data.add(ls20);
-	    		List<Object> ls21= new ArrayList<>();
-	    		ls21.add("Revenue Growth");
-	    		ls21.add("%");
-	    		data.add(ls21);
-	    		List<Object> ls22= new ArrayList<>();
-	    		ls22.add("Net Income");
-	    		ls22.add("%");
-	    		data.add(ls22);
-	    		List<Object> ls23= new ArrayList<>();
-	    		ls23.add("EBITDA");
-	    		ls23.add("%");
-	    		data.add(ls23);
-	    		List<Object> ls24= new ArrayList<>();
-	    		ls24.add("ASSET");
-	    		ls24.add("%");
-	    		data.add(ls24);
-	    		List<Object> ls25= new ArrayList<>();
-	    		ls25.add("Capitalization");
-	    		ls25.add("%");
-	    		data.add(ls25);
-	    		List<Object> ls26= new ArrayList<>();
-	    		ls26.add("Margin");
-	    		data.add(ls26);
-	    		List<Object> ls27= new ArrayList<>();
-	    		ls27.add("Gross Margin");
-	    		ls27.add("%");
-	    		data.add(ls27);
-	    		List<Object> ls28= new ArrayList<>();
-	    		ls28.add("Operating Margin");
-	    		ls28.add("%");
-	    		data.add(ls28);
-	    		List<Object> ls29= new ArrayList<>();
-	    		ls29.add("Profit margin");
-	    		ls29.add("%");
-	    		data.add(ls29);
-	    		List<Object> ls30= new ArrayList<>();
-	    		ls30.add("EBITDA/Rev");
-	    		ls30.add("%");
-	    		data.add(ls30);
-	    		List<Object> ls31= new ArrayList<>();
-	    		ls31.add("Profitabilities ratio");
-	    		data.add(ls31);
-	    		List<Object> ls32= new ArrayList<>();
-	    		ls32.add("ROE");
-	    		ls32.add("%");
-	    		data.add(ls32);
-	    		List<Object> ls33= new ArrayList<>();
-	    		ls33.add("ROA");
-	    		ls33.add("%");
-	    		data.add(ls33);
-	    		List<Object> ls34= new ArrayList<>();
-	    		ls34.add("ROIC");
-	    		ls34.add("%");
-	    		data.add(ls34);
-	    		List<Object> ls35= new ArrayList<>();
-	    		ls35.add("ROCE");
-	    		ls35.add("%");
-	    		data.add(ls35);
-
+	    		for(int i=0; i<ConstantManager.detailStockOverViewUnit.length;i++) {
+		    		List<Object> ls= new ArrayList<>();
+		    		ls.add(ConstantManager.vDetailStockOverView[i]);
+		    		if(!"".equals(ConstantManager.detailStockOverViewUnit[i])) {
+		    			ls.add(ConstantManager.detailStockOverViewUnit[i]);
+		    		}
+		    		data.add(ls);
+	    		}
 		    	for (Object object : result) {
 		    		Object[] arrayObject = (Object[]) object;
 		    		for(int i=0; i<arrayObject.length;i++) {
@@ -882,7 +762,8 @@ public class InvalueCoreProcessor {
 	    		ls8.add(arrayObject[9]);
 	    		valuation.add(ls8);
 	    		List<Object> ls9= new ArrayList<>();
-	    		ls9.add("Div Yield");
+//	    		ls9.add("Div Yield");
+	    		ls9.add("Tỷ suất cổ tức");
 	    		ls9.add("(%)");
 	    		ls9.add(arrayObject[10]);
 	    		valuation.add(ls9);
@@ -895,22 +776,26 @@ public class InvalueCoreProcessor {
 	    		
 	    		List<List<Object>> score = new ArrayList<>();
 	    		List<Object> ls11= new ArrayList<>();
-	    		ls11.add("F-Score");
+//	    		ls11.add("F-Score");
+	    		ls11.add("F-Score (Chất lượng BCTC)");
 	    		ls11.add("p");
 	    		ls11.add(arrayObject[12]);
 	    		score.add(ls11);
 	    		List<Object> ls12= new ArrayList<>();
-	    		ls12.add("C-score");
+//	    		ls12.add("C-score");
+	    		ls12.add("C-score (sửa đổi BCTC)");
 	    		ls12.add("p");
 	    		ls12.add(arrayObject[13]);
 	    		score.add(ls12);
 	    		List<Object> ls13= new ArrayList<>();
-	    		ls13.add("M-score");
+//	    		ls13.add("M-score");
+	    		ls13.add("M-score (Làm giả lợi nhuận)");
 	    		ls13.add("p");
 	    		ls13.add(arrayObject[14]);
 	    		score.add(ls13);
 	    		List<Object> ls14= new ArrayList<>();
-	    		ls14.add("Z-score");
+//	    		ls14.add("Z-score");
+	    		ls14.add("Z-score (khả năng phá sản)");
 	    		ls14.add("p");
 	    		ls14.add(arrayObject[15]);
 	    		score.add(ls14);
@@ -918,17 +803,20 @@ public class InvalueCoreProcessor {
 	    		
 	    		List<List<Object>> liquidityRatio = new ArrayList<>();
 	    		List<Object> ls15= new ArrayList<>();
-	    		ls15.add("Current ratio");
+//	    		ls15.add("Current ratio");
+	    		ls15.add("Hệ số thanh toán hiện hành");
 	    		ls15.add("x");
 	    		ls15.add(arrayObject[16]);
 	    		liquidityRatio.add(ls15);
 	    		List<Object> ls16= new ArrayList<>();
-	    		ls16.add("Quick ratio");
+//	    		ls16.add("Quick ratio");
+	    		ls16.add("Hệ số thanh toán nhanh");
 	    		ls16.add("x");
 	    		ls16.add(arrayObject[17]);
 	    		liquidityRatio.add(ls16);
 	    		List<Object> ls17= new ArrayList<>();
-	    		ls17.add("Cash ratio");
+//	    		ls17.add("Cash ratio");
+	    		ls17.add("Hệ số thanh toán tiền mặt");
 	    		ls17.add("x");
 	    		ls17.add(arrayObject[18]);
 	    		liquidityRatio.add(ls17);
@@ -936,17 +824,20 @@ public class InvalueCoreProcessor {
 	    		
 	    		List<List<Object>> activityTurnover = new ArrayList<>();
 	    		List<Object> ls18= new ArrayList<>();
-	    		ls18.add("Receivable turnover");
+//	    		ls18.add("Receivable turnover");
+	    		ls18.add("Vòng quay phải thu");
 	    		ls18.add("x");
 	    		ls18.add(arrayObject[19]);
 	    		activityTurnover.add(ls18);
 	    		List<Object> ls19= new ArrayList<>();
-	    		ls19.add("Payable turnover");
+//	    		ls19.add("Payable turnover");
+	    		ls19.add("Vòng quay phải trả");
 	    		ls19.add("x");
 	    		ls19.add(arrayObject[20]);
 	    		activityTurnover.add(ls19);
 	    		List<Object> ls20= new ArrayList<>();
-	    		ls20.add("inventory turnover");
+//	    		ls20.add("inventory turnover");
+	    		ls20.add("Vòng quay tồn kho");
 	    		ls20.add("x");
 	    		ls20.add(arrayObject[21]);
 	    		activityTurnover.add(ls20);
@@ -954,22 +845,26 @@ public class InvalueCoreProcessor {
 	    		
 	    		List<List<Object>> interpretationOfSolvencyRatios = new ArrayList<>();
 	    		List<Object> ls21= new ArrayList<>();
-	    		ls21.add("Debt to Assets ");
+//	    		ls21.add("Debt to Assets ");
+	    		ls21.add("Nợ/Tổng tài sản");
 	    		ls21.add("x");
 	    		ls21.add(arrayObject[22]);
 	    		interpretationOfSolvencyRatios.add(ls21);
 	    		List<Object> ls22= new ArrayList<>();
-	    		ls22.add("Debt to Equity ");
+//	    		ls22.add("Debt to Equity ");
+	    		ls22.add("Nợ/Vốn chủ sở hữu");
 	    		ls22.add("x");
 	    		ls22.add(arrayObject[23]);
 	    		interpretationOfSolvencyRatios.add(ls22);
 	    		List<Object> ls23= new ArrayList<>();
-	    		ls23.add("LT debt/Capitalazion");
+//	    		ls23.add("LT debt/Capitalazion");
+	    		ls23.add("Nợ dài hạn/Vốn hóa");
 	    		ls23.add("x");
 	    		ls23.add(arrayObject[24]);
 	    		interpretationOfSolvencyRatios.add(ls23);
 	    		List<Object> ls24= new ArrayList<>();
-	    		ls24.add("Interest coverage");
+//	    		ls24.add("Interest coverage");
+	    		ls24.add("Khả năng trả lãi vay");
 	    		ls24.add("x");
 	    		ls24.add(arrayObject[25]);
 	    		interpretationOfSolvencyRatios.add(ls24);
@@ -978,17 +873,20 @@ public class InvalueCoreProcessor {
 	    		
 	    		List<List<Object>> riskRatio = new ArrayList<>();
 	    		List<Object> ls25= new ArrayList<>();
-	    		ls25.add("AR/Rev");
+//	    		ls25.add("AR/Rev");
+	    		ls25.add("Phải thu/ Doanh thu");
 	    		ls25.add("x");
 	    		ls25.add(arrayObject[26]);
 	    		riskRatio.add(ls25);
 	    		List<Object> ls26= new ArrayList<>();
-	    		ls26.add("AR/Income");
+//	    		ls26.add("AR/Income");
+	    		ls26.add("Phải thu/ LNST");
 	    		ls26.add("x");
 	    		ls26.add(arrayObject[27]);
 	    		riskRatio.add(ls26);
 	    		List<Object> ls27= new ArrayList<>();
-	    		ls27.add("A&P/Income");
+//	    		ls27.add("A&P/Income");
+	    		ls27.add("Dự phòng/ LNST");
 	    		ls27.add("x");
 	    		ls27.add(arrayObject[28]);
 	    		riskRatio.add(ls27);
@@ -1078,7 +976,10 @@ public class InvalueCoreProcessor {
     			List<Object> ls= new ArrayList<>();
         		ls.add(ConstantManager.detailStockNomalReportLevel[i]);
         		ls.add(ConstantManager.vDetailStockNomalReport[i]);
-        		ls.add(ConstantManager.detailStockNomalReportUnit[i]);
+        		if(!"".equals(ConstantManager.detailStockNomalReportUnit[i])) {
+        			ls.add(ConstantManager.detailStockNomalReportUnit[i]);
+	    		}
+        		
         		dataNormal.add(ls);
     		}
 	    	for (Object object : resultNormal) {
@@ -1132,7 +1033,9 @@ public class InvalueCoreProcessor {
     			List<Object> ls= new ArrayList<>();
         		ls.add(ConstantManager.detailStockFinanceRatioLevel[i]);
         		ls.add(ConstantManager.vDetailStockFinanceRatio[i]);
-        		ls.add(ConstantManager.detailStockFinanceRatioUnit[i]);
+        		if(!"".equals(ConstantManager.detailStockFinanceRatioUnit[i])) {
+        			ls.add(ConstantManager.detailStockFinanceRatioUnit[i]);
+        		}
         		dataFinance.add(ls);
     		}
     		for (Object object : resultFinance) {
