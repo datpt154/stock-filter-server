@@ -24,6 +24,7 @@ import invalue.core.dto.InputSearchStockDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
+import invalue.core.dto.ScreenPageDTO;
 import invalue.core.processor.InvalueCoreProcessor;
 import invalue.core.repository.FinanceRatioQRepository;
 
@@ -140,5 +141,25 @@ public class InvalueCoreController {
 //    		}
 //    	}
     	return invalueCoreProcessor.getCompareFiltered(inputCompareFilterDTO);
+    }
+    @GetMapping("/screenRevenue")
+    public ScreenPageDTO screenRevenue() {
+    	return invalueCoreProcessor.screenRevenue();
+    }
+    @GetMapping("/screenProfit")
+    public ScreenPageDTO screenProfit() {
+    	return invalueCoreProcessor.screenProfit();
+    }
+    @GetMapping("/screenEPS")
+    public ScreenPageDTO screenEPS() {
+    	return invalueCoreProcessor.screenEPS();
+    }
+    @GetMapping("/screenPE_PB")
+    public ScreenPageDTO screenPE_PB() {
+    	return invalueCoreProcessor.screenPE_PB();
+    }
+    @GetMapping("/screenMCNWC_EVEBITDA")
+    public ScreenPageDTO screenMCNWC_EVEBITDA() {
+    	return invalueCoreProcessor.screenMCNWC_EVEBITDA();
     }
 }

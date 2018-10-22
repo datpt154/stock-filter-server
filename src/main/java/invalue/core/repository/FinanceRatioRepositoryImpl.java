@@ -175,7 +175,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	Query query = entityManager.createNativeQuery("");
     	select.append(" select f.MARKET_PRICE ");
     	from.append(" from finance_ratio f ");
-    	where.append(" where f.stock_code=? and f.y_q_r='Q' order by f.time_string desc limit 1 ");
+    	where.append(" where f.stock_code=? and f.y_q_r='Y' order by f.time_string desc limit 1 ");
     	params.add(stockCode);
     	
 		sql.append(select).append(from).append(where);
@@ -295,6 +295,225 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" where f.stock_code = ? and f.Y_Q_R=? order by f.code desc limit 5  ");
     	params.add(code);
     	params.add(time);
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> highestRevenue(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.NET_REVENUE revenue");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? ");
+		params.add(time);
+		sql.append(" order by f.NET_REVENUE desc,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+	@Override
+	public List<Object> highestRevenueGrowth(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.NET_REVENUE_YOY revenue");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? ");
+		params.add(time);
+		sql.append(" order by f.NET_REVENUE_YOY desc,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> highestProfit(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.NET_INCOME netIncome");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? ");
+		params.add(time);
+		sql.append(" order by f.NET_INCOME desc ,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> highestProfitGrowth(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.GROSS_PROFIT_YOY grossProfitYoy");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? ");
+		params.add(time);
+		sql.append(" order by f.GROSS_PROFIT_YOY desc,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> highestEPS(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.EPS eps");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? ");
+		params.add(time);
+		sql.append(" order by f.EPS desc,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> highestEPSGrowth(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.EPS_YOY epsYoy");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? ");
+		params.add(time);
+		sql.append(" order by f.EPS_YOY desc,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> lowestPE(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.P_E pe");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? and f.P_E>0 ");
+		params.add(time);
+		sql.append(" order by f.P_E ASC,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> lowestPB(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.P_B pb");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? and f.P_B>0 ");
+		params.add(time);
+		sql.append(" order by f.P_B ASC,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> lowestMCNWC(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.MC_NWC mcNwc");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? and f.MC_NWC>0 ");
+		params.add(time);
+		sql.append(" order by f.MC_NWC ASC,f.stock_code limit 10");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> lowestEVEBITDA(String time) {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" SELECT f.stock_code, f.EV_EBITDA evEbitda");
+    	sql.append(" from finance_ratio f");
+    	sql.append(" where 1 = 1 ");
+    	if(!"R".equals(time)) {
+    		sql.append(" and f.status = 0 ");
+    	}
+    	sql.append(" and Y_Q_R = ? and f.EV_EBITDA>0 ");
+		params.add(time);
+		sql.append(" order by f.EV_EBITDA ASC,f.stock_code limit 10");
         query = entityManager.createNativeQuery(sql.toString());
         for(int i=0;i<params.size();i++){
         	query.setParameter(i+1, params.get(i));

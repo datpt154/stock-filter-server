@@ -29,6 +29,8 @@ import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
 import invalue.core.dto.RecommendationsDTO;
+import invalue.core.dto.ScreenDTO;
+import invalue.core.dto.ScreenPageDTO;
 import invalue.core.dto.SearchItemDTO;
 import invalue.core.entity.FinanceRatio;
 import invalue.core.entity.NormalReport;
@@ -1055,6 +1057,495 @@ public class InvalueCoreProcessor {
 		
 	}
 	
+	public ScreenPageDTO screenRevenue() {
+		ScreenPageDTO page= new ScreenPageDTO();
+		//left
+		ScreenDTO left = new ScreenDTO();
+		List<SearchItemDTO> data= new ArrayList<>();
+		//Y
+		List<Object> resultY =financeRatioRepository.highestRevenue("Y");
+		if(!resultY.isEmpty()) {
+			for (Object object : resultY) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataYear(data);
+		}
+		//Q
+		List<Object> resultQ =financeRatioRepository.highestRevenue("Q");
+		if(!resultQ.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQ) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultR =financeRatioRepository.highestRevenue("R");
+		if(!resultR.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultR) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenLeft(left);
+		
+		//right
+		ScreenDTO right = new ScreenDTO();
+		data= new ArrayList<>();
+		//Y
+		List<Object> resultYr =financeRatioRepository.highestRevenueGrowth("Y");
+		if(!resultYr.isEmpty()) {
+			for (Object object : resultYr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataYear(data);
+		}
+		
+		//Q
+		List<Object> resultQr =financeRatioRepository.highestRevenueGrowth("Q");
+		if(!resultQr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultRr =financeRatioRepository.highestRevenueGrowth("R");
+		if(!resultRr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultRr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenRight(right);
+		
+		return page;
+	}
+	
+	public ScreenPageDTO screenProfit() {
+		ScreenPageDTO page= new ScreenPageDTO();
+		//left
+		ScreenDTO left = new ScreenDTO();
+		List<SearchItemDTO> data= new ArrayList<>();
+		//Y
+		List<Object> resultY =financeRatioRepository.highestProfit("Y");
+		if(!resultY.isEmpty()) {
+			for (Object object : resultY) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataYear(data);
+		}
+		//Q
+		List<Object> resultQ =financeRatioRepository.highestProfit("Q");
+		if(!resultQ.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQ) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultR =financeRatioRepository.highestProfit("R");
+		if(!resultR.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultR) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenLeft(left);
+		
+		//right
+		ScreenDTO right = new ScreenDTO();
+		data= new ArrayList<>();
+		//Y
+		List<Object> resultYr =financeRatioRepository.highestProfitGrowth("Y");
+		if(!resultYr.isEmpty()) {
+			for (Object object : resultYr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataYear(data);
+		}
+		
+		//Q
+		List<Object> resultQr =financeRatioRepository.highestProfitGrowth("Q");
+		if(!resultQr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultRr =financeRatioRepository.highestProfitGrowth("R");
+		if(!resultRr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultRr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenRight(right);
+		
+		return page;
+	}
+	
+	public ScreenPageDTO screenEPS() {
+		ScreenPageDTO page= new ScreenPageDTO();
+		//left
+		ScreenDTO left = new ScreenDTO();
+		List<SearchItemDTO> data= new ArrayList<>();
+		//Y
+		List<Object> resultY =financeRatioRepository.highestEPS("Y");
+		if(!resultY.isEmpty()) {
+			for (Object object : resultY) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataYear(data);
+		}
+		//Q
+		List<Object> resultQ =financeRatioRepository.highestEPS("Q");
+		if(!resultQ.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQ) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultR =financeRatioRepository.highestEPS("R");
+		if(!resultR.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultR) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenLeft(left);
+		
+		//right
+		ScreenDTO right = new ScreenDTO();
+		data= new ArrayList<>();
+		//Y
+		List<Object> resultYr =financeRatioRepository.highestEPSGrowth("Y");
+		if(!resultYr.isEmpty()) {
+			for (Object object : resultYr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataYear(data);
+		}
+		
+		//Q
+		List<Object> resultQr =financeRatioRepository.highestEPSGrowth("Q");
+		if(!resultQr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultRr =financeRatioRepository.highestEPSGrowth("R");
+		if(!resultRr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultRr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenRight(right);
+		
+		return page;
+	}
+	
+	public ScreenPageDTO screenPE_PB() {
+		ScreenPageDTO page= new ScreenPageDTO();
+		//left
+		ScreenDTO left = new ScreenDTO();
+		List<SearchItemDTO> data= new ArrayList<>();
+		//Y
+		List<Object> resultY =financeRatioRepository.lowestPE("Y");
+		if(!resultY.isEmpty()) {
+			for (Object object : resultY) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataYear(data);
+		}
+		//Q
+		List<Object> resultQ =financeRatioRepository.lowestPE("Q");
+		if(!resultQ.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQ) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultR =financeRatioRepository.lowestPE("R");
+		if(!resultR.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultR) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenLeft(left);
+		
+		//right
+		ScreenDTO right = new ScreenDTO();
+		data= new ArrayList<>();
+		//Y
+		List<Object> resultYr =financeRatioRepository.lowestPB("Y");
+		if(!resultYr.isEmpty()) {
+			for (Object object : resultYr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataYear(data);
+		}
+		
+		//Q
+		List<Object> resultQr =financeRatioRepository.lowestPB("Q");
+		if(!resultQr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultRr =financeRatioRepository.lowestPB("R");
+		if(!resultRr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultRr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenRight(right);
+		
+		return page;
+	}
+	
+	public ScreenPageDTO screenMCNWC_EVEBITDA() {
+		ScreenPageDTO page= new ScreenPageDTO();
+		//left
+		ScreenDTO left = new ScreenDTO();
+		List<SearchItemDTO> data= new ArrayList<>();
+		//Y
+		List<Object> resultY =financeRatioRepository.lowestMCNWC("Y");
+		if(!resultY.isEmpty()) {
+			for (Object object : resultY) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataYear(data);
+		}
+		//Q
+		List<Object> resultQ =financeRatioRepository.lowestMCNWC("Q");
+		if(!resultQ.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQ) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultR =financeRatioRepository.lowestMCNWC("R");
+		if(!resultR.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultR) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			left.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenLeft(left);
+		
+		//right
+		ScreenDTO right = new ScreenDTO();
+		data= new ArrayList<>();
+		//Y
+		List<Object> resultYr =financeRatioRepository.lowestEVEBITDA("Y");
+		if(!resultYr.isEmpty()) {
+			for (Object object : resultYr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataYear(data);
+		}
+		
+		//Q
+		List<Object> resultQr =financeRatioRepository.lowestEVEBITDA("Q");
+		if(!resultQr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultQr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataQuarter(data);
+		}
+		
+		//R
+		List<Object> resultRr =financeRatioRepository.lowestEVEBITDA("R");
+		if(!resultRr.isEmpty()) {
+			data= new ArrayList<>();
+			for (Object object : resultRr) {
+				SearchItemDTO tmp= new SearchItemDTO();
+				Object[] arrayObject = (Object[]) object;
+				tmp.setCode(arrayObject[0].toString());
+				tmp.setValue((Double)arrayObject[1]);
+				data.add(tmp);
+			}
+			right.setDataTTM(data);
+		}
+		
+		
+		page.setDataScreenRight(right);
+		
+		return page;
+	}
 	
 	public File convert(MultipartFile file)
 	{    
