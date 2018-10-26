@@ -520,4 +520,164 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
         }
         return query.getResultList();
 	}
+
+	@Override
+	public List<Object> screnNetNet() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code");
+    	sql.append(" ,f.MARKET_PRICE,f.NET_WORKING_CAPITAL");
+    	sql.append(" ,f.MARKET_CAPITAL,f.P_E,f.P_B,f.EPS");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE ");
+    	sql.append(" from finance_ratio f, stock s ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
+    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R<>'R'");
+    	sql.append(" and f.BENJAMIN_GRAHAM_NET_NETS =1");
+    	sql.append(" order by f.stock_code,f.Y_Q_R");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> screnNCAV() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE");
+    	sql.append(" ,f.NET_WORKING_CAPITAL");
+    	sql.append(" ,f.MARKET_CAPITAL,f.P_E,f.P_B,f.EPS");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE ");
+    	sql.append(" from finance_ratio f, stock s ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
+    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R<>'R'");
+    	sql.append(" and f.BENJAMIN_GRAHAM_NCAV_BARGAIN =1");
+    	sql.append(" order by f.stock_code,f.Y_Q_R");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> screnCANSLIM() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE");
+    	sql.append(" ,f.EPS_YOY,f.EPS");
+    	sql.append(" ,f.ROE,f.P_E,f.P_B");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE ");
+    	sql.append(" from finance_ratio f, stock s ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
+    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R='Q'");
+    	sql.append(" and f.CANSLIM_NOT_UPCOM =1");
+    	sql.append(" order by f.stock_code");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> screnPhilipFisherGrowth() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE");
+    	sql.append(" ,f.GROSS_PROFIT_YOY,f.PEG");
+    	sql.append(" ,f.DEBT_TO_EQUITY_RATIO,f.FCF,f.P_E");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE ");
+    	sql.append(" from finance_ratio f, stock s ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
+    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R='Y'");
+    	sql.append(" and f.PHILIP_FISHER_GROWTH_BUSINESS_INSIDER_Y =1");
+    	sql.append(" order by f.stock_code,f.Y_Q_R");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> screnJohnNeffValue() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE ");
+    	sql.append(" ,f.NET_REVENUE_YOY,f.PEG ");
+    	sql.append(" ,f.EPS,f.FCF,f.P_E ");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE  ");
+    	sql.append(" from finance_ratio f, stock s  ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code  ");
+    	sql.append(" and f.status = 0 ");
+    	sql.append(" and f.Y_Q_R='Y' ");
+    	sql.append(" and f.JOHN_NEFF_VALUE =1 ");
+    	sql.append(" order by f.stock_code,f.Y_Q_R ");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Object> screnPeterLynchGrowth() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE ");
+    	sql.append(" ,f.EPS_YOY,f.PEG ");
+    	sql.append(" ,f.DEBT_TO_ASSETS_RATIO,f.P_E,f.EPS ");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE  ");
+    	sql.append(" from finance_ratio f, stock s  ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code  ");
+    	sql.append(" and f.status = 0 ");
+    	sql.append(" and f.Y_Q_R='Y' ");
+    	sql.append(" and f.PETER_LYNCH_GROWTH =1 ");
+    	sql.append(" order by f.stock_code,f.Y_Q_R ");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+	@Override
+	public List<Object> screnGrahamChecklist() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE ");
+    	sql.append(" ,f.GRAHAM_CHECKLIST_Y,f.MARKET_CAPITAL ");
+    	sql.append(" ,f.P_E,f.P_B,f.EPS ");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE  ");
+    	sql.append(" from finance_ratio f, stock s  ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code  ");
+    	sql.append(" and f.status = 0 ");
+    	sql.append(" and f.Y_Q_R='Y' ");
+    	sql.append(" and f.GRAHAM_CHECKLIST_Y >7 ");
+    	sql.append(" order by f.stock_code ");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
 }

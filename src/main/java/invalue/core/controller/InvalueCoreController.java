@@ -24,9 +24,15 @@ import invalue.core.dto.InputSearchStockDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
+import invalue.core.dto.OutPutScreenBenjamin;
+import invalue.core.dto.OutPutScreenBreakOut;
+import invalue.core.dto.OutPutScreenCANSLIM;
+import invalue.core.dto.OutPutScreenGrahamChecklist;
+import invalue.core.dto.OutPutScreenJohnNeffValue;
+import invalue.core.dto.OutPutScreenPeterLynchGrowth;
+import invalue.core.dto.OutPutScreenPhilipFisherGrowth;
 import invalue.core.dto.ScreenPageDTO;
 import invalue.core.processor.InvalueCoreProcessor;
-import invalue.core.repository.FinanceRatioQRepository;
 
 @RestController
 @RequestMapping("/api")
@@ -35,8 +41,6 @@ public class InvalueCoreController {
 
 //    @Autowired
 //    NoteRepository noteRepository;
-    @Autowired
-    FinanceRatioQRepository financeRatioQRepository;
     @Autowired
     InvalueCoreProcessor invalueCoreProcessor;
     
@@ -94,17 +98,13 @@ public class InvalueCoreController {
     public String importPlanOfYear(@Valid @RequestBody MultipartFile multipartFile, String timeString) {
     	return invalueCoreProcessor.importPlanOfYear(multipartFile, timeString);
     }
+    @PostMapping("/importBreakOut")
+    public String importBreakOut(@Valid @RequestBody MultipartFile multipartFile) {
+    	return invalueCoreProcessor.importBreakOut(multipartFile);
+    }
     
-//    @GetMapping("/autocompletestock")
-//    public List<ObjectOutPutDTO> autoCompleteStock(@Valid @RequestBody String searchPattern) {
     @GetMapping("/autocompletestock/{searchPattern}")
     public List<ObjectOutPutDTO> autoCompleteStock(@PathVariable(value = "searchPattern") String searchPattern) {
-		
-//		Gson gson = new Gson();
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		map = (Map<String,Object>) gson.fromJson(searchPattern, map.getClass());
-//		String searchCode=(String) map.get("searchPattern");
-    	
     	return invalueCoreProcessor.autoCompleteStock(searchPattern);
     }
     
@@ -161,5 +161,45 @@ public class InvalueCoreController {
     @GetMapping("/screenMCNWC_EVEBITDA")
     public ScreenPageDTO screenMCNWC_EVEBITDA() {
     	return invalueCoreProcessor.screenMCNWC_EVEBITDA();
+    }
+    @GetMapping("/screenNetNet")
+    public List<OutPutScreenBenjamin> screenNetNet() {
+    	return invalueCoreProcessor.screenNetNet();
+    }
+    @GetMapping("/screnNCAV")
+    public List<OutPutScreenBenjamin> screnNCAV() {
+    	return invalueCoreProcessor.screnNCAV();
+    }
+    @GetMapping("/screnCANSLIM")
+    public List<OutPutScreenCANSLIM> screnCANSLIM() {
+    	return invalueCoreProcessor.screnCANSLIM();
+    }
+    @GetMapping("/screnPhilipFisherGrowth")
+    public List<OutPutScreenPhilipFisherGrowth> screnPhilipFisherGrowth() {
+    	return invalueCoreProcessor.screnPhilipFisherGrowth();
+    }
+    @GetMapping("/screnJohnNeffValue")
+    public List<OutPutScreenJohnNeffValue> screnJohnNeffValue() {
+    	return invalueCoreProcessor.screnJohnNeffValue();
+    }
+    @GetMapping("/screnPeterLynchGrowth")
+    public List<OutPutScreenPeterLynchGrowth> screnPeterLynchGrowth() {
+    	return invalueCoreProcessor.screnPeterLynchGrowth();
+    }
+    @GetMapping("/screnGrahamChecklist")
+    public List<OutPutScreenGrahamChecklist> screnGrahamChecklist() {
+    	return invalueCoreProcessor.screnGrahamChecklist();
+    }
+    @GetMapping("/screnBreakResistance")
+    public List<OutPutScreenBreakOut> screnBreakResistance() {
+    	return invalueCoreProcessor.screnBreakResistance();
+    }
+    @GetMapping("/screnBreakSupport")
+    public List<OutPutScreenBreakOut> screnBreakSupport() {
+    	return invalueCoreProcessor.screnBreakSupport();
+    }
+    @GetMapping("/screnTrendTrader")
+    public List<OutPutScreenBreakOut> screnTrendTrader() {
+    	return invalueCoreProcessor.screnTrendTrader();
     }
 }

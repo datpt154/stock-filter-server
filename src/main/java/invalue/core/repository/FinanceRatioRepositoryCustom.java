@@ -25,4 +25,11 @@ public interface FinanceRatioRepositoryCustom {
 	public List<Object> lowestPB(String time);
 	public List<Object> lowestMCNWC(String time);
 	public List<Object> lowestEVEBITDA(String time);
+	public List<Object> screnNetNet();
+	public List<Object> screnNCAV();
+	public List<Object> screnCANSLIM();
+	public List<Object> screnPhilipFisherGrowth();
+	public List<Object> screnJohnNeffValue();
+	public List<Object> screnPeterLynchGrowth();
+	public List<Object> screnGrahamChecklist();
 }

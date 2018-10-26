@@ -3,7 +3,8 @@ package invalue.core.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import invalue.core.entity.FinanceRatioY;
+import invalue.core.entity.BreakOut;
+import invalue.core.entity.SystemConfig;
 
 
 /**
@@ -11,7 +12,7 @@ import invalue.core.entity.FinanceRatioY;
  */
 
 @Repository
-public interface FinanceRatioYRepository extends JpaRepository<FinanceRatioY, Long>,FinanceRatioYRepositoryCustom {
+public interface BreakOutRepository extends JpaRepository<BreakOut, Long>,BreakOutRepositoryCustom {
 
 
 }

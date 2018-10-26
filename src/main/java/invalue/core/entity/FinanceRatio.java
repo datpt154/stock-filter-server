@@ -280,7 +280,7 @@ public class FinanceRatio implements java.io.Serializable {
 	@Column(name = "BENJAMIN_GRAHAM_NCAV_BARGAIN", precision = 20, scale = 5)
 	private Double benjaminGrahamNcavBargain;
 	@Basic
-	@Column(name = "CANSLIM_NOT_UPCOM_", precision = 20, scale = 5)
+	@Column(name = "CANSLIM_NOT_UPCOM", precision = 20, scale = 5)
 	private Double canslimNotUpcom;
 	@Basic
 	@Column(name = "PHILIP_FISHER_GROWTH_BUSINESS_INSIDER_Y", precision = 20, scale = 5)
@@ -289,7 +289,7 @@ public class FinanceRatio implements java.io.Serializable {
 	@Column(name = "JOHN_NEFF_VALUE", precision = 20, scale = 5)
 	private Double johnNeffValue;
 	@Basic
-	@Column(name = "PETER_LYNCH_GROWTH_", precision = 20, scale = 5)
+	@Column(name = "PETER_LYNCH_GROWTH", precision = 20, scale = 5)
 	private Double peterLynchGrowth;
 	@Basic
 	@Column(name = "GRAHAM_CHECKLIST_Y", precision = 20, scale = 5)
