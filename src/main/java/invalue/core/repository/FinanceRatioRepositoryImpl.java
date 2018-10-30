@@ -581,7 +581,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
     	sql.append(" and f.status = 0");
     	sql.append(" and f.Y_Q_R='Q'");
-    	sql.append(" and f.CANSLIM_NOT_UPCOM =1");
+    	sql.append(" and f.CANSLIM_NI =1");
     	sql.append(" order by f.stock_code");
         query = entityManager.createNativeQuery(sql.toString());
         for(int i=0;i<params.size();i++){
