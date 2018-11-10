@@ -275,7 +275,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" ,IFNULL(f.Z_SCORE, 0) ");
 
     	sql.append(" from finance_ratio f   ");
-    	sql.append(" where f.stock_code = ?  and f.Y_Q_R=?  order by f.code desc limit 5");
+    	sql.append(" where f.stock_code = ?  and f.Y_Q_R=?  order by f.code desc limit 6");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());
@@ -292,7 +292,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	Query query = entityManager.createNativeQuery("");
     	sql.append(" select f.TIME_STRING ");
     	sql.append(" from finance_ratio f   ");
-    	sql.append(" where f.stock_code = ? and f.Y_Q_R=? order by f.code desc limit 5  ");
+    	sql.append(" where f.stock_code = ? and f.Y_Q_R=? order by f.code desc limit 6  ");
     	params.add(code);
     	params.add(time);
         query = entityManager.createNativeQuery(sql.toString());
@@ -533,8 +533,8 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" ,f.F_SCORE,f.C_SCORE ");
     	sql.append(" from finance_ratio f, stock s ");
     	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
-    	sql.append(" and f.status = 0");
-    	sql.append(" and f.Y_Q_R<>'R'");
+//    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R='R'");
     	sql.append(" and f.BENJAMIN_GRAHAM_NET_NETS =1");
     	sql.append(" order by f.stock_code,f.Y_Q_R");
         query = entityManager.createNativeQuery(sql.toString());
@@ -556,8 +556,8 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" ,f.F_SCORE,f.C_SCORE ");
     	sql.append(" from finance_ratio f, stock s ");
     	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
-    	sql.append(" and f.status = 0");
-    	sql.append(" and f.Y_Q_R<>'R'");
+//    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R='R'");
     	sql.append(" and f.BENJAMIN_GRAHAM_NCAV_BARGAIN =1");
     	sql.append(" order by f.stock_code,f.Y_Q_R");
         query = entityManager.createNativeQuery(sql.toString());
@@ -579,8 +579,8 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" ,f.F_SCORE,f.C_SCORE ");
     	sql.append(" from finance_ratio f, stock s ");
     	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code ");
-    	sql.append(" and f.status = 0");
-    	sql.append(" and f.Y_Q_R='Q'");
+//    	sql.append(" and f.status = 0");
+    	sql.append(" and f.Y_Q_R='R'");
     	sql.append(" and f.CANSLIM_NI =1");
     	sql.append(" order by f.stock_code");
         query = entityManager.createNativeQuery(sql.toString());
@@ -672,7 +672,7 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
     	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code  ");
     	sql.append(" and f.status = 0 ");
     	sql.append(" and f.Y_Q_R='Y' ");
-    	sql.append(" and f.GRAHAM_CHECKLIST_Y >7 ");
+    	sql.append(" and f.GRAHAM_CHECKLIST_Y >=7 ");
     	sql.append(" order by f.stock_code ");
         query = entityManager.createNativeQuery(sql.toString());
         for(int i=0;i<params.size();i++){
@@ -680,4 +680,26 @@ public class FinanceRatioRepositoryImpl implements FinanceRatioRepositoryCustom 
         }
         return query.getResultList();
 	}
+	@Override
+	public List<Object> screnDBTTM() {
+		StringBuilder sql = new StringBuilder();
+    	
+    	List<Object> params = new ArrayList<Object>();
+    	Query query = entityManager.createNativeQuery("");
+    	sql.append(" select f.stock_code, s.name,s.stock_exchange_code,f.MARKET_PRICE  ");
+    	sql.append(" ,p.result,p.yoy ");
+    	sql.append(" ,f.P_E,f.P_B,f.EPS  ");
+    	sql.append(" ,f.F_SCORE,f.C_SCORE ");
+    	sql.append(" from finance_ratio f, stock s, plan_of_year p ");
+    	sql.append(" where 1 = 1 and f.STOCK_CODE = s.code  and p.stock_code=s.code ");
+//    	sql.append(" and f.status = 0  ");
+    	sql.append(" and f.Y_Q_R='R'  ");
+    	sql.append(" order by p.dbttm desc limit 30");
+        query = entityManager.createNativeQuery(sql.toString());
+        for(int i=0;i<params.size();i++){
+        	query.setParameter(i+1, params.get(i));
+        }
+        return query.getResultList();
+	}
+	
 }

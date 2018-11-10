@@ -29,7 +29,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
     	Query query = entityManager.createNativeQuery("");
     	sql.append(" select IFNULL(n.NET_REVENUE, 0) ");
     	sql.append(" ,IFNULL(n.NET_OPERATING_PROFIT, 0) ");
-    	sql.append(" ,IFNULL(n.NET_PROFIT_AFTER_TAX, 0) ");
+    	sql.append(" ,IFNULL(n.NET_INCOME, 0) ");
     	sql.append(" ,'null' SPACE_1 ");
     	sql.append(" ,IFNULL(n.TOTAL_ASSETS, 0) ");
     	sql.append(" ,IFNULL(n.CURRENT_ASSET, 0) ");
@@ -160,7 +160,7 @@ public class NormalReportRepositoryImpl implements NormalReportCustom {
 		List<Object> params = new ArrayList<Object>();
     	Query query = entityManager.createNativeQuery("");
     	sql.append(" select s.code, s.name ");
-    	sql.append(" ,p.REVENUE , p.PRETAX_PROFIT , p.NET_PROFIT LNST, p.PAYMENTS_OF_DIVIDENDS CoTuc ");
+    	sql.append(" , p.REVENUE_PERCENT, p.REVENUE, p.PRETAX_PROFIT_PERCENT, p.PRETAX_PROFIT, p.NET_PROFIT_PERCENT, p.NET_PROFIT, p.PAYMENTS_OF_DIVIDENDS CoTuc ");
     	sql.append(" ,f.P_E ");
     	sql.append(" ,f.PEG ");
     	sql.append(" ,f.P_B ");

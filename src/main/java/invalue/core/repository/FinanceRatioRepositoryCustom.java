@@ -32,4 +32,5 @@ public interface FinanceRatioRepositoryCustom {
 	public List<Object> screnJohnNeffValue();
 	public List<Object> screnPeterLynchGrowth();
 	public List<Object> screnGrahamChecklist();
+	public List<Object> screnDBTTM();
 }

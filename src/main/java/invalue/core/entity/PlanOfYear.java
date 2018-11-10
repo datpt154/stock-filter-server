@@ -64,18 +64,54 @@ public class PlanOfYear implements java.io.Serializable {
 	@Basic
 	@Column(name = "REVENUE", precision = 20, scale = 5)
 	private Double revenue;	
+	
+	@Basic
+	@Column(name = "REVENUE_NOW", precision = 20, scale = 5)
+	private Double revenueNow;	
+	
+	@Basic
+	@Column(name = "REVENUE_PERCENT", precision = 20, scale = 5)
+	private Double revenuePercent;	
 
 	@Basic
 	@Column(name = "PRETAX_PROFIT", precision = 20, scale = 5)
 	private Double pretaxProfit;
 	
 	@Basic
+	@Column(name = "PRETAX_PROFIT_NOW", precision = 20, scale = 5)
+	private Double pretaxProfitNow;
+	
+	@Basic
+	@Column(name = "PRETAX_PROFIT_PERCENT", precision = 20, scale = 5)
+	private Double pretaxProfitPercent;
+	
+	@Basic
 	@Column(name = "NET_PROFIT", precision = 20, scale = 5)
 	private Double netProfit;
 	
 	@Basic
+	@Column(name = "NET_PROFIT_NOW", precision = 20, scale = 5)
+	private Double netProfitNow;
+	
+	@Basic
+	@Column(name = "NET_PROFIT_PERCENT", precision = 20, scale = 5)
+	private Double netProfitPercent;
+	
+	@Basic
 	@Column(name = "PAYMENTS_OF_DIVIDENDS", precision = 20, scale = 5)
 	private Double paymentsOfDividends;
+	
+	@Basic
+	@Column(name = "RESULT", precision = 20, scale = 5)
+	private Double result;
+	
+	@Basic
+	@Column(name = "YOY", precision = 20, scale = 5)
+	private Double yoy;
+	
+	@Basic
+	@Column(name = "DBTTM", precision = 20, scale = 5)
+	private Double dBTTM;
 
 	public Long getId() {
 		return id;
@@ -181,5 +217,75 @@ public class PlanOfYear implements java.io.Serializable {
 		this.paymentsOfDividends = paymentsOfDividends;
 	}
 
-	
+	public Double getRevenueNow() {
+		return revenueNow;
+	}
+
+	public void setRevenueNow(Double revenueNow) {
+		this.revenueNow = revenueNow;
+	}
+
+	public Double getRevenuePercent() {
+		return revenuePercent;
+	}
+
+	public void setRevenuePercent(Double revenuePercent) {
+		this.revenuePercent = revenuePercent;
+	}
+
+	public Double getPretaxProfitNow() {
+		return pretaxProfitNow;
+	}
+
+	public void setPretaxProfitNow(Double pretaxProfitNow) {
+		this.pretaxProfitNow = pretaxProfitNow;
+	}
+
+	public Double getPretaxProfitPercent() {
+		return pretaxProfitPercent;
+	}
+
+	public void setPretaxProfitPercent(Double pretaxProfitPercent) {
+		this.pretaxProfitPercent = pretaxProfitPercent;
+	}
+
+	public Double getNetProfitNow() {
+		return netProfitNow;
+	}
+
+	public void setNetProfitNow(Double netProfitNow) {
+		this.netProfitNow = netProfitNow;
+	}
+
+	public Double getNetProfitPercent() {
+		return netProfitPercent;
+	}
+
+	public void setNetProfitPercent(Double netProfitPercent) {
+		this.netProfitPercent = netProfitPercent;
+	}
+
+	public Double getResult() {
+		return result;
+	}
+
+	public void setResult(Double result) {
+		this.result = result;
+	}
+
+	public Double getYoy() {
+		return yoy;
+	}
+
+	public void setYoy(Double yoy) {
+		this.yoy = yoy;
+	}
+
+	public Double getdBTTM() {
+		return dBTTM;
+	}
+
+	public void setdBTTM(Double dBTTM) {
+		this.dBTTM = dBTTM;
+	}
 }

@@ -32,6 +32,11 @@ public class BreakOutRepositoryImpl implements BreakOutRepositoryCustom {
     	sql.append(" select b.stock_code, s.name,s.stock_exchange_code,b.close_price,b.resistance,b.support,b.adx14,b.rsi14,b.macd,b.volume,DATE_FORMAT(b.break_time,'%d/%m/%Y') AS your_date  ");
     	sql.append(" from break_out b, stock s  ");
     	sql.append(" where 1 = 1 and b.STOCK_CODE = s.code and screen=? ");
+    	if(!"TT".equals(screnCode)) {
+    		sql.append(" and b.break_time>DATE_SUB(NOW(), INTERVAL 7 DAY) ");
+    	}else {
+    		sql.append(" and b.break_time>DATE_SUB(NOW(), INTERVAL 30 DAY) ");
+    	}
     	sql.append(" order by b.break_time desc,b.stock_code ");
     	params.add(screnCode);
         query = entityManager.createNativeQuery(sql.toString());

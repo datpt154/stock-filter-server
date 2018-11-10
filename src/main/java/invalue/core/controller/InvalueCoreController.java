@@ -27,6 +27,7 @@ import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
 import invalue.core.dto.OutPutScreenBenjamin;
 import invalue.core.dto.OutPutScreenBreakOut;
 import invalue.core.dto.OutPutScreenCANSLIM;
+import invalue.core.dto.OutPutScreenDBTTM;
 import invalue.core.dto.OutPutScreenGrahamChecklist;
 import invalue.core.dto.OutPutScreenJohnNeffValue;
 import invalue.core.dto.OutPutScreenPeterLynchGrowth;
@@ -201,5 +202,9 @@ public class InvalueCoreController {
     @GetMapping("/screnTrendTrader")
     public List<OutPutScreenBreakOut> screnTrendTrader() {
     	return invalueCoreProcessor.screnTrendTrader();
+    }
+    @GetMapping("/screnDBTTM")
+    public List<OutPutScreenDBTTM> screnDBTTM() {
+    	return invalueCoreProcessor.screnDBTTM();
     }
 }
