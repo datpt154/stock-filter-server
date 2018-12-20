@@ -3,11 +3,22 @@ package invalue.core.processor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,18 +27,26 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import invalue.core.constant.ConstantManager;
 import invalue.core.dto.ApiDTOBuilder;
 import invalue.core.dto.BasicFilterDTO;
 import invalue.core.dto.CompareFilterDTO;
+import invalue.core.dto.FilterNewsDTO;
 import invalue.core.dto.InputBasicFilterDTO;
 import invalue.core.dto.InputCompareFilterDTO;
 import invalue.core.dto.InputSearchStockDTO;
+import invalue.core.dto.ListShortNewsDTO;
+import invalue.core.dto.LoginOutputsDTO;
+import invalue.core.dto.NewsDTO;
 import invalue.core.dto.ObjectOutPutDTO;
 import invalue.core.dto.ObjectOutPutDetailStockDTO;
 import invalue.core.dto.ObjectOutPutDetailStockMoreDTO;
+import invalue.core.dto.ObjectOutPutRegisterDTO;
+import invalue.core.dto.OutPutLoginDTO;
 import invalue.core.dto.OutPutScreenBenjamin;
 import invalue.core.dto.OutPutScreenBreakOut;
 import invalue.core.dto.OutPutScreenCANSLIM;
@@ -37,22 +56,29 @@ import invalue.core.dto.OutPutScreenJohnNeffValue;
 import invalue.core.dto.OutPutScreenPeterLynchGrowth;
 import invalue.core.dto.OutPutScreenPhilipFisherGrowth;
 import invalue.core.dto.RecommendationsDTO;
+import invalue.core.dto.RegisterInputsDTO;
 import invalue.core.dto.ScreenDTO;
 import invalue.core.dto.ScreenPageDTO;
 import invalue.core.dto.SearchItemDTO;
+import invalue.core.dto.ShortNewsDTO;
 import invalue.core.entity.BreakOut;
 import invalue.core.entity.FinanceRatio;
+import invalue.core.entity.News;
 import invalue.core.entity.NormalReport;
 import invalue.core.entity.PlanOfYear;
 import invalue.core.entity.RecommendationsOfStock;
 import invalue.core.entity.Stock;
+import invalue.core.entity.User;
 import invalue.core.repository.BreakOutRepository;
 import invalue.core.repository.FinanceRatioRepository;
+import invalue.core.repository.NewsRepository;
 import invalue.core.repository.NormalReportRepository;
 import invalue.core.repository.PlanOfYearRepository;
 import invalue.core.repository.RecommendationsOfStockRepository;
 import invalue.core.repository.StockRepository;
 import invalue.core.repository.SystemConfigRepository;
+import invalue.core.repository.UserRepository;
+import invalue.core.util.DateUtil;
 import invalue.core.util.NumberFormatUtil;
 import invalue.core.util.StringUtil;
 import invalue.core.util.Unicode2English;
@@ -80,6 +106,12 @@ public class InvalueCoreProcessor {
     
     @Autowired
     BreakOutRepository breakOutRepository;
+    
+    @Autowired
+    NewsRepository newsRepository;
+    
+    @Autowired
+    UserRepository urerRepository;
     
 	
     public Collection<BasicFilterDTO> getFiltered(InputBasicFilterDTO inputBasicFilterDTO) {
@@ -165,7 +197,7 @@ public class InvalueCoreProcessor {
 				    	if(rowIndex<1) {
 				    		continue;
 				    	}
-				    	if(null==row.getCell(0)) {
+				    	if(null==row.getCell(0)||StringUtil.isNullOrEmpty(row.getCell(0).toString())) {
 				    		break;
 				    	}
 				    	FinanceRatio financeRatio = new FinanceRatio();
@@ -319,7 +351,7 @@ public class InvalueCoreProcessor {
 			    	if(rowIndex<1) {
 			    		continue;
 			    	}
-			    	if(null==row.getCell(0)) {
+			    	if(null==row.getCell(0)||StringUtil.isNullOrEmpty(row.getCell(0).toString())) {
 			    		break;
 			    	}
 			    	Stock stock = new Stock();
@@ -403,7 +435,7 @@ public class InvalueCoreProcessor {
 				    	if(rowIndex<1) {
 				    		continue;
 				    	}
-				    	if(null==row.getCell(0)) {
+				    	if(null==row.getCell(0)||StringUtil.isNullOrEmpty(row.getCell(0).toString())) {
 				    		break;
 				    	}
 				    	NormalReport normalReport = new NormalReport();
@@ -528,7 +560,7 @@ public class InvalueCoreProcessor {
 			    	if(rowIndex<1) {
 			    		continue;
 			    	}
-			    	if(null==row.getCell(0)) {
+			    	if(null==row.getCell(0)||StringUtil.isNullOrEmpty(row.getCell(0).toString())) {
 			    		break;
 			    	}
 			    	RecommendationsOfStock recommendationsOfStock = new RecommendationsOfStock();
@@ -596,7 +628,7 @@ public class InvalueCoreProcessor {
 			    	if(rowIndex<1) {
 			    		continue;
 			    	}
-			    	if(null==row.getCell(0)) {
+			    	if(null==row.getCell(0)||StringUtil.isNullOrEmpty(row.getCell(0).toString())) {
 			    		break;
 			    	}
 			    	PlanOfYear planOfYear = new PlanOfYear();
@@ -694,7 +726,7 @@ public class InvalueCoreProcessor {
 			    	if(rowIndex<1) {
 			    		continue;
 			    	}
-			    	if(null==row.getCell(0)) {
+			    	if(null==row.getCell(0)||StringUtil.isNullOrEmpty(row.getCell(0).toString())) {
 			    		break;
 			    	}
 			    	BreakOut breakOut = new BreakOut();
@@ -1934,6 +1966,307 @@ public class InvalueCoreProcessor {
 		}
 		return out;
 	}
+	public ListShortNewsDTO getAllNews(FilterNewsDTO inputData) {
+		ListShortNewsDTO lout= new ListShortNewsDTO();
+		List<ShortNewsDTO> out = new ArrayList<>();
+		List<Object> result =newsRepository.getListNewsPaging(inputData);
+		if(!result.isEmpty() && result.size()>1) {
+			for (int i=0; i<result.size()-1;i++) {
+				Object object=result.get(i);
+				ShortNewsDTO dto= new ShortNewsDTO();
+				Object[] arrayObject = (Object[]) object;
+				dto.setId(Long.parseLong(arrayObject[0].toString()));
+				if(null!=arrayObject[1]) {
+					dto.setCategoryId((Integer)arrayObject[1]);
+				}
+				if(null!=arrayObject[2]) {
+					dto.setCreatedTime(arrayObject[2].toString());
+				}
+				if(null!=arrayObject[3]) {
+					dto.setThumbnailUrl(arrayObject[3].toString());
+				}
+				
+				if(null!=arrayObject[4]) {
+					dto.setTitle(arrayObject[4].toString());
+				}
+				
+				out.add(dto);
+			}
+			lout.setListData(out);
+			lout.setTotalRows(Integer.parseInt(result.get(result.size()-1).toString()));
+		}else {
+			lout.setListData(out);
+			lout.setTotalRows(0);
+		}
+		return lout;
+	}
+	public News createNews(NewsDTO news) {
+		News n;
+		if(null!=news.getId() && news.getId()>0) {
+			n=newsRepository.getOne(news.getId());
+			n.setTitle(news.getTitle());
+			n.setThumbnailUrl(news.getThumbnailUrl());
+			if(null!=news.getListTag() && !news.getListTag().isEmpty()) {
+				n.setTag("");
+				for(String tag :news.getListTag()) {
+					n.setTag(n.getTag()+"#"+tag);
+				}
+			}
+			n.setContent(news.getContent());
+			n.setCategoryId(news.getCategoryId());
+			n.setUpdatedTime(new Date());
+		}else {
+			n = new News();
+			n.setCreatedTime(new Date());
+			n.setTitle(news.getTitle());
+			n.setThumbnailUrl(news.getThumbnailUrl());
+			if(null!=news.getListTag() && !news.getListTag().isEmpty()) {
+				StringBuffer sb= new StringBuffer();
+				for(String tag :news.getListTag()) {
+					sb.append("#").append(tag);
+				}
+				n.setTag(sb.toString());
+			}
+			n.setContent(news.getContent());
+			n.setCategoryId(news.getCategoryId());
+			n.setStatus(1);
+			n.setCreatedTime(new Date());
+			n.setType(1);
+		}
+		
+		return newsRepository.save(n);
+	}
+	public NewsDTO getNewsDetail(Long id) {
+		List<Object> result =newsRepository.getNewsById(id);
+		if(!result.isEmpty()) {
+			Object[] arrayObject = (Object[]) result.get(0);
+			NewsDTO dto= new NewsDTO();
+			dto.setId(Long.parseLong(arrayObject[0].toString()));
+			dto.setCategoryId((Integer)arrayObject[1]);
+			dto.setContent(arrayObject[2].toString());
+			dto.setCreatedTime(arrayObject[3].toString());
+			if(null!=arrayObject[4]) {
+				String tag= arrayObject[4].toString();
+				String []arrayTag=tag.split("#");
+				List<String> lst= new ArrayList<>();
+				if(null!=arrayTag && arrayTag.length>0) {
+					for (int i=1; i<arrayTag.length;i++) {
+						lst.add(arrayTag[i]);
+					}
+				}
+				dto.setListTag(lst);
+			}
+			
+			dto.setThumbnailUrl(arrayObject[5].toString());
+			dto.setTitle(arrayObject[6].toString());
+			return dto;
+		}
+		return null;
+	}
+	public Boolean deleteNews(Long id) {
+		newsRepository.deleteById(id);
+		return true;
+	}
+	
+	public List<ObjectOutPutDTO> getAllNewscategory() {
+		List<ObjectOutPutDTO>lst= new ArrayList<>();
+		ObjectOutPutDTO o= new ObjectOutPutDTO();
+		o.setCode("PT");
+		o.setId(1L);
+		o.setName("Phân tích");
+		lst.add(o);
+		o= new ObjectOutPutDTO();
+		o.setCode("KN");
+		o.setId(2L);
+		o.setName("Khuyến nghị");
+		lst.add(o);
+		o= new ObjectOutPutDTO();
+		o.setCode("KS");
+		o.setId(3L);
+		o.setName("Case study");
+		lst.add(o);
+		o= new ObjectOutPutDTO();
+		o.setCode("TT");
+		o.setId(4L);
+		o.setName("Tin tức");
+		lst.add(o);
+		return lst;
+	}
+	
+	public ObjectOutPutRegisterDTO register(RegisterInputsDTO registerInput) throws NoSuchAlgorithmException {
+		ObjectOutPutRegisterDTO out = new ObjectOutPutRegisterDTO();
+		if(null==registerInput) {
+			out.setCode("-1");
+			out.setMessage("Khong nhan duoc thong tin khach hang");
+			return out;
+		}else if(StringUtil.isNullOrEmpty(registerInput.getEmail())) {
+			out.setCode("-2");
+			out.setMessage("Khong nhan duoc Email khach hang");
+			return out;
+		}else if(StringUtil.isNullOrEmpty(registerInput.getName())) {
+			out.setCode("-3");
+			out.setMessage("Khong nhan duoc Ten khach hang");
+			return out;
+		}else if(StringUtil.isNullOrEmpty(registerInput.getProvider())) {
+			out.setCode("-4");
+			out.setMessage("Khong nhan duoc Provider dang ky");
+			return out;
+		}else if("GOOGLE".equals(registerInput.getProvider()) && StringUtil.isNullOrEmpty(registerInput.getProvider())){
+			out.setCode("-5");
+			out.setMessage("Khong nhan duoc ID cua Provider Google");
+			return out;
+		}else if("INVALUE".equals(registerInput.getProvider()) && StringUtil.isNullOrEmpty(registerInput.getPassword())){
+			out.setCode("-6");
+			out.setMessage("Khong nhan duoc Password khach hang");
+			return out;
+		}else if(!validate(registerInput.getEmail())) {
+			out.setCode("-8");
+			out.setMessage("Email khong dung dinh dang");
+			return out;
+		}
+		List<Object> result = urerRepository.getUserByEmail(registerInput.getEmail());
+		if(!result.isEmpty()) {
+			out.setCode("-7");
+			out.setMessage("Email da dang ky roi");
+			return out;
+		}
+		User u= new User();
+		byte[] array = new byte[5]; // length is bounded by 7
+	    new Random().nextBytes(array);
+	    String salt = "123456";
+		u.setEmail(registerInput.getEmail());
+		u.setFullName(registerInput.getName());
+		
+		if("INVALUE".equals(registerInput.getProvider())) {
+			u.setPassword(registerInput.getPassword());
+			u.setSalt(salt);
+		}else {
+			u.setIdProvider(registerInput.getIdProvider());
+		}
+		u.setRoleId(1);
+		u.setStatus(1);
+		u.setToken("123456");
+		u.setType(1);
+		
+		u.setCreatedTime(new Date());
+		u = urerRepository.save(u);
+		
+		if(null!=u && u.getId()>0) {
+			out.setCode("0");
+			out.setMessage("Dang ky thanh cong");
+			return out;
+		}else {
+			out.setCode("500");
+			out.setMessage("Loi trong qua trinh xu ly");
+			return out;
+		}
+    }
+	
+	public ObjectOutPutRegisterDTO login(RegisterInputsDTO registerInput) throws NoSuchAlgorithmException {
+		ObjectOutPutRegisterDTO out = new ObjectOutPutRegisterDTO();
+		if(null==registerInput) {
+			out.setCode("-1");
+			out.setMessage("Khong nhan duoc thong tin khach hang");
+			return out;
+		}else if(StringUtil.isNullOrEmpty(registerInput.getEmail())) {
+			out.setCode("-2");
+			out.setMessage("Khong nhan duoc Email khach hang");
+			return out;
+		}else if(StringUtil.isNullOrEmpty(registerInput.getProvider())) {
+			out.setCode("-3");
+			out.setMessage("Khong nhan duoc Provider dang nhap");
+			return out;
+		}else if("GOOGLE".equals(registerInput.getProvider()) && StringUtil.isNullOrEmpty(registerInput.getProvider())){
+			out.setCode("-4");
+			out.setMessage("Khong nhan duoc ID cua Provider Google");
+			return out;
+		}else if("INVALUE".equals(registerInput.getProvider()) && StringUtil.isNullOrEmpty(registerInput.getPassword())){
+			out.setCode("-5");
+			out.setMessage("Khong nhan duoc Password khach hang");
+			return out;
+		}
+		List<Object> result = urerRepository.getUserByEmail(registerInput.getEmail());
+		if(!result.isEmpty()) {
+			Object[] arrayObject = (Object[]) result.get(0);
+			LoginOutputsDTO u= new LoginOutputsDTO();
+			u.setId(Long.parseLong(arrayObject[0].toString()));
+			u.setEmail(arrayObject[2].toString());
+			if(null!=arrayObject[3])
+				u.setFullName(arrayObject[3].toString());
+			if(null!=arrayObject[4])	
+				u.setPhone(arrayObject[4].toString());
+			u.setRoleId((Integer)arrayObject[5]);
+			//6
+			u.setType((Integer)arrayObject[7]);
+			//7
+			String uPass="";
+			String uSalt="";
+			String idProvider="";
+			String provider="";
+			if(null!=arrayObject[8])
+				uPass=arrayObject[8].toString();
+			if(null!=arrayObject[9])
+				uSalt=arrayObject[9].toString();
+			if(null!=arrayObject[10])
+				u.setToken(arrayObject[10].toString());
+			if(null!=arrayObject[11])
+				idProvider = arrayObject[11].toString();
+			if(null!=arrayObject[12])
+				provider = arrayObject[12].toString();
+			u.setNumFilter(5);
+			u.setNumPTKT(5);
+			if(!"INVALUE".equals(registerInput.getProvider()) && !"GOOGLE".equals(registerInput.getProvider())) {
+				out.setCode("-4");
+				out.setMessage("Tai khoan hoac mat khau khong hop le");
+				return out;
+			}
+			if("INVALUE".equals(registerInput.getProvider())) {
+				if(!registerInput.getPassword().equals(uPass)) {
+					out.setCode("-4");
+					out.setMessage("Tai khoan hoac mat khau khong hop le");
+					return out;
+				}
+				else {
+					out.setCode("0");
+					out.setMessage("Dang nhap thanh cong");
+					out.setValue(u);
+					return out;
+				}
+			}else if("GOOGLE".equals(registerInput.getProvider())) {
+				if(!registerInput.getIdProvider().equals(idProvider)) {
+					out.setCode("-4");
+					out.setMessage("Tai khoan hoac mat khau khong hop le");
+					return out;
+				}
+				else {
+					out.setCode("0");
+					out.setMessage("Dang nhap thanh cong");
+					out.setValue(u);
+					return out;
+				}
+			}else {
+				out.setCode("-4");
+				out.setMessage("Tai khoan hoac mat khau khong hop le");
+				return out;
+			}
+			
+		}else {
+			out.setCode("-4");
+			out.setMessage("Tai khoan hoac mat khau khong hop le");
+			return out;
+		}
+		
+	}
+	public final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+	public boolean validate(String emailStr) {
+	        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+	        return matcher.find();
+	}
+	public static String generateString() {
+        String uuid = UUID.randomUUID().toString();
+        return "uuid = " + uuid;
+    }
 	public File convert(MultipartFile file)
 	{    
 		try {
